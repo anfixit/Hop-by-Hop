@@ -50,8 +50,9 @@ ufw default allow outgoing
 ufw allow OpenSSH
 ufw --force enable
 
-# fail2ban по умолчанию ищет записи sshd.service, а в Ubuntu 24.04 служба называется
-# ssh.service (сокет-активация), и часть неудачных входов он не видит. Указываем явно.
+# Стандартный фильтр fail2ban отбирает записи по _SYSTEMD_UNIT=sshd.service ИЛИ _COMM=sshd.
+# В Ubuntu 24.04 служба называется ssh.service (сокет-активация), так что первая половина
+# условия не срабатывает и всё держится на имени процесса. Указываем имя службы явно.
 cat > /etc/fail2ban/jail.d/sshd-ubuntu.local <<'EOF'
 [sshd]
 enabled = true
