@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Одни и те же биты: NRZ и манчестерский код</text>
+
+  <!-- границы тактов -->
+  <g stroke="#E2E8F0" stroke-width="2">
+    <line x1="160" y1="80" x2="160" y2="440"/><line x1="270" y1="80" x2="270" y2="440"/>
+    <line x1="380" y1="80" x2="380" y2="440"/><line x1="490" y1="80" x2="490" y2="440"/>
+    <line x1="600" y1="80" x2="600" y2="440"/><line x1="710" y1="80" x2="710" y2="440"/>
+    <line x1="820" y1="80" x2="820" y2="440"/><line x1="930" y1="80" x2="930" y2="440"/>
+    <line x1="1040" y1="80" x2="1040" y2="440"/>
+  </g>
+
+  <g font-size="28" font-weight="bold" fill="#0E1830" text-anchor="middle">
+    <text x="215" y="115">1</text><text x="325" y="115">0</text><text x="435" y="115">1</text><text x="545" y="115">1</text>
+    <text x="655" y="115">0</text><text x="765" y="115">0</text><text x="875" y="115">0</text><text x="985" y="115">0</text>
+  </g>
+
+  <g font-size="22" font-weight="bold" fill="#0E1830">
+    <text x="30" y="218">NRZ</text>
+    <text x="30" y="365">Манчестер</text>
+    <text x="30" y="392" font-size="16" font-weight="normal" fill="#475569">IEEE 802.3</text>
+  </g>
+
+  <polyline fill="none" stroke="#4338CA" stroke-width="6"
+    points="160,170 270,170 270,250 380,250 380,170 600,170 600,250 1040,250"/>
+
+  <polyline fill="none" stroke="#0F766E" stroke-width="6"
+    points="160,410 215,410 215,330 325,330 325,410 435,410 435,330 490,330 490,410 545,410 545,330 655,330 655,410 710,410 710,330 765,330 765,410 820,410 820,330 875,330 875,410 930,410 930,330 985,330 985,410 1040,410"/>
+
+  <!-- выделение проблемного участка NRZ -->
+  <rect x="600" y="150" width="440" height="120" rx="10" fill="none" stroke="#DC2626" stroke-width="3"/>
+  <text x="820" y="292" text-anchor="middle" font-size="18" fill="#DC2626">четыре такта без перепада: приёмнику не за что зацепиться</text>
+
+  <text x="600" y="475" text-anchor="middle" font-size="19" fill="#475569">Манчестер: 1 - перепад вверх в середине такта, 0 - вниз. Перепад есть всегда,</text>
+  <text x="600" y="502" text-anchor="middle" font-size="19" fill="#475569">но сигнал меняется до двух раз за бит, поэтому нужна вдвое большая полоса</text>
+</svg>

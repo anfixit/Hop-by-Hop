@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Созвездия и шум</text>
+
+  <g font-size="22" font-weight="bold" fill="#0E1830" text-anchor="middle">
+    <text x="210" y="100">QPSK, сильный шум</text>
+    <text x="600" y="100">QAM-16, слабый шум</text>
+    <text x="990" y="100">QAM-16, сильный шум</text>
+  </g>
+
+  <!-- оси -->
+  <g stroke="#CBD5E1" stroke-width="2">
+    <line x1="60" y1="300" x2="360" y2="300"/><line x1="210" y1="150" x2="210" y2="450"/>
+    <line x1="450" y1="300" x2="750" y2="300"/><line x1="600" y1="150" x2="600" y2="450"/>
+    <line x1="840" y1="300" x2="1140" y2="300"/><line x1="990" y1="150" x2="990" y2="450"/>
+  </g>
+
+  <!-- QPSK: облака r=38 -->
+  <g fill="#FDE68A">
+    <circle cx="140" cy="230" r="38"/><circle cx="280" cy="230" r="38"/>
+    <circle cx="140" cy="370" r="38"/><circle cx="280" cy="370" r="38"/>
+  </g>
+  <g fill="#4338CA">
+    <circle cx="140" cy="230" r="8"/><circle cx="280" cy="230" r="8"/>
+    <circle cx="140" cy="370" r="8"/><circle cx="280" cy="370" r="8"/>
+  </g>
+
+  <!-- QAM-16, слабый шум: сетка ±30, ±90, облака r=14 -->
+  <g fill="#FDE68A">
+    <circle cx="510" cy="210" r="14"/><circle cx="570" cy="210" r="14"/><circle cx="630" cy="210" r="14"/><circle cx="690" cy="210" r="14"/>
+    <circle cx="510" cy="270" r="14"/><circle cx="570" cy="270" r="14"/><circle cx="630" cy="270" r="14"/><circle cx="690" cy="270" r="14"/>
+    <circle cx="510" cy="330" r="14"/><circle cx="570" cy="330" r="14"/><circle cx="630" cy="330" r="14"/><circle cx="690" cy="330" r="14"/>
+    <circle cx="510" cy="390" r="14"/><circle cx="570" cy="390" r="14"/><circle cx="630" cy="390" r="14"/><circle cx="690" cy="390" r="14"/>
+  </g>
+  <g fill="#4338CA">
+    <circle cx="510" cy="210" r="6"/><circle cx="570" cy="210" r="6"/><circle cx="630" cy="210" r="6"/><circle cx="690" cy="210" r="6"/>
+    <circle cx="510" cy="270" r="6"/><circle cx="570" cy="270" r="6"/><circle cx="630" cy="270" r="6"/><circle cx="690" cy="270" r="6"/>
+    <circle cx="510" cy="330" r="6"/><circle cx="570" cy="330" r="6"/><circle cx="630" cy="330" r="6"/><circle cx="690" cy="330" r="6"/>
+    <circle cx="510" cy="390" r="6"/><circle cx="570" cy="390" r="6"/><circle cx="630" cy="390" r="6"/><circle cx="690" cy="390" r="6"/>
+  </g>
+
+  <!-- QAM-16, сильный шум: облака r=38 перекрываются -->
+  <g fill="#FCA5A5">
+    <circle cx="900" cy="210" r="38"/><circle cx="960" cy="210" r="38"/><circle cx="1020" cy="210" r="38"/><circle cx="1080" cy="210" r="38"/>
+    <circle cx="900" cy="270" r="38"/><circle cx="960" cy="270" r="38"/><circle cx="1020" cy="270" r="38"/><circle cx="1080" cy="270" r="38"/>
+    <circle cx="900" cy="330" r="38"/><circle cx="960" cy="330" r="38"/><circle cx="1020" cy="330" r="38"/><circle cx="1080" cy="330" r="38"/>
+    <circle cx="900" cy="390" r="38"/><circle cx="960" cy="390" r="38"/><circle cx="1020" cy="390" r="38"/><circle cx="1080" cy="390" r="38"/>
+  </g>
+  <g fill="#4338CA">
+    <circle cx="900" cy="210" r="6"/><circle cx="960" cy="210" r="6"/><circle cx="1020" cy="210" r="6"/><circle cx="1080" cy="210" r="6"/>
+    <circle cx="900" cy="270" r="6"/><circle cx="960" cy="270" r="6"/><circle cx="1020" cy="270" r="6"/><circle cx="1080" cy="270" r="6"/>
+    <circle cx="900" cy="330" r="6"/><circle cx="960" cy="330" r="6"/><circle cx="1020" cy="330" r="6"/><circle cx="1080" cy="330" r="6"/>
+    <circle cx="900" cy="390" r="6"/><circle cx="960" cy="390" r="6"/><circle cx="1020" cy="390" r="6"/><circle cx="1080" cy="390" r="6"/>
+  </g>
+
+  <g font-size="19" text-anchor="middle">
+    <text x="210" y="480" fill="#0F766E">2 бита на символ, облака</text>
+    <text x="210" y="505" fill="#0F766E">не пересекаются: надёжно</text>
+    <text x="600" y="480" fill="#0F766E">4 бита на символ,</text>
+    <text x="600" y="505" fill="#0F766E">нужен сильный сигнал</text>
+    <text x="990" y="480" fill="#DC2626">облака перекрываются:</text>
+    <text x="990" y="505" fill="#DC2626">приёмник путает символы</text>
+  </g>
+  <text x="600" y="545" text-anchor="middle" font-size="17" fill="#475569">точка - идеальный символ, облако - куда его может сдвинуть шум; расстояние от центра - амплитуда, угол - фаза</text>
+</svg>

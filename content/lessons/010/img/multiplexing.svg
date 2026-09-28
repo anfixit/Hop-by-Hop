@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Как разделить одну линию между каналами</text>
+
+  <!-- FDM -->
+  <text x="40" y="110" font-size="22" font-weight="bold" fill="#0E1830">FDM: у каждого своя полоса частот</text>
+  <line x1="60" y1="200" x2="1140" y2="200" stroke="#0E1830" stroke-width="3"/>
+  <polygon points="1150,200 1132,191 1132,209" fill="#0E1830"/>
+  <text x="1140" y="228" text-anchor="end" font-size="18" fill="#475569">частота</text>
+  <rect x="120" y="130" width="280" height="70" fill="#C7D2FE" stroke="#4338CA" stroke-width="2"/>
+  <rect x="440" y="130" width="280" height="70" fill="#CCFBF1" stroke="#0F766E" stroke-width="2"/>
+  <rect x="760" y="130" width="280" height="70" fill="#FED7AA" stroke="#EA580C" stroke-width="2"/>
+  <g font-size="20" text-anchor="middle" fill="#0E1830">
+    <text x="260" y="172">канал 1</text><text x="580" y="172">канал 2</text><text x="900" y="172">канал 3</text>
+  </g>
+  <g font-size="15" text-anchor="middle" fill="#475569">
+    <text x="420" y="225">защитный</text><text x="740" y="225">защитный</text>
+    <text x="420" y="243">промежуток</text><text x="740" y="243">промежуток</text>
+  </g>
+
+  <!-- TDM -->
+  <text x="40" y="300" font-size="22" font-weight="bold" fill="#0E1830">TDM: у каждого свой отрезок времени</text>
+  <line x1="60" y1="390" x2="1140" y2="390" stroke="#0E1830" stroke-width="3"/>
+  <polygon points="1150,390 1132,381 1132,399" fill="#0E1830"/>
+  <text x="1140" y="418" text-anchor="end" font-size="18" fill="#475569">время</text>
+  <g stroke-width="2">
+    <rect x="120" y="320" width="150" height="70" fill="#C7D2FE" stroke="#4338CA"/>
+    <rect x="270" y="320" width="150" height="70" fill="#CCFBF1" stroke="#0F766E"/>
+    <rect x="420" y="320" width="150" height="70" fill="#FED7AA" stroke="#EA580C"/>
+    <rect x="590" y="320" width="150" height="70" fill="#C7D2FE" stroke="#4338CA"/>
+    <rect x="740" y="320" width="150" height="70" fill="#CCFBF1" stroke="#0F766E"/>
+    <rect x="890" y="320" width="150" height="70" fill="#FED7AA" stroke="#EA580C"/>
+  </g>
+  <g font-size="22" text-anchor="middle" fill="#0E1830">
+    <text x="195" y="363">1</text><text x="345" y="363">2</text><text x="495" y="363">3</text>
+    <text x="665" y="363">1</text><text x="815" y="363">2</text><text x="965" y="363">3</text>
+  </g>
+  <text x="345" y="440" text-anchor="middle" font-size="16" fill="#475569">цикл: каждый канал получает свой слот</text>
+  <text x="815" y="440" text-anchor="middle" font-size="16" fill="#475569">следующий цикл</text>
+
+  <!-- WDM -->
+  <text x="40" y="490" font-size="22" font-weight="bold" fill="#0E1830">WDM: у каждого своя длина волны в одном волокне</text>
+  <g stroke-width="6" fill="none">
+    <polyline points="120,515 330,550" stroke="#DC2626"/>
+    <polyline points="120,550 330,550" stroke="#16A34A"/>
+    <polyline points="120,585 330,550" stroke="#2563EB"/>
+  </g>
+  <rect x="330" y="530" width="540" height="40" rx="20" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+  <line x1="350" y1="544" x2="850" y2="544" stroke="#DC2626" stroke-width="4"/>
+  <line x1="350" y1="550" x2="850" y2="550" stroke="#16A34A" stroke-width="4"/>
+  <line x1="350" y1="556" x2="850" y2="556" stroke="#2563EB" stroke-width="4"/>
+  <g stroke-width="6" fill="none">
+    <polyline points="870,550 1080,515" stroke="#DC2626"/>
+    <polyline points="870,550 1080,550" stroke="#16A34A"/>
+    <polyline points="870,550 1080,585" stroke="#2563EB"/>
+  </g>
+  <g font-size="18" fill="#0E1830">
+    <text x="1090" y="521">λ1</text><text x="1090" y="556">λ2</text><text x="1090" y="591">λ3</text>
+  </g>
+</svg>
