@@ -50,7 +50,17 @@ ufw default allow outgoing
 ufw allow OpenSSH
 ufw --force enable
 
+# fail2ban по умолчанию ищет записи sshd.service, а в Ubuntu 24.04 служба называется
+# ssh.service (сокет-активация), и часть неудачных входов он не видит. Указываем явно.
+cat > /etc/fail2ban/jail.d/sshd-ubuntu.local <<'EOF'
+[sshd]
+enabled = true
+backend = systemd
+journalmatch = _SYSTEMD_UNIT=ssh.service + _COMM=sshd
+EOF
+
 systemctl enable --now fail2ban docker
+fail2ban-client reload >/dev/null
 
 echo "--- готово"
 docker --version
