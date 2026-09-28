@@ -10,8 +10,12 @@ APP_DIR=/opt/hopbyhop
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -q
 apt-get upgrade -yq
-# Docker из репозитория Ubuntu: пакеты подписаны и обновляются вместе с системой
-apt-get install -yq docker.io docker-compose-v2 ufw unattended-upgrades fail2ban
+apt-get install -yq ufw unattended-upgrades fail2ban
+# Docker: если уже стоит (например, docker-ce из репозитория Docker), не трогаем;
+# иначе ставим из репозитория Ubuntu - пакеты подписаны и обновляются вместе с системой
+if ! command -v docker >/dev/null || ! docker compose version >/dev/null 2>&1; then
+  apt-get install -yq docker.io docker-compose-v2
+fi
 
 # Автоматические обновления безопасности
 dpkg-reconfigure -f noninteractive unattended-upgrades
