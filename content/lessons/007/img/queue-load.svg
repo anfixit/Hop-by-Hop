@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Очередь растёт нелинейно</text>
+
+  <!-- оси: x от 100 (ρ=0) до 900 (ρ=1), y от 480 (0) вверх -->
+  <line x1="100" y1="480" x2="940" y2="480" stroke="#0E1830" stroke-width="3"/>
+  <line x1="100" y1="480" x2="100" y2="80" stroke="#0E1830" stroke-width="3"/>
+  <polygon points="950,480 930,470 930,490" fill="#0E1830"/>
+  <polygon points="100,70 90,90 110,90" fill="#0E1830"/>
+
+  <!-- зоны -->
+  <rect x="100" y="80" width="560" height="400" fill="#F0FDFA"/>
+  <rect x="660" y="80" width="160" height="400" fill="#FEF3C7"/>
+  <rect x="820" y="80" width="80" height="400" fill="#FEE2E2"/>
+  <line x1="900" y1="80" x2="900" y2="480" stroke="#DC2626" stroke-width="2"/>
+
+  <!-- кривая ρ/(1-ρ), масштаб 20 px на единицу -->
+  <polyline fill="none" stroke="#4338CA" stroke-width="6"
+    points="100,480 180,477.8 260,475 340,471.4 420,466.7 500,460 580,450 660,433.3 740,400 780,366.7 820,300 836,250 852,186.7 860,100"/>
+
+  <!-- отметки -->
+  <g font-size="20" text-anchor="middle" fill="#0E1830">
+    <text x="100" y="510">0</text><text x="500" y="510">0,5</text><text x="820" y="510">0,9</text><text x="900" y="510">1</text>
+  </g>
+  <g stroke="#0E1830" stroke-width="2"><line x1="500" y1="480" x2="500" y2="490"/><line x1="820" y1="480" x2="820" y2="490"/></g>
+  <circle cx="500" cy="460" r="8" fill="#4338CA"/>
+  <circle cx="820" cy="300" r="8" fill="#4338CA"/>
+  <text x="270" y="420" font-size="19" fill="#0E1830">при 0,5 очередь уже есть</text>
+  <text x="520" y="280" font-size="19" fill="#0E1830">при 0,9 ждать в очереди</text>
+  <text x="520" y="304" font-size="19" fill="#0E1830">в 9 раз дольше, чем при 0,5</text>
+  <text x="130" y="140" font-size="18" fill="#475569">при трафике с более сильными всплесками кривая ещё круче</text>
+
+  <text x="520" y="555" text-anchor="middle" font-size="22" fill="#0E1830">загрузка канала ρ = поступает / может отправить</text>
+  <text x="60" y="280" font-size="22" fill="#0E1830" transform="rotate(-90 60 280)" text-anchor="middle">ожидание в очереди</text>
+
+  <g font-size="18">
+    <text x="960" y="200" fill="#0F766E">спокойно</text>
+    <text x="960" y="230" fill="#B45309">растут задержки</text>
+    <text x="960" y="260" fill="#DC2626">огромные очереди</text>
+  </g>
+  <rect x="940" y="185" width="14" height="14" fill="#F0FDFA" stroke="#0F766E"/>
+  <rect x="940" y="215" width="14" height="14" fill="#FEF3C7" stroke="#B45309"/>
+  <rect x="940" y="245" width="14" height="14" fill="#FEE2E2" stroke="#DC2626"/>
+  <text x="600" y="590" text-anchor="middle" font-size="17" fill="#475569">простейшая модель очереди (M/M/1); ожидание - в единицах времени передачи одного пакета</text>
+</svg>

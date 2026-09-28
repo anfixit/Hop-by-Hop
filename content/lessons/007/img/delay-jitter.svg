@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <rect width="1200" height="620" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Идеальная сеть и настоящая</text>
+
+  <!-- Идеальная -->
+  <text x="40" y="100" font-size="24" font-weight="bold" fill="#0F766E">Идеальная</text>
+  <text x="40" y="140" font-size="18" fill="#475569">отправлено</text>
+  <line x1="170" y1="135" x2="1160" y2="135" stroke="#CBD5E1" stroke-width="3"/>
+  <g fill="#14B8A6"><rect x="200" y="120" width="40" height="30" rx="4"/><rect x="340" y="120" width="40" height="30" rx="4"/><rect x="480" y="120" width="40" height="30" rx="4"/><rect x="620" y="120" width="40" height="30" rx="4"/><rect x="760" y="120" width="40" height="30" rx="4"/></g>
+  <g font-size="16" text-anchor="middle" fill="#FFFFFF"><text x="220" y="141">1</text><text x="360" y="141">2</text><text x="500" y="141">3</text><text x="640" y="141">4</text><text x="780" y="141">5</text></g>
+  <text x="40" y="230" font-size="18" fill="#475569">получено</text>
+  <line x1="170" y1="225" x2="1160" y2="225" stroke="#CBD5E1" stroke-width="3"/>
+  <g stroke="#94A3B8" stroke-width="2"><line x1="220" y1="150" x2="320" y2="210"/><line x1="360" y1="150" x2="460" y2="210"/><line x1="500" y1="150" x2="600" y2="210"/><line x1="640" y1="150" x2="740" y2="210"/><line x1="780" y1="150" x2="880" y2="210"/></g>
+  <g fill="#14B8A6"><rect x="300" y="210" width="40" height="30" rx="4"/><rect x="440" y="210" width="40" height="30" rx="4"/><rect x="580" y="210" width="40" height="30" rx="4"/><rect x="720" y="210" width="40" height="30" rx="4"/><rect x="860" y="210" width="40" height="30" rx="4"/></g>
+  <g font-size="16" text-anchor="middle" fill="#FFFFFF"><text x="320" y="231">1</text><text x="460" y="231">2</text><text x="600" y="231">3</text><text x="740" y="231">4</text><text x="880" y="231">5</text></g>
+  <text x="600" y="275" text-anchor="middle" font-size="18" fill="#0F766E">одинаковая задержка, интервалы сохранены</text>
+
+  <line x1="40" y1="305" x2="1160" y2="305" stroke="#E2E8F0" stroke-width="3"/>
+
+  <!-- Настоящая -->
+  <text x="40" y="355" font-size="24" font-weight="bold" fill="#DC2626">Настоящая</text>
+  <text x="40" y="395" font-size="18" fill="#475569">отправлено</text>
+  <line x1="170" y1="390" x2="1160" y2="390" stroke="#CBD5E1" stroke-width="3"/>
+  <g fill="#14B8A6"><rect x="200" y="375" width="40" height="30" rx="4"/><rect x="340" y="375" width="40" height="30" rx="4"/><rect x="480" y="375" width="40" height="30" rx="4"/><rect x="620" y="375" width="40" height="30" rx="4"/><rect x="760" y="375" width="40" height="30" rx="4"/></g>
+  <g font-size="16" text-anchor="middle" fill="#FFFFFF"><text x="220" y="396">1</text><text x="360" y="396">2</text><text x="500" y="396">3</text><text x="640" y="396">4</text><text x="780" y="396">5</text></g>
+  <text x="40" y="485" font-size="18" fill="#475569">получено</text>
+  <line x1="170" y1="480" x2="1160" y2="480" stroke="#CBD5E1" stroke-width="3"/>
+  <g stroke="#94A3B8" stroke-width="2"><line x1="220" y1="405" x2="320" y2="465"/><line x1="360" y1="405" x2="560" y2="465"/><line x1="500" y1="405" x2="880" y2="465"/><line x1="640" y1="405" x2="740" y2="465"/></g>
+  <line x1="780" y1="405" x2="860" y2="440" stroke="#DC2626" stroke-width="2"/>
+  <text x="870" y="448" font-size="22" font-weight="bold" fill="#DC2626">×</text>
+  <g fill="#14B8A6"><rect x="300" y="465" width="40" height="30" rx="4"/><rect x="540" y="465" width="40" height="30" rx="4"/><rect x="720" y="465" width="40" height="30" rx="4"/></g>
+  <rect x="860" y="465" width="40" height="30" rx="4" fill="#F59E0B"/>
+  <g font-size="16" text-anchor="middle" fill="#FFFFFF"><text x="320" y="486">1</text><text x="560" y="486">2</text><text x="740" y="486">4</text><text x="880" y="486">3</text></g>
+  <g font-size="18" fill="#0E1830">
+    <text x="170" y="540">разные задержки (джиттер)</text>
+    <text x="520" y="540" fill="#B45309">пакет 3 пришёл после 4</text>
+    <text x="850" y="540" fill="#DC2626">пакет 5 потерян</text>
+  </g>
+  <text x="600" y="595" text-anchor="middle" font-size="20" fill="#475569">Характеристики сети меряют, насколько настоящая сеть отличается от идеальной</text>
+</svg>
