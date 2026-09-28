@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="1200" height="680">
+  <rect width="1200" height="680" fill="#FFFFFF"/>
+  <text x="600" y="48" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Протоколы - по горизонтали, интерфейсы - по вертикали</text>
+
+  <text x="230" y="100" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Компьютер A</text>
+  <text x="970" y="100" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Компьютер B</text>
+
+  <!-- уровни A -->
+  <g font-size="22" text-anchor="middle" fill="#0E1830">
+    <rect x="110" y="125" width="240" height="70" rx="10" fill="#CCFBF1" stroke="#0F766E" stroke-width="2"/><text x="230" y="168">Уровень 4</text>
+    <rect x="110" y="235" width="240" height="70" rx="10" fill="#E0E7FF" stroke="#4338CA" stroke-width="2"/><text x="230" y="278">Уровень 3</text>
+    <rect x="110" y="345" width="240" height="70" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/><text x="230" y="388">Уровень 2</text>
+    <rect x="110" y="455" width="240" height="70" rx="10" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/><text x="230" y="498">Уровень 1</text>
+    <!-- уровни B -->
+    <rect x="850" y="125" width="240" height="70" rx="10" fill="#CCFBF1" stroke="#0F766E" stroke-width="2"/><text x="970" y="168">Уровень 4</text>
+    <rect x="850" y="235" width="240" height="70" rx="10" fill="#E0E7FF" stroke="#4338CA" stroke-width="2"/><text x="970" y="278">Уровень 3</text>
+    <rect x="850" y="345" width="240" height="70" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/><text x="970" y="388">Уровень 2</text>
+    <rect x="850" y="455" width="240" height="70" rx="10" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/><text x="970" y="498">Уровень 1</text>
+  </g>
+
+  <!-- протоколы: пунктир из точек -->
+  <g fill="#94A3B8">
+    <circle cx="370" cy="160" r="4"/><circle cx="400" cy="160" r="4"/><circle cx="430" cy="160" r="4"/><circle cx="460" cy="160" r="4"/><circle cx="490" cy="160" r="4"/><circle cx="710" cy="160" r="4"/><circle cx="740" cy="160" r="4"/><circle cx="770" cy="160" r="4"/><circle cx="800" cy="160" r="4"/><circle cx="830" cy="160" r="4"/>
+    <circle cx="370" cy="270" r="4"/><circle cx="400" cy="270" r="4"/><circle cx="430" cy="270" r="4"/><circle cx="460" cy="270" r="4"/><circle cx="490" cy="270" r="4"/><circle cx="710" cy="270" r="4"/><circle cx="740" cy="270" r="4"/><circle cx="770" cy="270" r="4"/><circle cx="800" cy="270" r="4"/><circle cx="830" cy="270" r="4"/>
+    <circle cx="370" cy="380" r="4"/><circle cx="400" cy="380" r="4"/><circle cx="430" cy="380" r="4"/><circle cx="460" cy="380" r="4"/><circle cx="490" cy="380" r="4"/><circle cx="710" cy="380" r="4"/><circle cx="740" cy="380" r="4"/><circle cx="770" cy="380" r="4"/><circle cx="800" cy="380" r="4"/><circle cx="830" cy="380" r="4"/>
+  </g>
+  <g font-size="19" text-anchor="middle" fill="#475569">
+    <text x="600" y="167">протокол 4</text><text x="600" y="277">протокол 3</text><text x="600" y="387">протокол 2</text>
+  </g>
+
+  <!-- интерфейсы -->
+  <g font-size="18" fill="#B45309">
+    <text x="30" y="222">интерфейс</text><text x="30" y="332">интерфейс</text><text x="30" y="442">интерфейс</text>
+  </g>
+
+  <!-- реальный путь -->
+  <g stroke="#14B8A6" stroke-width="7" fill="none">
+    <line x1="230" y1="195" x2="230" y2="229"/><line x1="230" y1="305" x2="230" y2="339"/><line x1="230" y1="415" x2="230" y2="449"/>
+    <line x1="230" y1="525" x2="230" y2="580"/><line x1="230" y1="580" x2="970" y2="580"/><line x1="970" y1="580" x2="970" y2="531"/>
+    <line x1="970" y1="449" x2="970" y2="421"/><line x1="970" y1="339" x2="970" y2="311"/><line x1="970" y1="229" x2="970" y2="201"/>
+  </g>
+  <g fill="#0F766E">
+    <polygon points="970,525 960,541 980,541"/><polygon points="970,415 960,431 980,431"/><polygon points="970,305 960,321 980,321"/><polygon points="970,195 960,211 980,211"/>
+  </g>
+  <text x="600" y="570" text-anchor="middle" font-size="21" fill="#0F766E">протокол 1: биты по проводу - единственный настоящий обмен</text>
+
+  <text x="600" y="630" text-anchor="middle" font-size="21" fill="#0E1830">Пунктир - виртуальный разговор пиров. Сплошная линия - настоящий путь данных:</text>
+  <text x="600" y="660" text-anchor="middle" font-size="21" fill="#0E1830">вниз по уровням, по проводу, вверх по уровням.</text>
+</svg>
