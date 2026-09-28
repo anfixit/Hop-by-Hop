@@ -1,0 +1,40 @@
+name: Тесты
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      # Проверяет код и весь контент курса: структуру уроков, тесты, вёрстку для Telegraph, типографику
+      - run: python -m pytest -q
+
+  notify:
+    needs: test
+    # Для PR из форков секреты недоступны - там уведомление просто пропустится
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/actions
+      - uses: ./.github/actions/telegram-notify
+        with:
+          status: ${{ needs.test.result }}
+          title: Тесты
+          bot-token: ${{ secrets.BOT_TOKEN }}
+          chat-id: ${{ secrets.NOTIFY_CHAT_ID }}
