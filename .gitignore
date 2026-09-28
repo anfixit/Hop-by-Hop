@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Hop-by-Hop ---
+# Книги и извлечённый текст лежат уровнем выше и не публикуются; на всякий случай:
+Books/
+books_text/
+*.pdf
+# Локальные данные бота
+*.sqlite3
+*.db
