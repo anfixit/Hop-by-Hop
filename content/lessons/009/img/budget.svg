@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Бюджет линии: считаем простым сложением</text>
+
+  <!-- ось: y = 110 + (-дБм) * 18; 0 дБм = 110, -20 дБм = 470 -->
+  <line x1="150" y1="100" x2="150" y2="490" stroke="#0E1830" stroke-width="3"/>
+  <g font-size="18" fill="#0E1830" text-anchor="end">
+    <text x="138" y="116">0 дБм</text>
+    <text x="138" y="206">-5 дБм</text>
+    <text x="138" y="296">-10 дБм</text>
+    <text x="138" y="386">-15 дБм</text>
+    <text x="138" y="476">-20 дБм</text>
+  </g>
+  <g stroke="#E2E8F0" stroke-width="2">
+    <line x1="152" y1="110" x2="1150" y2="110"/>
+    <line x1="152" y1="200" x2="1150" y2="200"/>
+    <line x1="152" y1="290" x2="1150" y2="290"/>
+    <line x1="152" y1="380" x2="1150" y2="380"/>
+  </g>
+
+  <!-- порог чувствительности -->
+  <rect x="152" y="470" width="998" height="20" fill="#FEE2E2"/>
+  <line x1="152" y1="470" x2="1150" y2="470" stroke="#DC2626" stroke-width="3"/>
+  <text x="1080" y="462" text-anchor="end" font-size="18" fill="#DC2626">порог чувствительности приёмника -20 дБм</text>
+
+  <!-- уровень сигнала: 0 → разъём -0,75 → 40 км -10 → разъём -0,75 → -11,5 -->
+  <polyline points="200,110 300,110 300,123.5 400,123.5 900,303.5 1000,303.5 1000,317 1100,317" fill="none" stroke="#4338CA" stroke-width="6"/>
+  <circle cx="200" cy="110" r="9" fill="#4338CA"/>
+  <circle cx="1100" cy="317" r="9" fill="#4338CA"/>
+
+  <g font-size="18" fill="#0E1830">
+    <text x="200" y="95" text-anchor="middle">лазер 0 дБм (1 мВт)</text>
+    <text x="300" y="160" text-anchor="middle">разъём -0,75 дБ</text>
+    <text x="560" y="265" text-anchor="middle">40 км волокна × 0,25 дБ/км = -10 дБ</text>
+    <text x="1000" y="280" text-anchor="middle">разъём -0,75 дБ</text>
+    <text x="1085" y="350" text-anchor="end">приёмник -11,5 дБм</text>
+  </g>
+
+  <!-- запас -->
+  <line x1="1100" y1="330" x2="1100" y2="462" stroke="#0F766E" stroke-width="3"/>
+  <polygon points="1100,470 1092,455 1108,455" fill="#0F766E"/>
+  <text x="1090" y="410" text-anchor="end" font-size="20" font-weight="bold" fill="#0F766E">запас 8,5 дБ</text>
+
+  <text x="600" y="530" text-anchor="middle" font-size="19" fill="#475569">0 - 0,75 - 10 - 0,75 = -11,5 дБм, это выше порога -20 дБм: линия работает с запасом</text>
+</svg>
