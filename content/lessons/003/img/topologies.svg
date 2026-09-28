@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#FFFFFF"/>
+  <text x="600" y="50" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Основные топологии</text>
+
+  <!-- 1. Полносвязная (200, 220) -->
+  <g stroke="#94A3B8" stroke-width="3">
+    <line x1="200" y1="130" x2="290" y2="195"/><line x1="200" y1="130" x2="255" y2="300"/><line x1="200" y1="130" x2="145" y2="300"/><line x1="200" y1="130" x2="110" y2="195"/>
+    <line x1="290" y1="195" x2="255" y2="300"/><line x1="290" y1="195" x2="145" y2="300"/><line x1="290" y1="195" x2="110" y2="195"/>
+    <line x1="255" y1="300" x2="145" y2="300"/><line x1="255" y1="300" x2="110" y2="195"/><line x1="145" y1="300" x2="110" y2="195"/>
+  </g>
+  <g fill="#14B8A6"><circle cx="200" cy="130" r="18"/><circle cx="290" cy="195" r="18"/><circle cx="255" cy="300" r="18"/><circle cx="145" cy="300" r="18"/><circle cx="110" cy="195" r="18"/></g>
+  <text x="200" y="360" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Полносвязная</text>
+  <text x="200" y="390" text-anchor="middle" font-size="18" fill="#475569">каждый с каждым: N(N-1)/2 линий</text>
+
+  <!-- 2. Звезда (600, 220) -->
+  <g stroke="#94A3B8" stroke-width="3">
+    <line x1="600" y1="215" x2="600" y2="120"/><line x1="600" y1="215" x2="695" y2="170"/><line x1="600" y1="215" x2="695" y2="275"/>
+    <line x1="600" y1="215" x2="600" y2="310"/><line x1="600" y1="215" x2="505" y2="275"/><line x1="600" y1="215" x2="505" y2="170"/>
+  </g>
+  <rect x="572" y="190" width="56" height="50" rx="8" fill="#0E1830"/>
+  <g fill="#14B8A6"><circle cx="600" cy="120" r="18"/><circle cx="695" cy="170" r="18"/><circle cx="695" cy="275" r="18"/><circle cx="600" cy="310" r="18"/><circle cx="505" cy="275" r="18"/><circle cx="505" cy="170" r="18"/></g>
+  <text x="600" y="360" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Звезда</text>
+  <text x="600" y="390" text-anchor="middle" font-size="18" fill="#475569">все через центральное устройство</text>
+
+  <!-- 3. Дерево (1000, 220) -->
+  <g stroke="#94A3B8" stroke-width="3">
+    <line x1="1000" y1="125" x2="920" y2="210"/><line x1="1000" y1="125" x2="1080" y2="210"/>
+    <line x1="920" y1="210" x2="880" y2="300"/><line x1="920" y1="210" x2="960" y2="300"/>
+    <line x1="1080" y1="210" x2="1040" y2="300"/><line x1="1080" y1="210" x2="1120" y2="300"/>
+  </g>
+  <rect x="975" y="103" width="50" height="44" rx="8" fill="#0E1830"/>
+  <rect x="895" y="188" width="50" height="44" rx="8" fill="#0E1830"/>
+  <rect x="1055" y="188" width="50" height="44" rx="8" fill="#0E1830"/>
+  <g fill="#14B8A6"><circle cx="880" cy="300" r="18"/><circle cx="960" cy="300" r="18"/><circle cx="1040" cy="300" r="18"/><circle cx="1120" cy="300" r="18"/></g>
+  <text x="1000" y="360" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Дерево</text>
+  <text x="1000" y="390" text-anchor="middle" font-size="18" fill="#475569">звёзды, соединённые в иерархию</text>
+
+  <!-- 4. Кольцо (200, 560) -->
+  <circle cx="200" cy="545" r="90" fill="none" stroke="#94A3B8" stroke-width="3"/>
+  <g fill="#14B8A6"><circle cx="200" cy="455" r="18"/><circle cx="290" cy="545" r="18"/><circle cx="200" cy="635" r="18"/><circle cx="110" cy="545" r="18"/>
+  <circle cx="264" cy="481" r="18"/><circle cx="264" cy="609" r="18"/><circle cx="136" cy="609" r="18"/><circle cx="136" cy="481" r="18"/></g>
+  <text x="200" y="690" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Кольцо</text>
+
+  <!-- 5. Общая шина (600, 560) -->
+  <line x1="450" y1="545" x2="750" y2="545" stroke="#0E1830" stroke-width="6"/>
+  <g stroke="#94A3B8" stroke-width="3">
+    <line x1="480" y1="545" x2="480" y2="485"/><line x1="560" y1="545" x2="560" y2="605"/><line x1="640" y1="545" x2="640" y2="485"/><line x1="720" y1="545" x2="720" y2="605"/>
+  </g>
+  <g fill="#14B8A6"><circle cx="480" cy="480" r="18"/><circle cx="560" cy="610" r="18"/><circle cx="640" cy="480" r="18"/><circle cx="720" cy="610" r="18"/></g>
+  <text x="600" y="690" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Общая шина</text>
+  <text x="600" y="660" text-anchor="middle" font-size="18" fill="#DC2626">каждый слышит всех</text>
+
+  <!-- 6. Ячеистая (1000, 560) -->
+  <g stroke="#94A3B8" stroke-width="3">
+    <line x1="900" y1="480" x2="1000" y2="470"/><line x1="1000" y1="470" x2="1100" y2="490"/><line x1="900" y1="480" x2="950" y2="560"/>
+    <line x1="1000" y1="470" x2="950" y2="560"/><line x1="1000" y1="470" x2="1060" y2="570"/><line x1="1100" y1="490" x2="1060" y2="570"/>
+    <line x1="950" y1="560" x2="1060" y2="570"/><line x1="950" y1="560" x2="920" y2="630"/><line x1="1060" y1="570" x2="1080" y2="630"/><line x1="920" y1="630" x2="1080" y2="630"/>
+  </g>
+  <g fill="#14B8A6"><circle cx="900" cy="480" r="16"/><circle cx="1000" cy="470" r="16"/><circle cx="1100" cy="490" r="16"/><circle cx="950" cy="560" r="16"/>
+  <circle cx="1060" cy="570" r="16"/><circle cx="920" cy="630" r="16"/><circle cx="1080" cy="630" r="16"/></g>
+  <text x="1000" y="690" text-anchor="middle" font-size="24" font-weight="bold" fill="#0E1830">Ячеистая</text>
+</svg>
