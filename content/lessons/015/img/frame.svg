@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Кадр Ethernet II</text>
+
+  <!-- поля -->
+  <g stroke="#0E1830" stroke-width="2" font-size="18" text-anchor="middle">
+    <rect x="40" y="110" width="140" height="80" fill="#E2E8F0"/>
+    <rect x="180" y="110" width="150" height="80" fill="#C7D2FE"/>
+    <rect x="330" y="110" width="150" height="80" fill="#CCFBF1"/>
+    <rect x="480" y="110" width="110" height="80" fill="#FDE68A"/>
+    <rect x="590" y="110" width="420" height="80" fill="#F1F5F9"/>
+    <rect x="1010" y="110" width="150" height="80" fill="#FECACA"/>
+  </g>
+  <g font-size="18" text-anchor="middle" fill="#0E1830">
+    <text x="110" y="145">преамбула</text><text x="110" y="170">и SFD</text>
+    <text x="255" y="145">получатель</text><text x="255" y="170">(DA)</text>
+    <text x="405" y="145">отправитель</text><text x="405" y="170">(SA)</text>
+    <text x="535" y="145">тип</text><text x="535" y="170">EtherType</text>
+    <text x="800" y="145">данные</text><text x="800" y="170">например, IP-пакет</text>
+    <text x="1085" y="145">FCS</text><text x="1085" y="170">CRC-32</text>
+  </g>
+  <g font-size="18" text-anchor="middle" fill="#475569">
+    <text x="110" y="220">7 + 1 байт</text>
+    <text x="255" y="220">6 байт</text>
+    <text x="405" y="220">6 байт</text>
+    <text x="535" y="220">2 байта</text>
+    <text x="800" y="220">46-1500 байт</text>
+    <text x="1085" y="220">4 байта</text>
+  </g>
+
+  <!-- кадр 64-1518 -->
+  <line x1="180" y1="250" x2="1160" y2="250" stroke="#0E1830" stroke-width="2"/>
+  <line x1="180" y1="242" x2="180" y2="258" stroke="#0E1830" stroke-width="2"/>
+  <line x1="1160" y1="242" x2="1160" y2="258" stroke="#0E1830" stroke-width="2"/>
+  <text x="670" y="278" text-anchor="middle" font-size="18" fill="#0E1830">сам кадр: от 64 до 1518 байт; преамбулу добавляет и снимает сетевая карта</text>
+
+  <!-- EtherType -->
+  <rect x="40" y="310" width="540" height="180" rx="12" fill="#FFFBEB" stroke="#B45309" stroke-width="2"/>
+  <text x="60" y="345" font-size="20" font-weight="bold" fill="#0E1830">Частые значения EtherType</text>
+  <g font-size="18" fill="#0E1830" font-family="monospace">
+    <text x="60" y="380">0x0800  IPv4</text>
+    <text x="60" y="408">0x86DD  IPv6</text>
+    <text x="60" y="436">0x0806  ARP</text>
+    <text x="60" y="464">0x8100  метка VLAN</text>
+  </g>
+
+  <!-- биты MAC -->
+  <rect x="620" y="310" width="540" height="180" rx="12" fill="#EEF2FF" stroke="#4338CA" stroke-width="2"/>
+  <text x="640" y="345" font-size="20" font-weight="bold" fill="#0E1830">Первый байт MAC-адреса</text>
+  <g font-family="monospace" font-size="22" text-anchor="middle">
+    <rect x="650" y="362" width="44" height="40" fill="#FFFFFF" stroke="#94A3B8"/><text x="672" y="390">x</text>
+    <rect x="694" y="362" width="44" height="40" fill="#FFFFFF" stroke="#94A3B8"/><text x="716" y="390">x</text>
+    <rect x="738" y="362" width="44" height="40" fill="#FFFFFF" stroke="#94A3B8"/><text x="760" y="390">x</text>
+    <rect x="782" y="362" width="44" height="40" fill="#FFFFFF" stroke="#94A3B8"/><text x="804" y="390">x</text>
+    <rect x="826" y="362" width="44" height="40" fill="#FFFFFF" stroke="#94A3B8"/><text x="848" y="390">x</text>
+    <rect x="870" y="362" width="44" height="40" fill="#FFFFFF" stroke="#94A3B8"/><text x="892" y="390">x</text>
+    <rect x="914" y="362" width="44" height="40" fill="#C7D2FE" stroke="#4338CA"/><text x="936" y="388" font-size="15">U/L</text>
+    <rect x="958" y="362" width="44" height="40" fill="#FDE68A" stroke="#B45309"/><text x="980" y="388" font-size="15">I/G</text>
+  </g>
+  <g font-size="16" fill="#0E1830">
+    <text x="640" y="432">I/G (младший бит): 0 - один интерфейс, 1 - группа</text>
+    <text x="640" y="456">U/L: 0 - адрес от производителя (OUI), 1 - локальный</text>
+    <text x="640" y="480">в линию младший бит (I/G) уходит первым</text>
+  </g>
+</svg>
