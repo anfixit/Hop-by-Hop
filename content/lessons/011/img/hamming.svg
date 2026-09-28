@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Расстояние Хэмминга на примере кода {000, 111}</text>
+  <text x="600" y="82" text-anchor="middle" font-size="20" fill="#475569">допустимы только два слова; каждый шаг - переворот одного бита</text>
+
+  <line x1="190" y1="230" x2="1010" y2="230" stroke="#94A3B8" stroke-width="5"/>
+
+  <!-- допустимые -->
+  <circle cx="190" cy="230" r="58" fill="#0F766E"/>
+  <text x="190" y="241" text-anchor="middle" font-size="32" font-weight="bold" fill="#FFFFFF">000</text>
+  <circle cx="1010" cy="230" r="58" fill="#0F766E"/>
+  <text x="1010" y="241" text-anchor="middle" font-size="32" font-weight="bold" fill="#FFFFFF">111</text>
+  <!-- недопустимые -->
+  <circle cx="463" cy="230" r="48" fill="#FFFFFF" stroke="#DC2626" stroke-width="4"/>
+  <text x="463" y="240" text-anchor="middle" font-size="28" fill="#991B1B">001</text>
+  <circle cx="737" cy="230" r="48" fill="#FFFFFF" stroke="#DC2626" stroke-width="4"/>
+  <text x="737" y="240" text-anchor="middle" font-size="28" fill="#991B1B">011</text>
+
+  <g font-size="18" fill="#475569" text-anchor="middle">
+    <text x="190" y="315">допустимое</text>
+    <text x="463" y="315">недопустимое</text>
+    <text x="737" y="315">недопустимое</text>
+    <text x="1010" y="315">допустимое</text>
+  </g>
+  <text x="600" y="138" text-anchor="middle" font-size="22" font-weight="bold" fill="#0E1830">d = 3 шага</text>
+  <line x1="190" y1="152" x2="1010" y2="152" stroke="#0E1830" stroke-width="2"/>
+  <line x1="190" y1="144" x2="190" y2="160" stroke="#0E1830" stroke-width="2"/>
+  <line x1="1010" y1="144" x2="1010" y2="160" stroke="#0E1830" stroke-width="2"/>
+
+  <!-- выводы -->
+  <rect x="60" y="355" width="520" height="130" rx="14" fill="#F0FDFA" stroke="#0F766E" stroke-width="2"/>
+  <text x="80" y="390" font-size="20" font-weight="bold" fill="#0F766E">Отправили 000, одна ошибка: пришло 001</text>
+  <text x="80" y="422" font-size="19" fill="#0E1830">001 ближе к 000 (1 шаг), чем к 111 (2 шага):</text>
+  <text x="80" y="452" font-size="19" fill="#0E1830">исправляем на 000. Код исправляет (d-1)/2 = 1</text>
+
+  <rect x="620" y="355" width="520" height="130" rx="14" fill="#FEF2F2" stroke="#DC2626" stroke-width="2"/>
+  <text x="640" y="390" font-size="20" font-weight="bold" fill="#991B1B">Отправили 000, две ошибки: пришло 011</text>
+  <text x="640" y="422" font-size="19" fill="#0E1830">Исправление даст 111 - неверно. Но слово</text>
+  <text x="640" y="452" font-size="19" fill="#0E1830">недопустимое: обнаружить можно d-1 = 2 ошибки</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">CRC ловит помехи, но не людей</text>
+
+  <g font-family="monospace" font-size="22">
+    <!-- 1: помеха -->
+    <text x="40" y="120" font-family="sans-serif" font-size="21" font-weight="bold" fill="#0E1830">1. Помеха перевернула бит</text>
+    <rect x="40" y="140" width="420" height="50" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/>
+    <text x="55" y="173" fill="#0E1830">Pay 120 to Alice</text>
+    <rect x="470" y="140" width="190" height="50" rx="8" fill="#E0E7FF" stroke="#4338CA" stroke-width="2"/>
+    <text x="485" y="173" fill="#312E81">CRC 17a1e928</text>
+
+    <!-- 2: атакующий -->
+    <text x="40" y="270" font-family="sans-serif" font-size="21" font-weight="bold" fill="#0E1830">2. Атакующий перевернул биты и поправил CRC</text>
+    <rect x="40" y="290" width="420" height="50" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/>
+    <text x="55" y="323" fill="#0E1830">Pay 900 to Alice</text>
+    <rect x="470" y="290" width="190" height="50" rx="8" fill="#E0E7FF" stroke="#4338CA" stroke-width="2"/>
+    <text x="485" y="323" fill="#312E81">CRC 11ad9fd6</text>
+
+    <!-- 3: HMAC -->
+    <text x="40" y="420" font-family="sans-serif" font-size="21" font-weight="bold" fill="#0E1830">3. То же, но вместо CRC - HMAC с секретным ключом</text>
+    <rect x="40" y="440" width="420" height="50" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/>
+    <text x="55" y="473" fill="#0E1830">Pay 900 to Alice</text>
+    <rect x="470" y="440" width="190" height="50" rx="8" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+    <text x="485" y="473" fill="#78350F">MAC 82bb55ff</text>
+    <text x="470" y="512" font-family="sans-serif" font-size="16" fill="#78350F">старый MAC от "Pay 100"</text>
+  </g>
+
+  <g font-size="20">
+    <text x="690" y="160" fill="#0F766E" font-weight="bold">CRC не сходится - кадр выброшен</text>
+    <text x="690" y="186" fill="#475569">случайную ошибку поймали</text>
+    <text x="690" y="310" fill="#DC2626" font-weight="bold">CRC сходится - подделка принята</text>
+    <text x="690" y="336" fill="#475569">поправку считают без знания текста</text>
+    <text x="690" y="460" fill="#0F766E" font-weight="bold">MAC не сходится - подделка отвергнута</text>
+    <text x="690" y="486" fill="#475569">нужен 0d60cfe8, но без ключа его не вычислить</text>
+  </g>
+  <text x="600" y="540" text-anchor="middle" font-size="18" fill="#475569">значения CRC и MAC - из примеров урока; в строке 1 помеха превратила 0 в 2 (один бит)</text>
+</svg>
