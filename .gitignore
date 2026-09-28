@@ -225,3 +225,4 @@ books_text/
 # Локальные данные бота
 *.sqlite3
 *.db
+data/
