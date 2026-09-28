@@ -84,7 +84,12 @@ def _load_quiz(items: list, where: str) -> tuple[QuizQuestion, ...]:
     quiz = []
     for i, item in enumerate(items, start=1):
         at = f"{where}, тест #{i}"
-        options = tuple(str(o) for o in _require(item, "options", at))
+        raw = _require(item, "options", at)
+        # "Текст: пояснение" без кавычек YAML читает как словарь, и на кнопке окажется {'Текст': ...}
+        for o in raw:
+            if not isinstance(o, (str, int, float)):
+                raise ContentError(f"{at}: вариант {o!r} не строка - возьми его в кавычки")
+        options = tuple(str(o) for o in raw)
         answer = int(_require(item, "answer", at))
         if not 2 <= len(options) <= MAX_OPTIONS:
             raise ContentError(f"{at}: вариантов должно быть от 2 до {MAX_OPTIONS}")

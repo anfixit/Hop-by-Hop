@@ -32,6 +32,9 @@ def test_quiz_validation():
     with pytest.raises(ContentError):
         _load_quiz([{"q": "?", "options": ["a", "a"], "answer": 0, "explain": "x"}], "t")
     assert _load_quiz([{"q": "?", "options": ["a", "b"], "answer": 0, "explain": "x"}], "t")[0].answer == 0
+    # вариант "DNS: пояснение" без кавычек YAML превращает в словарь
+    with pytest.raises(ContentError):
+        _load_quiz([{"q": "?", "options": [{"DNS": "x"}, "b"], "answer": 0, "explain": "x"}], "t")
 
 
 def test_cost_with_cache():
