@@ -97,7 +97,7 @@ def markdown_to_nodes(text: str) -> list:
 
 def split_title(text: str) -> tuple[str, str]:
     """Первая строка вида '# Заголовок' становится заголовком страницы."""
-    first, _, rest = text.lstrip().partition("\n")
+    first, _, rest = text.lstrip("\ufeff \n").partition("\n")
     if first.startswith("# "):
         return first[2:].strip(), rest
     raise ValueError("lesson.md должен начинаться со строки '# Заголовок'")

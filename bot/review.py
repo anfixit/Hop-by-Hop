@@ -1,4 +1,4 @@
-﻿"""Проверка открытых ответов через Claude API и учёт стоимости."""
+"""Проверка открытых ответов через Claude API и учёт стоимости."""
 import json
 import logging
 from dataclasses import dataclass

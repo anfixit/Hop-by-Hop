@@ -1,4 +1,4 @@
-﻿name: Telegram notify
+name: Telegram notify
 description: Отправить итог пайплайна в Telegram
 
 inputs:

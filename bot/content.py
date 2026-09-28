@@ -110,7 +110,7 @@ def _load_open(items: list, where: str) -> tuple[OpenQuestion, ...]:
 
 def load_lesson(folder: Path, telegraph: dict[str, dict]) -> Lesson:
     where = folder.name
-    meta = yaml.safe_load((folder / "lesson.yaml").read_text(encoding="utf-8")) or {}
+    meta = yaml.safe_load((folder / "lesson.yaml").read_text(encoding="utf-8-sig")) or {}
     text_path = folder / "lesson.md"
     if not text_path.exists():
         raise ContentError(f"{where}: нет lesson.md")

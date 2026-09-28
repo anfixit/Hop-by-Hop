@@ -1,4 +1,4 @@
-﻿# Hop-by-Hop
+# Hop-by-Hop
 
 Публичный Telegram-бот с курсом по компьютерным сетям: от битов и Ethernet до TLS 1.3, современных прокси-протоколов (Xray, VLESS, REALITY, XHTTP, sing-box) и OpenWrt, с акцентом на информационную безопасность.
 
