@@ -36,5 +36,5 @@ jobs:
         with:
           status: ${{ needs.test.result }}
           title: Тесты
-          bot-token: ${{ secrets.BOT_TOKEN }}
+          bot-token: ${{ secrets.NOTIFY_BOT_TOKEN }}
           chat-id: ${{ secrets.NOTIFY_CHAT_ID }}
