@@ -45,7 +45,7 @@ def test_cost_with_cache():
 def test_telegraph_headings_and_tables():
     nodes = markdown_to_nodes("## Раздел\n\n| a | b |\n|---|---|\n| 1 | 22 |\n\ntext **bold**")
     assert nodes[0] == {"tag": "h3", "children": ["Раздел"]}
-    assert nodes[1]["tag"] == "pre" and "22" in nodes[1]["children"][0]
+    assert nodes[1] == {"tag": "ul", "children": [{"tag": "li", "children": [{"tag": "strong", "children": ["1"]}, {"tag": "br"}, "b: 22"]}]}
     assert nodes[2] == {"tag": "p", "children": ["text ", {"tag": "strong", "children": ["bold"]}]}
 
 

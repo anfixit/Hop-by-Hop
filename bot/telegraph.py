@@ -1,7 +1,7 @@
 """Markdown урока -> узлы Telegraph (https://telegra.ph/api#Node) и клиент API.
 
 Telegraph понимает ограниченный набор тегов: заголовки только h3/h4, таблиц нет.
-Поэтому h1/h2 превращаются в h3, h3+ в h4, а таблицы - в моноширинный текст.
+Поэтому h1/h2 превращаются в h3, h3+ в h4, а таблицы - в список карточек.
 """
 import json
 import urllib.parse
@@ -58,7 +58,7 @@ class _Builder(HTMLParser):
                 self.table[-1].append("".join(self.cell).strip())
                 self.cell = None
             elif tag == "table":
-                self._children().append({"tag": "pre", "children": [_render_table(self.table)]})
+                self._children().append(_table_as_list(self.table))
                 self.table = None
             return
         tag = RENAME.get(tag, tag)
@@ -78,14 +78,23 @@ class _Builder(HTMLParser):
         self._children().append(data)
 
 
-def _render_table(rows: list[list[str]]) -> str:
+def _table_as_list(rows: list[list[str]]) -> dict:
+    """Таблица -> список карточек: моноширинные таблицы не читаются на телефоне.
+
+    Каждая строка становится пунктом: первая ячейка жирным, остальные - "Заголовок: значение".
+    """
     rows = [r for r in rows if r]
-    if not rows:
-        return ""
-    widths = [max(len(r[i]) if i < len(r) else 0 for r in rows) for i in range(max(map(len, rows)))]
-    lines = [" | ".join(c.ljust(w) for c, w in zip(r, widths)).rstrip() for r in rows]
-    lines.insert(1, "-+-".join("-" * w for w in widths))
-    return "\n".join(lines)
+    header, body = (rows[0], rows[1:]) if len(rows) > 1 else ([], rows)
+    items = []
+    for row in body:
+        children: list = [{"tag": "strong", "children": [row[0]]}] if row and row[0] else []
+        for i, cell in enumerate(row[1:], start=1):
+            if not cell:
+                continue
+            label = header[i] if i < len(header) and header[i] else ""
+            children += [{"tag": "br"}, f"{label}: {cell}" if label else cell]
+        items.append({"tag": "li", "children": children})
+    return {"tag": "ul", "children": items}
 
 
 def _figures(nodes: list, resolve_src) -> list:
