@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="50" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Из чего складывается задержка пакета</text>
+
+  <!-- схема пути -->
+  <rect x="40" y="100" width="180" height="70" rx="10" fill="#CCFBF1" stroke="#0F766E" stroke-width="2"/>
+  <text x="130" y="143" text-anchor="middle" font-size="22" fill="#0E1830">Отправитель</text>
+  <rect x="525" y="100" width="150" height="70" rx="10" fill="#0E1830"/>
+  <text x="600" y="143" text-anchor="middle" font-size="22" fill="#FFFFFF">Коммутатор</text>
+  <rect x="980" y="100" width="180" height="70" rx="10" fill="#CCFBF1" stroke="#0F766E" stroke-width="2"/>
+  <text x="1070" y="143" text-anchor="middle" font-size="22" fill="#0E1830">Получатель</text>
+  <line x1="220" y1="135" x2="525" y2="135" stroke="#94A3B8" stroke-width="5"/>
+  <line x1="675" y1="135" x2="980" y2="135" stroke="#94A3B8" stroke-width="5"/>
+
+  <!-- компоненты -->
+  <g font-size="22">
+    <rect x="60" y="230" width="36" height="36" rx="6" fill="#14B8A6"/>
+    <text x="110" y="256" font-weight="bold" fill="#0E1830">Передача в линию</text>
+    <text x="110" y="286" fill="#475569">размер пакета / скорость линии: 1500 байт по 100 Мбит/с = 0,12 мс</text>
+
+    <rect x="60" y="320" width="36" height="36" rx="6" fill="#6366F1"/>
+    <text x="110" y="346" font-weight="bold" fill="#0E1830">Распространение сигнала</text>
+    <text x="110" y="376" fill="#475569">расстояние / ~200 000 км/с в оптоволокне: 5000 км = 25 мс</text>
+
+    <rect x="60" y="410" width="36" height="36" rx="6" fill="#F59E0B"/>
+    <text x="110" y="436" font-weight="bold" fill="#0E1830">Очередь в коммутаторе</text>
+    <text x="110" y="466" fill="#475569">зависит от чужого трафика: от нуля до "пакет выброшен"</text>
+
+    <rect x="60" y="500" width="36" height="36" rx="6" fill="#94A3B8"/>
+    <text x="110" y="526" font-weight="bold" fill="#0E1830">Обработка в узле</text>
+    <text x="110" y="556" fill="#475569">разобрать заголовок, выбрать выход: микросекунды - миллисекунды</text>
+  </g>
+
+  <!-- цветные метки на схеме -->
+  <rect x="215" y="180" width="60" height="16" fill="#14B8A6"/>
+  <rect x="275" y="180" width="245" height="16" fill="#6366F1"/>
+  <rect x="530" y="180" width="90" height="16" fill="#F59E0B"/>
+  <rect x="620" y="180" width="50" height="16" fill="#94A3B8"/>
+  <rect x="680" y="180" width="60" height="16" fill="#14B8A6"/>
+  <rect x="740" y="180" width="245" height="16" fill="#6366F1"/>
+  <text x="600" y="215" text-anchor="middle" font-size="18" fill="#475569">на каждом участке пути всё повторяется, а коммутатор ждёт пакет целиком</text>
+</svg>
