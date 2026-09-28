@@ -1,0 +1,105 @@
+﻿name: Деплой
+
+# Запускается после успешных тестов на main (или вручную)
+on:
+  workflow_run:
+    workflows: [Тесты]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/anfixit/hop-by-hop
+
+jobs:
+  deploy:
+    # Выключатель: переменная репозитория DEPLOY_ENABLED=true (Settings -> Variables)
+    if: vars.DEPLOY_ENABLED == 'true' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Сборка и публикация образа
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker build -t "$IMAGE:$GITHUB_SHA" -t "$IMAGE:latest" .
+          docker push "$IMAGE:$GITHUB_SHA"
+          docker push "$IMAGE:latest"
+        env:
+          GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: SSH-доступ к серверу
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          # Строгая проверка ключа сервера: без DEPLOY_KNOWN_HOSTS деплой не пойдёт (защита от MITM)
+          test -n "$KNOWN_HOSTS" || { echo "::error::Не задан секрет DEPLOY_KNOWN_HOSTS"; exit 1; }
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Сборка .env из секретов
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          ADMIN_IDS: ${{ secrets.ADMIN_IDS }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAPH_TOKEN: ${{ secrets.TELEGRAPH_TOKEN }}
+        run: |
+          umask 077
+          {
+            printf 'BOT_TOKEN=%s\n' "$BOT_TOKEN"
+            printf 'ADMIN_IDS=%s\n' "$ADMIN_IDS"
+            printf 'ANTHROPIC_API_KEY=%s\n' "$ANTHROPIC_API_KEY"
+            printf 'TELEGRAPH_TOKEN=%s\n' "$TELEGRAPH_TOKEN"
+          } > deploy/.env
+
+      - name: Выкладка
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          TAG: ${{ github.event.workflow_run.head_sha || github.sha }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: |
+          SSH="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes $DEPLOY_USER@$HOST"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes deploy/compose.yml deploy/.env "$DEPLOY_USER@$HOST:/opt/hopbyhop/"
+          # Токен GHCR живёт только до конца этого запуска; после pull выходим из реестра
+          printf '%s' "$GHCR_TOKEN" | $SSH "docker login ghcr.io -u '$GHCR_USER' --password-stdin >/dev/null"
+          $SSH "cd /opt/hopbyhop && chmod 600 .env \
+            && IMAGE_TAG='$TAG' docker compose pull -q \
+            && IMAGE_TAG='$TAG' docker compose up -d --remove-orphans \
+            ; rc=\$?; docker logout ghcr.io >/dev/null; docker image prune -f >/dev/null; exit \$rc"
+          sleep 15
+          $SSH "cd /opt/hopbyhop && docker compose ps --format '{{.Service}}: {{.State}} {{.Status}}' && docker compose logs --tail 20 bot"
+          $SSH "cd /opt/hopbyhop && test \"\$(docker compose ps --format '{{.State}}' bot)\" = running"
+
+      - name: Убрать секреты с раннера
+        if: always()
+        run: rm -f deploy/.env ~/.ssh/deploy_key
+
+  notify:
+    needs: deploy
+    if: always() && needs.deploy.result != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/actions
+      - uses: ./.github/actions/telegram-notify
+        with:
+          status: ${{ needs.deploy.result }}
+          title: Деплой
+          bot-token: ${{ secrets.NOTIFY_BOT_TOKEN }}
+          chat-id: ${{ secrets.NOTIFY_CHAT_ID }}

@@ -1,0 +1,25 @@
+# Лежит на сервере в /opt/hopbyhop/compose.yml; туда его копирует workflow деплоя.
+services:
+  bot:
+    image: ghcr.io/anfixit/hop-by-hop:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - botdata:/data
+    # Жёсткие ограничения: бот только ходит наружу в Telegram и Anthropic
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+volumes:
+  botdata:

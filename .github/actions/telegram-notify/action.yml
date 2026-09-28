@@ -1,4 +1,4 @@
-name: Telegram notify
+﻿name: Telegram notify
 description: Отправить итог пайплайна в Telegram
 
 inputs:
@@ -28,7 +28,7 @@ runs:
         REPO: ${{ github.repository }}
         REF: ${{ github.ref_name }}
         ACTOR: ${{ github.actor }}
-        COMMIT_MSG: ${{ github.event.head_commit.message || github.event.pull_request.title || '' }}
+        COMMIT_MSG: ${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message || github.event.pull_request.title || '' }}
         SHA: ${{ github.sha }}
         RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
