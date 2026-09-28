@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <g font-family="sans-serif">
+    <text x="600" y="55" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Злоумышленник на пути данных: три вопроса безопасности</text>
+
+    <!-- путь -->
+    <line x1="200" y1="190" x2="1000" y2="190" stroke="#94A3B8" stroke-width="6"/>
+    <rect x="40" y="150" width="160" height="80" rx="12" fill="#CCFBF1" stroke="#0F766E" stroke-width="3"/>
+    <text x="120" y="198" text-anchor="middle" font-size="26" fill="#0E1830">Клиент</text>
+    <rect x="1000" y="150" width="160" height="80" rx="12" fill="#0E1830"/>
+    <text x="1080" y="198" text-anchor="middle" font-size="26" fill="#FFFFFF">Сервер</text>
+    <text x="400" y="170" text-anchor="middle" font-size="21" fill="#475569">запрос и ответ</text>
+
+    <rect x="500" y="155" width="200" height="70" rx="35" fill="#FEE2E2" stroke="#DC2626" stroke-width="4"/>
+    <text x="600" y="198" text-anchor="middle" font-size="22" font-weight="bold" fill="#991B1B">злоумышленник</text>
+
+    <!-- связи к карточкам -->
+    <g stroke="#FCA5A5" stroke-width="3">
+      <line x1="540" y1="225" x2="230" y2="360"/>
+      <line x1="600" y1="225" x2="600" y2="360"/>
+      <line x1="660" y1="225" x2="970" y2="360"/>
+    </g>
+
+    <!-- карточки -->
+    <rect x="70" y="360" width="320" height="170" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="230" y="405" text-anchor="middle" font-size="26" font-weight="bold" fill="#0E1830">Читает</text>
+    <text x="230" y="445" text-anchor="middle" font-size="22" fill="#0F766E">Конфиденциальность</text>
+    <text x="230" y="485" text-anchor="middle" font-size="19" fill="#475569">пароли, переписка,</text>
+    <text x="230" y="510" text-anchor="middle" font-size="19" fill="#475569">номера карт</text>
+
+    <rect x="440" y="360" width="320" height="170" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="600" y="405" text-anchor="middle" font-size="26" font-weight="bold" fill="#0E1830">Меняет</text>
+    <text x="600" y="445" text-anchor="middle" font-size="22" fill="#0F766E">Целостность</text>
+    <text x="600" y="485" text-anchor="middle" font-size="19" fill="#475569">другой номер счёта,</text>
+    <text x="600" y="510" text-anchor="middle" font-size="19" fill="#475569">чужой код в странице</text>
+
+    <rect x="810" y="360" width="320" height="170" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="970" y="405" text-anchor="middle" font-size="26" font-weight="bold" fill="#0E1830">Не пропускает</text>
+    <text x="970" y="445" text-anchor="middle" font-size="22" fill="#0F766E">Доступность</text>
+    <text x="970" y="485" text-anchor="middle" font-size="19" fill="#475569">сайт не открывается,</text>
+    <text x="970" y="510" text-anchor="middle" font-size="19" fill="#475569">сервис лежит</text>
+
+    <text x="600" y="575" text-anchor="middle" font-size="20" fill="#475569">HTTPS (TLS) защищает от чтения и подмены и проверяет сервер, но не от "не пропускает"</text>
+  </g>
+</svg>

@@ -43,7 +43,8 @@ class _Builder(HTMLParser):
         if tag not in ALLOWED:
             return  # тег разворачивается: дети попадут к родителю
         node: dict = {"tag": tag}
-        keep = {k: v for k, v in attrs if k in ("href", "src") and v}
+        # alt нужен только до сборки figure/figcaption, в Telegraph он не уходит
+        keep = {k: v for k, v in attrs if k in ("href", "src", "alt") and v}
         if keep:
             node["attrs"] = keep
         self._children().append(node)
@@ -87,12 +88,49 @@ def _render_table(rows: list[list[str]]) -> str:
     return "\n".join(lines)
 
 
-def markdown_to_nodes(text: str) -> list:
+def _figures(nodes: list, resolve_src) -> list:
+    """Абзац из одной картинки -> figure с подписью из alt; src проходит через resolve_src."""
+    result = []
+    for node in nodes:
+        if isinstance(node, dict) and node.get("tag") == "img":
+            attrs = node.setdefault("attrs", {})
+            attrs["src"] = resolve_src(attrs.get("src", ""))
+            attrs.pop("alt", None)
+        if isinstance(node, dict) and node.get("children"):
+            kids = [c for c in node["children"] if not (isinstance(c, str) and not c.strip())]
+            if node["tag"] == "p" and len(kids) == 1 and isinstance(kids[0], dict) and kids[0]["tag"] == "img":
+                alt = kids[0].get("attrs", {}).get("alt", "")
+                figure = {"tag": "figure", "children": _figures(kids, resolve_src)}
+                if alt:
+                    figure["children"].append({"tag": "figcaption", "children": [alt]})
+                result.append(figure)
+                continue
+            node["children"] = _figures(node["children"], resolve_src)
+        result.append(node)
+    return result
+
+
+def markdown_to_nodes(text: str, resolve_src=lambda src: src) -> list:
+    """resolve_src превращает относительный путь картинки в абсолютный URL."""
     html = markdown.markdown(text, extensions=["fenced_code", "tables", "sane_lists"])
     builder = _Builder()
     builder.feed(html)
     builder.close()
-    return builder.root
+    return _figures(builder.root, resolve_src)
+
+
+def image_sources(text: str) -> list[str]:
+    """Все src картинок урока (для проверки, что файлы существуют)."""
+    found = []
+
+    def walk(nodes):
+        for n in nodes:
+            if isinstance(n, dict):
+                if n.get("tag") == "img":
+                    found.append(n["attrs"]["src"])
+                walk(n.get("children", []))
+    walk(markdown_to_nodes(text))
+    return found
 
 
 def split_title(text: str) -> tuple[str, str]:

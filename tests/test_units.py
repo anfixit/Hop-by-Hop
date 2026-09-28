@@ -52,3 +52,11 @@ def test_telegraph_headings_and_tables():
 def test_telegraph_code_block():
     nodes = markdown_to_nodes("```\n[ETH | IP]\n```")
     assert nodes == [{"tag": "pre", "children": [{"tag": "code", "children": ["[ETH | IP]\n"]}]}]
+
+
+def test_telegraph_image_becomes_figure():
+    nodes = markdown_to_nodes("text\n\n![Подпись](img/a.png)\n", lambda src: "https://x/" + src)
+    assert nodes[1] == {"tag": "figure", "children": [
+        {"tag": "img", "attrs": {"src": "https://x/img/a.png"}},
+        {"tag": "figcaption", "children": ["Подпись"]},
+    ]}

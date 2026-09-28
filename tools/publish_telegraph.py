@@ -6,16 +6,49 @@
 
 Страница урока создаётся один раз; повторная публикация редактирует её по тому же адресу.
 Адреса хранятся в content/telegraph.json (он в git).
+
+Картинки берутся из репозитория на GitHub по ссылке на конкретный коммит, поэтому перед
+публикацией коммит с картинками должен быть уже отправлен (git push).
 """
 import json
+import shutil
+import subprocess
 import sys
 
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 from bot import telegraph
-from bot.config import REPO_ROOT, Settings
+from bot.config import REPO_ROOT
 from bot.content import LESSONS_DIR, TELEGRAPH_INDEX
 
 AUTHOR = "Hop-by-Hop"
 ENV_FILE = REPO_ROOT / ".env"
+RAW_BASE = "https://raw.githubusercontent.com/anfixit/Hop-by-Hop"
+
+
+class PublishSettings(BaseSettings):
+    """Только то, что нужно для публикации: боту и его токену здесь делать нечего."""
+
+    model_config = SettingsConfigDict(env_file=ENV_FILE, env_file_encoding="utf-8", extra="ignore")
+    telegraph_token: SecretStr | None = None
+    proxy_url: str | None = None
+
+
+GIT = shutil.which("git") or r"C:\Program Files\Git\cmd\git.exe"
+
+
+def _git(*args: str) -> str:
+    return subprocess.run([GIT, *args], cwd=REPO_ROOT, capture_output=True, text=True, check=True).stdout.strip()
+
+
+def _pushed_commit() -> str:
+    """SHA текущего коммита, если он уже есть на GitHub в main, иначе ошибка."""
+    sha = _git("rev-parse", "HEAD")
+    _git("fetch", "-q", "origin")
+    if "origin/main" not in _git("branch", "-r", "--contains", sha).split():
+        raise SystemExit("Текущий коммит ещё не на GitHub: сначала git push, иначе картинки не откроются.")
+    return sha
 
 
 def init() -> None:
@@ -23,8 +56,7 @@ def init() -> None:
     if any(l.startswith("TELEGRAPH_TOKEN=") and l.strip() != "TELEGRAPH_TOKEN=" for l in lines):
         print("TELEGRAPH_TOKEN уже задан в .env, ничего не делаю.")
         return
-    proxy = Settings().proxy_url
-    account = telegraph.call("createAccount", proxy, short_name="HopByHop", author_name=AUTHOR)
+    account = telegraph.call("createAccount", PublishSettings().proxy_url, short_name="HopByHop", author_name=AUTHOR)
     token_line = f"TELEGRAPH_TOKEN={account['access_token']}"
     lines = [token_line if l.startswith("TELEGRAPH_TOKEN=") else l for l in lines]
     if token_line not in lines:
@@ -33,10 +65,20 @@ def init() -> None:
     print("Аккаунт Telegraph создан, токен записан в .env (в консоль не выводится).")
 
 
-def _lesson_nodes(lesson_id: int) -> tuple[str, list]:
-    text = (LESSONS_DIR / f"{lesson_id:03d}" / "lesson.md").read_text(encoding="utf-8")
+def _lesson_nodes(lesson_id: int, commit: str | None) -> tuple[str, list]:
+    folder = LESSONS_DIR / f"{lesson_id:03d}"
+    text = (folder / "lesson.md").read_text(encoding="utf-8-sig")
     title, body = telegraph.split_title(text)
-    nodes = telegraph.markdown_to_nodes(body)
+
+    def resolve(src: str) -> str:
+        if src.startswith(("http://", "https://")):
+            return src
+        if not (folder / src).exists():
+            raise SystemExit(f"Урок {lesson_id}: нет файла картинки {src}")
+        rel = (folder / src).relative_to(REPO_ROOT).as_posix()
+        return f"{RAW_BASE}/{commit or 'main'}/{rel}"
+
+    nodes = telegraph.markdown_to_nodes(body, resolve)
     size = len(json.dumps(nodes, ensure_ascii=False).encode())
     if size > telegraph.MAX_CONTENT_BYTES:
         raise SystemExit(f"Урок {lesson_id}: {size} байт, лимит Telegraph 64 КБ. Раздели урок на части.")
@@ -44,10 +86,10 @@ def _lesson_nodes(lesson_id: int) -> tuple[str, list]:
 
 
 def publish(lesson_id: int) -> None:
-    settings = Settings()
+    settings = PublishSettings()
     if settings.telegraph_token is None:
         raise SystemExit("Нет TELEGRAPH_TOKEN. Сначала: python -m tools.publish_telegraph init")
-    title, nodes = _lesson_nodes(lesson_id)
+    title, nodes = _lesson_nodes(lesson_id, _pushed_commit())
     index = json.loads(TELEGRAPH_INDEX.read_text(encoding="utf-8")) if TELEGRAPH_INDEX.exists() else {}
     params = dict(access_token=settings.telegraph_token.get_secret_value(), title=title, author_name=AUTHOR,
                   content=nodes, return_content="false")
@@ -68,7 +110,7 @@ def main(argv: list[str]) -> None:
         case ["publish", lesson_id]:
             publish(int(lesson_id))
         case ["preview", lesson_id]:
-            title, nodes = _lesson_nodes(int(lesson_id))
+            title, nodes = _lesson_nodes(int(lesson_id), commit=None)
             print(title)
             print(json.dumps(nodes, ensure_ascii=False, indent=1))
         case _:

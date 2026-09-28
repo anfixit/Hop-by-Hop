@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <g font-family="sans-serif">
+    <!-- Каналы -->
+    <text x="60" y="55" font-size="28" font-weight="bold" fill="#0E1830">Коммутация каналов: у каждого разговора свой канал</text>
+    <text x="60" y="118" font-size="24" font-weight="bold" fill="#0F766E">A</text>
+    <rect x="100" y="90" width="1040" height="40" rx="6" fill="#E2E8F0"/>
+    <rect x="130" y="90" width="100" height="40" fill="#14B8A6"/>
+    <rect x="480" y="90" width="80" height="40" fill="#14B8A6"/>
+    <rect x="850" y="90" width="80" height="40" fill="#14B8A6"/>
+    <text x="60" y="178" font-size="24" font-weight="bold" fill="#B45309">B</text>
+    <rect x="100" y="150" width="1040" height="40" rx="6" fill="#E2E8F0"/>
+    <rect x="300" y="150" width="80" height="40" fill="#F59E0B"/>
+    <rect x="640" y="150" width="120" height="40" fill="#F59E0B"/>
+    <rect x="990" y="150" width="70" height="40" fill="#F59E0B"/>
+    <text x="100" y="230" font-size="21" fill="#475569">Серое - канал закреплён за разговором, но простаивает. Его нельзя отдать другому.</text>
+
+    <!-- Пакеты -->
+    <text x="60" y="310" font-size="28" font-weight="bold" fill="#0E1830">Коммутация пакетов: один общий канал</text>
+    <text x="30" y="378" font-size="24" font-weight="bold" fill="#0E1830">A+B</text>
+    <rect x="100" y="350" width="1040" height="40" rx="6" fill="#E2E8F0"/>
+    <rect x="130" y="350" width="100" height="40" fill="#14B8A6"/>
+    <rect x="300" y="350" width="80" height="40" fill="#F59E0B"/>
+    <rect x="480" y="350" width="80" height="40" fill="#14B8A6"/>
+    <rect x="640" y="350" width="120" height="40" fill="#F59E0B"/>
+    <rect x="850" y="350" width="80" height="40" fill="#14B8A6"/>
+    <rect x="990" y="350" width="70" height="40" fill="#F59E0B"/>
+    <text x="100" y="430" font-size="21" fill="#475569">Пакеты обоих разговоров идут по одному каналу, когда у кого-то есть данные.</text>
+    <text x="100" y="460" font-size="21" fill="#475569">Свободное время канала можно отдать третьему, четвёртому и так далее.</text>
+
+    <!-- Ось времени -->
+    <line x1="100" y1="510" x2="1120" y2="510" stroke="#0E1830" stroke-width="3"/>
+    <polygon points="1140,510 1116,500 1116,520" fill="#0E1830"/>
+    <text x="1140" y="545" text-anchor="end" font-size="22" fill="#0E1830">время</text>
+  </g>
+</svg>
