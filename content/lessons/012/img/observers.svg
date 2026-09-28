@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Кто видит твой трафик, если сайт открыт по HTTPS</text>
+
+  <line x1="100" y1="150" x2="1100" y2="150" stroke="#94A3B8" stroke-width="6"/>
+  <g font-size="17" text-anchor="middle">
+    <circle cx="100" cy="150" r="44" fill="#0F766E"/>
+    <text x="100" y="156" fill="#FFFFFF" font-weight="bold">Ты</text>
+    <circle cx="300" cy="150" r="44" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/>
+    <text x="300" y="147" fill="#0E1830">роутер,</text>
+    <text x="300" y="167" fill="#0E1830">Wi-Fi</text>
+    <circle cx="500" cy="150" r="44" fill="#FFFFFF" stroke="#64748B" stroke-width="2"/>
+    <text x="500" y="147" fill="#0E1830">соседи</text>
+    <text x="500" y="167" fill="#0E1830">PON/кабель</text>
+    <circle cx="700" cy="150" r="44" fill="#FEE2E2" stroke="#DC2626" stroke-width="3"/>
+    <text x="700" y="156" fill="#0E1830">провайдер</text>
+    <circle cx="900" cy="150" r="44" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/>
+    <text x="900" y="156" fill="#0E1830">транзит</text>
+    <circle cx="1100" cy="150" r="44" fill="#0E1830"/>
+    <text x="1100" y="156" fill="#FFFFFF">сервер</text>
+  </g>
+
+  <!-- таблица видимости -->
+  <g font-size="18">
+    <text x="40" y="250" font-weight="bold" fill="#0E1830">Видно</text>
+    <text x="40" y="300" fill="#0E1830">адреса, время, объёмы</text>
+    <text x="40" y="350" fill="#0E1830">открытый DNS</text>
+    <text x="40" y="400" fill="#0E1830">имя сайта (SNI)</text>
+    <text x="40" y="450" fill="#0E1830">содержимое</text>
+  </g>
+  <g stroke="#E2E8F0" stroke-width="2">
+    <line x1="40" y1="265" x2="1160" y2="265"/>
+    <line x1="40" y1="315" x2="1160" y2="315"/>
+    <line x1="40" y1="365" x2="1160" y2="365"/>
+    <line x1="40" y1="415" x2="1160" y2="415"/>
+    <line x1="40" y1="465" x2="1160" y2="465"/>
+  </g>
+  <!-- столбцы: роутер 300, доступ 500, провайдер 700, транзит 900, сервер 1100 -->
+  <g font-size="24" font-weight="bold" text-anchor="middle">
+    <text x="300" y="302" fill="#DC2626">да</text><text x="500" y="302" fill="#B45309">объёмы*</text><text x="700" y="302" fill="#DC2626">да</text><text x="900" y="302" fill="#DC2626">да</text><text x="1100" y="302" fill="#DC2626">да</text>
+    <text x="300" y="352" fill="#DC2626">да</text><text x="500" y="352" fill="#0F766E">нет*</text><text x="700" y="352" fill="#DC2626">да</text><text x="900" y="352" fill="#B45309">иногда</text><text x="1100" y="352" fill="#475569">-</text>
+    <text x="300" y="402" fill="#DC2626">да</text><text x="500" y="402" fill="#0F766E">нет*</text><text x="700" y="402" fill="#DC2626">да</text><text x="900" y="402" fill="#DC2626">да</text><text x="1100" y="402" fill="#DC2626">да</text>
+    <text x="300" y="452" fill="#0F766E">нет</text><text x="500" y="452" fill="#0F766E">нет</text><text x="700" y="452" fill="#0F766E">нет</text><text x="900" y="452" fill="#0F766E">нет</text><text x="1100" y="452" fill="#DC2626">да</text>
+  </g>
+
+  <g font-size="17" fill="#475569">
+    <text x="40" y="510">* соседи в PON и кабельной сети физически получают кадры, адресованные тебе, но они обычно зашифрованы;</text>
+    <text x="40" y="534">  видны время и объёмы. Шифрование заканчивается у провайдера, поэтому от него оно не защищает (см. его столбец).</text>
+    <text x="40" y="570">Программы на твоём устройстве видят всё до шифрования. Защита: HTTPS - содержимое,</text>
+    <text x="40" y="594">DoH/DoT - DNS, ECH - имя сайта, VPN - всё до своего сервера (но тогда всё видит владелец VPN).</text>
+  </g>
+</svg>
