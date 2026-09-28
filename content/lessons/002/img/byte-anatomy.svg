@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="55" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Один байт = 8 бит = две hex-цифры</text>
+
+  <!-- веса -->
+  <g font-size="22" fill="#475569" text-anchor="middle">
+    <text x="180" y="125">128</text><text x="300" y="125">64</text><text x="420" y="125">32</text><text x="540" y="125">16</text>
+    <text x="660" y="125">8</text><text x="780" y="125">4</text><text x="900" y="125">2</text><text x="1020" y="125">1</text>
+  </g>
+  <text x="60" y="125" font-size="20" fill="#475569">вес</text>
+
+  <!-- биты -->
+  <g stroke="#0E1830" stroke-width="3">
+    <rect x="130" y="145" width="100" height="100" rx="10" fill="#14B8A6"/>
+    <rect x="250" y="145" width="100" height="100" rx="10" fill="#14B8A6"/>
+    <rect x="370" y="145" width="100" height="100" rx="10" fill="#F1F5F9"/>
+    <rect x="490" y="145" width="100" height="100" rx="10" fill="#F1F5F9"/>
+    <rect x="610" y="145" width="100" height="100" rx="10" fill="#F1F5F9"/>
+    <rect x="730" y="145" width="100" height="100" rx="10" fill="#F1F5F9"/>
+    <rect x="850" y="145" width="100" height="100" rx="10" fill="#F1F5F9"/>
+    <rect x="970" y="145" width="100" height="100" rx="10" fill="#F1F5F9"/>
+  </g>
+  <g font-size="48" font-weight="bold" text-anchor="middle">
+    <text x="180" y="212" fill="#FFFFFF">1</text><text x="300" y="212" fill="#FFFFFF">1</text>
+    <text x="420" y="212" fill="#0E1830">0</text><text x="540" y="212" fill="#0E1830">0</text>
+    <text x="660" y="212" fill="#0E1830">0</text><text x="780" y="212" fill="#0E1830">0</text>
+    <text x="900" y="212" fill="#0E1830">0</text><text x="1020" y="212" fill="#0E1830">0</text>
+  </g>
+  <text x="60" y="205" font-size="20" fill="#475569">биты</text>
+
+  <!-- скобки полубайтов -->
+  <g stroke="#B45309" stroke-width="4" fill="none">
+    <path d="M130 270 L130 285 L590 285 L590 270"/>
+    <path d="M610 270 L610 285 L1070 285 L1070 270"/>
+  </g>
+  <text x="360" y="325" text-anchor="middle" font-size="22" fill="#B45309">старшие 4 бита = 1100 = c</text>
+  <text x="840" y="325" text-anchor="middle" font-size="22" fill="#B45309">младшие 4 бита = 0000 = 0</text>
+
+  <!-- итоги -->
+  <rect x="130" y="370" width="940" height="150" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="28" text-anchor="middle" fill="#0E1830">
+    <text x="290" y="425">двоичная</text>
+    <text x="600" y="425">десятичная</text>
+    <text x="910" y="425">hex</text>
+  </g>
+  <g font-size="36" font-weight="bold" text-anchor="middle" fill="#0F766E">
+    <text x="290" y="480">11000000</text>
+    <text x="600" y="480">128 + 64 = 192</text>
+    <text x="910" y="480">0xc0</text>
+  </g>
+</svg>

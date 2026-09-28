@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="55" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Адреса и номера - это просто байты</text>
+  <text x="600" y="92" text-anchor="middle" font-size="20" fill="#475569">каждый квадрат - один байт</text>
+
+  <!-- порт: 2 байта -->
+  <text x="40" y="160" font-size="24" font-weight="bold" fill="#0E1830">Порт</text>
+  <text x="40" y="188" font-size="18" fill="#475569">2 байта</text>
+  <g fill="#FEF3C7" stroke="#B45309" stroke-width="2">
+    <rect x="250" y="135" width="52" height="52" rx="6"/><rect x="306" y="135" width="52" height="52" rx="6"/>
+  </g>
+  <g font-size="20" text-anchor="middle" fill="#0E1830"><text x="276" y="168">01</text><text x="332" y="168">bb</text></g>
+  <text x="380" y="168" font-size="22" fill="#0F766E">= 443</text>
+
+  <!-- IPv4: 4 байта -->
+  <text x="40" y="260" font-size="24" font-weight="bold" fill="#0E1830">IPv4-адрес</text>
+  <text x="40" y="288" font-size="18" fill="#475569">4 байта</text>
+  <g fill="#CCFBF1" stroke="#0F766E" stroke-width="2">
+    <rect x="250" y="235" width="52" height="52" rx="6"/><rect x="306" y="235" width="52" height="52" rx="6"/>
+    <rect x="362" y="235" width="52" height="52" rx="6"/><rect x="418" y="235" width="52" height="52" rx="6"/>
+  </g>
+  <g font-size="20" text-anchor="middle" fill="#0E1830">
+    <text x="276" y="268">c0</text><text x="332" y="268">a8</text><text x="388" y="268">01</text><text x="444" y="268">0a</text>
+  </g>
+  <text x="492" y="268" font-size="22" fill="#0F766E">= 192.168.1.10</text>
+
+  <!-- MAC: 6 байт -->
+  <text x="40" y="360" font-size="24" font-weight="bold" fill="#0E1830">MAC-адрес</text>
+  <text x="40" y="388" font-size="18" fill="#475569">6 байтов</text>
+  <g fill="#E0E7FF" stroke="#4338CA" stroke-width="2">
+    <rect x="250" y="335" width="52" height="52" rx="6"/><rect x="306" y="335" width="52" height="52" rx="6"/>
+    <rect x="362" y="335" width="52" height="52" rx="6"/><rect x="418" y="335" width="52" height="52" rx="6"/>
+    <rect x="474" y="335" width="52" height="52" rx="6"/><rect x="530" y="335" width="52" height="52" rx="6"/>
+  </g>
+  <g font-size="20" text-anchor="middle" fill="#0E1830">
+    <text x="276" y="368">52</text><text x="332" y="368">54</text><text x="388" y="368">00</text>
+    <text x="444" y="368">12</text><text x="500" y="368">34</text><text x="556" y="368">56</text>
+  </g>
+  <text x="604" y="368" font-size="22" fill="#0F766E">= 52:54:00:12:34:56</text>
+
+  <!-- IPv6: 16 байт -->
+  <text x="40" y="460" font-size="24" font-weight="bold" fill="#0E1830">IPv6-адрес</text>
+  <text x="40" y="488" font-size="18" fill="#475569">16 байтов</text>
+  <g fill="#FCE7F3" stroke="#BE185D" stroke-width="2">
+    <rect x="250" y="435" width="52" height="52" rx="6"/><rect x="306" y="435" width="52" height="52" rx="6"/>
+    <rect x="362" y="435" width="52" height="52" rx="6"/><rect x="418" y="435" width="52" height="52" rx="6"/>
+    <rect x="474" y="435" width="52" height="52" rx="6"/><rect x="530" y="435" width="52" height="52" rx="6"/>
+    <rect x="586" y="435" width="52" height="52" rx="6"/><rect x="642" y="435" width="52" height="52" rx="6"/>
+    <rect x="698" y="435" width="52" height="52" rx="6"/><rect x="754" y="435" width="52" height="52" rx="6"/>
+    <rect x="810" y="435" width="52" height="52" rx="6"/><rect x="866" y="435" width="52" height="52" rx="6"/>
+    <rect x="922" y="435" width="52" height="52" rx="6"/><rect x="978" y="435" width="52" height="52" rx="6"/>
+    <rect x="1034" y="435" width="52" height="52" rx="6"/><rect x="1090" y="435" width="52" height="52" rx="6"/>
+  </g>
+  <g font-size="20" text-anchor="middle" fill="#0E1830">
+    <text x="276" y="468">20</text><text x="332" y="468">01</text><text x="388" y="468">0d</text><text x="444" y="468">b8</text>
+    <text x="500" y="468">00</text><text x="556" y="468">00</text><text x="612" y="468">00</text><text x="668" y="468">00</text>
+    <text x="724" y="468">00</text><text x="780" y="468">00</text><text x="836" y="468">00</text><text x="892" y="468">00</text>
+    <text x="948" y="468">00</text><text x="1004" y="468">00</text><text x="1060" y="468">00</text><text x="1116" y="468">01</text>
+  </g>
+  <text x="250" y="530" font-size="22" fill="#0F766E">= 2001:db8::1   (группы по 2 байта, "::" заменяет подряд идущие нули)</text>
+
+  <text x="600" y="600" text-anchor="middle" font-size="20" fill="#475569">Запись для человека разная, но внутри пакета это одинаково просто байты</text>
+</svg>

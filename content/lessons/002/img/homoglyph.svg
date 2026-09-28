@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="55" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Выглядят одинаково, но это разные байты</text>
+
+  <!-- латинская -->
+  <rect x="120" y="100" width="420" height="300" rx="16" fill="#F0FDFA" stroke="#0F766E" stroke-width="3"/>
+  <text x="330" y="150" text-anchor="middle" font-size="24" fill="#0F766E">латинская буква</text>
+  <text x="330" y="270" text-anchor="middle" font-size="110" fill="#0E1830">a</text>
+  <text x="330" y="345" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">61</text>
+  <text x="330" y="380" text-anchor="middle" font-size="20" fill="#475569">1 байт в UTF-8</text>
+
+  <!-- кириллическая -->
+  <rect x="660" y="100" width="420" height="300" rx="16" fill="#FEF2F2" stroke="#DC2626" stroke-width="3"/>
+  <text x="870" y="150" text-anchor="middle" font-size="24" fill="#DC2626">кириллическая буква</text>
+  <text x="870" y="270" text-anchor="middle" font-size="110" fill="#0E1830">а</text>
+  <text x="870" y="345" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">d0 b0</text>
+  <text x="870" y="380" text-anchor="middle" font-size="20" fill="#475569">2 байта в UTF-8</text>
+
+  <text x="600" y="265" text-anchor="middle" font-size="44" fill="#DC2626">≠</text>
+
+  <text x="600" y="455" text-anchor="middle" font-size="22" fill="#0E1830">Домен с подменённой буквой - это другой домен.</text>
+  <text x="600" y="490" text-anchor="middle" font-size="22" fill="#0E1830">На этом строятся фишинговые ссылки.</text>
+</svg>
