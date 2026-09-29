@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <rect width="1200" height="620" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">IPv4-адрес: 32 бита, сеть и узел</text>
+
+  <!-- пример адреса -->
+  <g font-size="20" text-anchor="middle" font-family="monospace" fill="#0E1830">
+    <rect x="160" y="80" width="220" height="50" fill="#DBEAFE" stroke="#2563EB"/><text x="270" y="112">10000000</text>
+    <rect x="380" y="80" width="220" height="50" fill="#DBEAFE" stroke="#2563EB"/><text x="490" y="112">11010000</text>
+    <rect x="600" y="80" width="220" height="50" fill="#DBEAFE" stroke="#2563EB"/><text x="710" y="112">00000010</text>
+    <rect x="820" y="80" width="220" height="50" fill="#FEF3C7" stroke="#B45309"/><text x="930" y="112">10010111</text>
+  </g>
+  <g font-size="20" text-anchor="middle" fill="#0E1830">
+    <text x="270" y="160">128</text><text x="490" y="160">208</text><text x="710" y="160">2</text><text x="930" y="160">151</text>
+  </g>
+  <text x="490" y="192" text-anchor="middle" font-size="17" fill="#2563EB">номер сети: 128.208.2.0/24</text>
+  <text x="930" y="192" text-anchor="middle" font-size="17" fill="#B45309">номер узла</text>
+  <text x="600" y="222" text-anchor="middle" font-size="16" fill="#475569">Где граница между сетью и узлом, по самому адресу не видно: её задаёт длина префикса (/24) или маска (урок 22)</text>
+
+  <text x="600" y="275" text-anchor="middle" font-size="22" font-weight="bold" fill="#0E1830">Классы адресов (до 1993 года): граница по первым битам</text>
+  <g font-size="17" fill="#0E1830">
+    <text x="60" y="315" font-weight="bold">класс</text><text x="150" y="315" font-weight="bold">начало</text>
+    <text x="260" y="315" font-weight="bold">как делился адрес</text><text x="760" y="315" font-weight="bold">первый байт</text><text x="930" y="315" font-weight="bold">в записи CIDR</text>
+  </g>
+  <g font-size="17" fill="#0E1830">
+    <!-- A -->
+    <text x="75" y="355">A</text><text x="150" y="355" font-family="monospace">0</text>
+    <rect x="260" y="336" width="110" height="28" fill="#DBEAFE" stroke="#2563EB"/><rect x="370" y="336" width="330" height="28" fill="#FEF3C7" stroke="#B45309"/>
+    <text x="315" y="356" text-anchor="middle" font-size="14">сеть 8</text><text x="535" y="356" text-anchor="middle" font-size="14">узел 24</text>
+    <text x="760" y="355">0-127</text><text x="930" y="355">сеть /8</text>
+    <!-- B -->
+    <text x="75" y="400">B</text><text x="150" y="400" font-family="monospace">10</text>
+    <rect x="260" y="381" width="220" height="28" fill="#DBEAFE" stroke="#2563EB"/><rect x="480" y="381" width="220" height="28" fill="#FEF3C7" stroke="#B45309"/>
+    <text x="370" y="401" text-anchor="middle" font-size="14">сеть 16</text><text x="590" y="401" text-anchor="middle" font-size="14">узел 16</text>
+    <text x="760" y="400">128-191</text><text x="930" y="400">сеть /16</text>
+    <!-- C -->
+    <text x="75" y="445">C</text><text x="150" y="445" font-family="monospace">110</text>
+    <rect x="260" y="426" width="330" height="28" fill="#DBEAFE" stroke="#2563EB"/><rect x="590" y="426" width="110" height="28" fill="#FEF3C7" stroke="#B45309"/>
+    <text x="425" y="446" text-anchor="middle" font-size="14">сеть 24</text><text x="645" y="446" text-anchor="middle" font-size="14">узел 8</text>
+    <text x="760" y="445">192-223</text><text x="930" y="445">сеть /24</text>
+    <!-- D -->
+    <text x="75" y="490">D</text><text x="150" y="490" font-family="monospace">1110</text>
+    <rect x="260" y="471" width="440" height="28" fill="#F3E8FF" stroke="#7C3AED"/>
+    <text x="480" y="491" text-anchor="middle" font-size="14">групповой адрес (multicast)</text>
+    <text x="760" y="490">224-239</text><text x="930" y="490">весь блок 224.0.0.0/4</text>
+    <!-- E -->
+    <text x="75" y="535">E</text><text x="150" y="535" font-family="monospace">1111</text>
+    <rect x="260" y="516" width="440" height="28" fill="#E2E8F0" stroke="#64748B"/>
+    <text x="480" y="536" text-anchor="middle" font-size="14">зарезервировано</text>
+    <text x="760" y="535">240-255</text><text x="930" y="535">весь блок 240.0.0.0/4</text>
+  </g>
+  <text x="600" y="590" text-anchor="middle" font-size="16" fill="#475569">С 1993 года классов нет (CIDR): длина префикса любая, а первые биты говорят о классе только по традиции</text>
+</svg>
