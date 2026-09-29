@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Заголовок IPv4: 20 байт + до 40 байт опций</text>
+
+  <!-- шкала битов: 32 бита = 960 px, 30 px на бит, от x=120 -->
+  <g font-size="14" fill="#475569" text-anchor="middle">
+    <text x="120" y="80">0</text><text x="360" y="80">8</text><text x="600" y="80">16</text><text x="840" y="80">24</text><text x="1065" y="80">31</text>
+  </g>
+  <g font-size="16" text-anchor="middle" fill="#0E1830">
+    <!-- строка 1 -->
+    <rect x="120" y="90" width="120" height="56" fill="#DBEAFE" stroke="#2563EB"/><text x="180" y="115">Version</text><text x="180" y="135" font-size="13" fill="#475569">4 бита: 4</text>
+    <rect x="240" y="90" width="120" height="56" fill="#DBEAFE" stroke="#2563EB"/><text x="300" y="115">IHL</text><text x="300" y="135" font-size="13" fill="#475569">длина заголовка</text>
+    <rect x="360" y="90" width="240" height="56" fill="#F3E8FF" stroke="#7C3AED"/><text x="480" y="115">DSCP + ECN</text><text x="480" y="135" font-size="13" fill="#475569">класс обслуживания, перегрузка</text>
+    <rect x="600" y="90" width="480" height="56" fill="#DBEAFE" stroke="#2563EB"/><text x="840" y="115">Total Length</text><text x="840" y="135" font-size="13" fill="#475569">длина пакета целиком, до 65 535</text>
+    <!-- строка 2 -->
+    <rect x="120" y="146" width="480" height="56" fill="#FEF3C7" stroke="#B45309"/><text x="360" y="171">Identification</text><text x="360" y="191" font-size="13" fill="#475569">номер пакета для сборки фрагментов</text>
+    <rect x="600" y="146" width="90" height="56" fill="#FEF3C7" stroke="#B45309"/><text x="645" y="171">флаги</text><text x="645" y="191" font-size="13" fill="#475569">0 DF MF</text>
+    <rect x="690" y="146" width="390" height="56" fill="#FEF3C7" stroke="#B45309"/><text x="885" y="171">Fragment Offset</text><text x="885" y="191" font-size="13" fill="#475569">13 бит, в единицах по 8 байт</text>
+    <!-- строка 3 -->
+    <rect x="120" y="202" width="240" height="56" fill="#FEE2E2" stroke="#B91C1C"/><text x="240" y="227">TTL</text><text x="240" y="247" font-size="13" fill="#475569">минус 1 на каждом маршрутизаторе</text>
+    <rect x="360" y="202" width="240" height="56" fill="#DCFCE7" stroke="#15803D"/><text x="480" y="227">Protocol</text><text x="480" y="247" font-size="13" fill="#475569">1 ICMP, 6 TCP, 17 UDP</text>
+    <rect x="600" y="202" width="480" height="56" fill="#FEE2E2" stroke="#B91C1C"/><text x="840" y="227">Header Checksum</text><text x="840" y="247" font-size="13" fill="#475569">только заголовок, пересчёт на каждом шаге</text>
+    <!-- строка 4-5 -->
+    <rect x="120" y="258" width="960" height="50" fill="#E2E8F0" stroke="#64748B"/><text x="600" y="289">Source Address - 32 бита, адрес отправителя (никем не проверяется)</text>
+    <rect x="120" y="308" width="960" height="50" fill="#E2E8F0" stroke="#64748B"/><text x="600" y="339">Destination Address - 32 бита, адрес получателя</text>
+    <rect x="120" y="358" width="960" height="44" fill="#F8FAFC" stroke="#94A3B8" stroke-dasharray="6 4"/><text x="600" y="386">Options - 0-40 байт, почти не используются</text>
+  </g>
+  <g font-size="14" fill="#475569">
+    <text x="30" y="123">байты 0-3</text><text x="30" y="179">4-7</text><text x="30" y="235">8-11</text><text x="30" y="288">12-15</text><text x="30" y="338">16-19</text>
+  </g>
+
+  <rect x="120" y="425" width="960" height="112" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="17" fill="#0E1830">
+    <text x="140" y="455">Наш пакет из опыта: 45 00 0030 7b1d 4000 40 01 d378 c0000201 c6336402</text>
+    <text x="140" y="483">45 - версия 4, заголовок 5 слов = 20 байт; 0030 - 48 байт; 4000 - DF=1, смещение 0;</text>
+    <text x="140" y="511">40 - TTL 64; 01 - ICMP; d378 - контрольная сумма; 192.0.2.1 -&gt; 198.51.100.2</text>
+  </g>
+</svg>
