@@ -42,3 +42,20 @@ async def test_progress_budget_and_tiers(settings):
             assert await reviews_today(session, 5) == 1
     finally:
         await engine.dispose()
+
+
+async def test_toc_buttons_are_short(settings):
+    from bot.content import load_course
+    from bot.handlers.lessons import render_toc
+
+    engine, db = await init_db(settings)
+    try:
+        course = load_course()
+        text, markup = await render_toc(SimpleNamespace(id=5, username="u", first_name="U"), 0, db, settings, course)
+        buttons = [b for row in markup.inline_keyboard for b in row]
+        # полные названия - в тексте, на кнопках только значок и номер
+        assert all(len(b.text) <= 8 for b in buttons)
+        first = course.ordered(False)[0]
+        assert first.title.split(":")[0] in text
+    finally:
+        await engine.dispose()

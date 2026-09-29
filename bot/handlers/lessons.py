@@ -13,7 +13,8 @@ from bot.handlers.common import btn, kb, sees_drafts
 
 router = Router(name="lessons")
 
-PAGE_SIZE = 8
+PAGE_SIZE = 10
+BUTTONS_PER_ROW = 5
 
 WELCOME = (
     "<b>Hop-by-Hop</b> - курс по компьютерным сетям.\n\n"
@@ -61,7 +62,9 @@ async def render_toc(tg_user, page: int, db, settings: Settings, course: Course)
 
     pages = max(1, -(-len(lessons) // PAGE_SIZE))
     page = min(max(page, 0), pages - 1)
-    rows = []
+    # Длинные названия Telegram обрезает на кнопках, поэтому полные названия идут текстом,
+    # а на кнопках только значок и номер урока, по BUTTONS_PER_ROW в ряд.
+    lines, buttons = [], []
     for lesson in lessons[page * PAGE_SIZE:(page + 1) * PAGE_SIZE]:
         if lesson.id in passed:
             mark = "✅"
@@ -70,14 +73,20 @@ async def render_toc(tg_user, page: int, db, settings: Settings, course: Course)
         else:
             mark = "🔒"
         draft = " [черновик]" if not lesson.published else ""
-        rows.append([btn(f"{mark} {lesson.id}. {lesson.title}{draft}", f"ls:{lesson.id}")])
+        lines.append(f"{mark} {lesson.id}. {escape(lesson.title)}{draft}")
+        buttons.append(btn(f"{mark} {lesson.id}", f"ls:{lesson.id}"))
+    rows = [buttons[i:i + BUTTONS_PER_ROW] for i in range(0, len(buttons), BUTTONS_PER_ROW)]
     nav = []
     if page > 0:
         nav.append(btn("←", f"toc:{page - 1}"))
     if page < pages - 1:
         nav.append(btn("→", f"toc:{page + 1}"))
     done = len(passed & {l.id for l in lessons})
-    text = f"<b>Оглавление</b>\nПройдено: {done} из {len(lessons)}. Страница {page + 1} из {pages}."
+    text = (
+        f"<b>Оглавление</b>\nПройдено: {done} из {len(lessons)}. Страница {page + 1} из {pages}.\n\n"
+        + "\n".join(lines)
+        + "\n\nВыбери номер урока на кнопках ниже."
+    )
     return text, kb(*rows, nav)
 
 
