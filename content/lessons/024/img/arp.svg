@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">ARP: кто здесь 192.0.2.2?</text>
+
+  <g font-size="18" text-anchor="middle">
+    <rect x="80" y="90" width="220" height="80" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="190" y="122" fill="#0E1830">pc1</text><text x="190" y="146" font-size="15" fill="#475569">192.0.2.1  02:..:01</text>
+    <rect x="490" y="90" width="220" height="80" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="600" y="122" fill="#0E1830">pc2</text><text x="600" y="146" font-size="15" fill="#475569">192.0.2.2  02:..:02</text>
+    <rect x="900" y="90" width="220" height="80" rx="10" fill="#0E1830"/>
+    <text x="1010" y="122" fill="#FFFFFF">rtr</text><text x="1010" y="146" font-size="15" fill="#CBD5E1">192.0.2.254  02:..:03</text>
+  </g>
+
+  <!-- запрос всем -->
+  <g stroke="#7C3AED" stroke-width="3">
+    <line x1="190" y1="170" x2="190" y2="220"/>
+    <line x1="190" y1="220" x2="1010" y2="220"/>
+    <line x1="600" y1="220" x2="600" y2="186"/>
+    <line x1="1010" y1="220" x2="1010" y2="186"/>
+  </g>
+  <path d="M600 172 L592 188 L608 188 z" fill="#7C3AED"/>
+  <path d="M1010 172 L1002 188 L1018 188 z" fill="#7C3AED"/>
+  <text x="630" y="252" font-size="17" fill="#7C3AED">1. запрос всем (ff:ff:ff:ff:ff:ff):</text><text x="630" y="276" font-size="17" fill="#7C3AED">"у кого 192.0.2.2? ответь 192.0.2.1, 02:..:01"</text>
+
+  <!-- ответ адресно -->
+  <g stroke="#15803D" stroke-width="3">
+    <line x1="600" y1="170" x2="600" y2="170"/>
+    <path d="M560 170 C 500 300, 300 300, 220 180" fill="none"/>
+  </g>
+  <path d="M212 172 L212 192 L228 184 z" fill="#15803D"/>
+  <text x="380" y="315" text-anchor="middle" font-size="17" fill="#15803D">2. ответ только pc1: "192.0.2.2 - это 02:..:02"</text>
+
+  <rect x="60" y="360" width="1080" height="210" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="17" fill="#0E1830">
+    <text x="80" y="392" font-weight="bold">Что после этого знают участники</text>
+    <text x="80" y="422">pc1 запомнил 192.0.2.2 -&gt; 02:..:02 (из ответа) и шлёт кадры прямо ему.</text>
+    <text x="80" y="450">pc2 запомнил 192.0.2.1 -&gt; 02:..:01 (из запроса): отвечать можно без своего ARP-запроса.</text>
+    <text x="80" y="478">rtr увидел запрос, но он не для него: не отвечает и новую запись не заводит.</text>
+    <text x="80" y="514" font-weight="bold">Записи в ARP-кэше живут недолго:</text>
+    <text x="80" y="542">REACHABLE (связь подтверждена) - STALE (давно не проверяли) - перепроверка - или удаление;</text>
+    <text x="80" y="566">INCOMPLETE - ответа пока нет, FAILED - так и не было; PERMANENT - статическая запись.</text>
+  </g>
+</svg>
