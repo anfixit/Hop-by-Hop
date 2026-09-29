@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">192.0.2.77/26: сеть и широковещательный адрес</text>
+
+  <g font-size="19" fill="#0E1830">
+    <text x="40" y="115">адрес</text>
+    <text x="40" y="175">маска /26</text>
+    <text x="40" y="255">адрес AND маска</text>
+    <text x="40" y="335">сеть OR (NOT маска)</text>
+  </g>
+  <g font-family="monospace" font-size="22" fill="#0E1830">
+    <text x="300" y="115">11000000.00000000.00000010.</text><text x="750" y="115" fill="#2563EB">01</text><text x="783" y="115" fill="#B45309">001101</text>
+    <text x="300" y="175">11111111.11111111.11111111.</text><text x="750" y="175" fill="#2563EB">11</text><text x="783" y="175" fill="#B45309">000000</text>
+    <line x1="300" y1="195" x2="885" y2="195" stroke="#0E1830" stroke-width="2"/>
+    <text x="300" y="255">11000000.00000000.00000010.</text><text x="750" y="255" fill="#2563EB">01</text><text x="783" y="255" fill="#B45309">000000</text>
+    <text x="300" y="335">11000000.00000000.00000010.</text><text x="750" y="335" fill="#2563EB">01</text><text x="783" y="335" fill="#B45309">111111</text>
+  </g>
+  <g font-size="19" fill="#0E1830">
+    <text x="920" y="115">192.0.2.77</text>
+    <text x="920" y="175">255.255.255.192</text>
+    <text x="920" y="255" font-weight="bold">192.0.2.64 - сеть</text>
+    <text x="920" y="335" font-weight="bold">192.0.2.127 - всем</text>
+  </g>
+
+  <rect x="40" y="380" width="1120" height="150" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="18" fill="#0E1830">
+    <text x="60" y="412"><tspan fill="#2563EB" font-weight="bold">синие биты</tspan> - часть номера сети (26 бит), <tspan fill="#B45309" font-weight="bold">оранжевые</tspan> - номер узла (6 бит)</text>
+    <text x="60" y="444">Сеть: номер узла из одних нулей. Широковещательный адрес: из одних единиц.</text>
+    <text x="60" y="476">Адресов 2^6 = 64, узлам достаётся 62: от 192.0.2.65 до 192.0.2.126.</text>
+    <text x="60" y="508">Быстрый счёт: блок = 256 - 192 = 64; 77 лежит в блоке от 64 до 127.</text>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" width="1200" height="460">
+  <rect width="1200" height="460" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">VLSM: сеть 198.51.100.0/24 для 100, 50, 20 и 2 узлов</text>
+
+  <!-- шкала 256 адресов = 1024 px, 4 px на адрес -->
+  <g font-size="17" text-anchor="middle" fill="#0E1830">
+    <rect x="88" y="100" width="512" height="90" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="344" y="138">198.51.100.0/25</text><text x="344" y="165" font-size="15" fill="#475569">128 адресов, 126 узлов (нужно 100)</text>
+    <rect x="600" y="100" width="256" height="90" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="728" y="138">.128/26</text><text x="728" y="165" font-size="15" fill="#475569">62 узла (нужно 50)</text>
+    <rect x="856" y="100" width="128" height="90" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+    <text x="920" y="138">.192/27</text><text x="920" y="165" font-size="14" fill="#475569">30 (нужно 20)</text>
+    <rect x="984" y="100" width="16" height="90" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/>
+    <rect x="1000" y="100" width="112" height="90" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <text x="1056" y="150" font-size="14" fill="#475569">свободно</text>
+  </g>
+  <g font-size="15" fill="#475569" text-anchor="middle">
+    <text x="88" y="215">.0</text><text x="600" y="215">.128</text><text x="856" y="215">.192</text><text x="984" y="215">.224</text><text x="1112" y="215">.255</text>
+  </g>
+  <line x1="992" y1="100" x2="992" y2="60" stroke="#7C3AED" stroke-width="2"/>
+  <text x="992" y="80" text-anchor="end" font-size="15" fill="#7C3AED">.224/30 - связь двух маршрутизаторов, 2 узла  </text>
+
+  <g font-size="18" fill="#0E1830">
+    <text x="88" y="270">Правила:</text>
+    <text x="88" y="302">1. Размер блока - степень двойки не меньше "узлы + 2" (адрес сети и широковещательный).</text>
+    <text x="88" y="334">2. Блок размером 2^k начинается с адреса, кратного 2^k: /26 - с .0, .64, .128 или .192.</text>
+    <text x="88" y="366">3. Раздаём от больших блоков к маленьким, тогда выравнивание соблюдается само.</text>
+    <text x="88" y="398">4. Блоки не пересекаются, а остаток (.228-.255) можно раздать потом.</text>
+  </g>
+</svg>
