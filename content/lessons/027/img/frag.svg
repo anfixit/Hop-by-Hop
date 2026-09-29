@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Пакет 1428 байт и сеть с MTU 1000</text>
+
+  <!-- исходный пакет: 1 px = 0.7 байт -> 1428 байт = 1000 px -->
+  <text x="100" y="95" font-size="18" fill="#0E1830">исходный пакет (ID 8561, DF=0):</text>
+  <g font-size="15" text-anchor="middle" fill="#0E1830">
+    <rect x="100" y="110" width="14" height="50" fill="#FEE2E2" stroke="#B91C1C"/>
+    <rect x="114" y="110" width="986" height="50" fill="#DBEAFE" stroke="#2563EB"/>
+    <text x="607" y="140">данные IP: 8 байт ICMP + 1400 байт пинга = 1408 байт</text>
+  </g>
+  <text x="100" y="180" font-size="14" fill="#B91C1C">заголовок IP 20 байт</text>
+
+  <!-- фрагменты -->
+  <text x="100" y="240" font-size="18" fill="#0E1830">после маршрутизатора: два пакета</text>
+  <g font-size="15" text-anchor="middle" fill="#0E1830">
+    <rect x="100" y="255" width="14" height="50" fill="#FEE2E2" stroke="#B91C1C"/>
+    <rect x="114" y="255" width="683" height="50" fill="#DBEAFE" stroke="#2563EB"/>
+    <text x="455" y="285">байты 0-975 данных (976 = 122 x 8)</text>
+    <rect x="830" y="255" width="14" height="50" fill="#FEE2E2" stroke="#B91C1C"/>
+    <rect x="844" y="255" width="302" height="50" fill="#DBEAFE" stroke="#2563EB"/>
+    <text x="995" y="285">байты 976-1407</text>
+  </g>
+  <g font-size="15" fill="#0E1830">
+    <text x="100" y="330">фрагмент 1: длина 996 = 20 + 976</text>
+    <text x="100" y="352">смещение 0, MF=1 ("будут ещё")</text>
+    <text x="830" y="330">фрагмент 2: длина 452 = 20 + 432</text>
+    <text x="830" y="352">смещение 976 (в поле 122), MF=0</text>
+  </g>
+
+  <rect x="60" y="390" width="1080" height="150" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="17" fill="#0E1830">
+    <text x="80" y="422">У обоих фрагментов тот же ID 8561 и полный заголовок IP со своей длиной и суммой.</text>
+    <text x="80" y="450">В фрагмент влезает 1000 - 20 = 980 байт данных, но размер берётся кратным 8: 976.</text>
+    <text x="80" y="478">Смещение в заголовке хранится в единицах по 8 байт: 976 / 8 = 122.</text>
+    <text x="80" y="506">Собирает пакет только получатель; пропал один фрагмент - пропал весь пакет.</text>
+  </g>
+</svg>
