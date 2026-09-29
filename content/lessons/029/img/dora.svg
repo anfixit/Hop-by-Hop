@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Четыре сообщения DHCP</text>
+
+  <g font-size="18" text-anchor="middle">
+    <rect x="80" y="80" width="240" height="64" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="200" y="108" fill="#0E1830">клиент</text><text x="200" y="130" font-size="14" fill="#475569">адреса нет, только MAC</text>
+    <rect x="880" y="80" width="240" height="64" rx="10" fill="#0E1830"/><text x="1000" y="108" fill="#FFFFFF">DHCP-сервер</text><text x="1000" y="130" font-size="14" fill="#CBD5E1">192.0.2.1, пул 192.0.2.100-110</text>
+  </g>
+  <g stroke="#94A3B8" stroke-width="2">
+    <line x1="200" y1="144" x2="200" y2="470"/><line x1="1000" y1="144" x2="1000" y2="470"/>
+  </g>
+
+  <g font-size="17" stroke-width="3">
+    <!-- 1 Discover -->
+    <text x="600" y="186" text-anchor="middle" fill="#2563EB">1. Discover: есть здесь DHCP-сервер?</text>
+    <line x1="200" y1="200" x2="984" y2="200" stroke="#2563EB"/><path d="M1000 200 L984 192 L984 208 z" fill="#2563EB"/>
+    <text x="600" y="224" text-anchor="middle" font-size="14" fill="#475569">от 0.0.0.0:68 к 255.255.255.255:67, кадр на ff:ff:ff:ff:ff:ff</text>
+    <!-- 2 Offer -->
+    <text x="600" y="266" text-anchor="middle" fill="#B91C1C">2. Offer: могу дать 192.0.2.101 на 30 секунд</text>
+    <line x1="1000" y1="280" x2="216" y2="280" stroke="#B91C1C"/><path d="M200 280 L216 272 L216 288 z" fill="#B91C1C"/>
+    <text x="600" y="304" text-anchor="middle" font-size="14" fill="#475569">маска, шлюз, DNS, домен и срок аренды едут в опциях</text>
+    <!-- 3 Request -->
+    <text x="600" y="346" text-anchor="middle" fill="#2563EB">3. Request: беру 192.0.2.101 у сервера 192.0.2.1</text>
+    <line x1="200" y1="360" x2="984" y2="360" stroke="#2563EB"/><path d="M1000 360 L984 352 L984 368 z" fill="#2563EB"/>
+    <text x="600" y="384" text-anchor="middle" font-size="14" fill="#475569">снова широковещательно: остальные серверы узнают, что выбраны не они</text>
+    <!-- 4 ACK -->
+    <text x="600" y="426" text-anchor="middle" fill="#15803D">4. ACK: адрес твой, аренда началась</text>
+    <line x1="1000" y1="440" x2="216" y2="440" stroke="#15803D"/><path d="M200 440 L216 432 L216 448 z" fill="#15803D"/>
+    <text x="600" y="464" text-anchor="middle" font-size="14" fill="#475569">клиент настраивает интерфейс, маршрут по умолчанию и DNS</text>
+  </g>
+
+  <rect x="40" y="500" width="1120" height="70" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="530" text-anchor="middle" font-size="17" fill="#0E1830">В DHCP нет проверки подлинности: клиент не может убедиться, настоящий ли это сервер</text>
+  <text x="600" y="555" text-anchor="middle" font-size="17" fill="#0E1830">Поэтому защиту строят в сети, на портах коммутатора (см. раздел о защите)</text>
+</svg>

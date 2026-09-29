@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Жизнь аренды: сроки по умолчанию в RFC 2131</text>
+
+  <rect x="100" y="120" width="500" height="70" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+  <rect x="600" y="120" width="375" height="70" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+  <rect x="975" y="120" width="125" height="70" fill="#FED7AA" stroke="#C2410C" stroke-width="2"/>
+  <rect x="1100" y="120" width="70" height="70" fill="#FECACA" stroke="#B91C1C" stroke-width="2"/>
+
+  <g font-size="18" text-anchor="middle" fill="#0E1830">
+    <text x="350" y="150">адрес в работе</text>
+    <text x="350" y="174" font-size="15" fill="#475569">клиент просто пользуется им</text>
+    <text x="787" y="150">RENEWING</text>
+    <text x="787" y="174" font-size="15" fill="#475569">просьба к выдавшему серверу</text>
+    <text x="1037" y="150" font-size="16">REBINDING</text>
+    <text x="1037" y="174" font-size="14" fill="#475569">любому</text>
+    <text x="1135" y="150" font-size="14">конец</text>
+  </g>
+
+  <g stroke="#0E1830" stroke-width="2">
+    <line x1="100" y1="110" x2="100" y2="200"/><line x1="600" y1="110" x2="600" y2="200"/>
+    <line x1="975" y1="110" x2="975" y2="200"/><line x1="1100" y1="110" x2="1100" y2="200"/>
+  </g>
+  <g font-size="17" text-anchor="middle" fill="#0E1830">
+    <text x="100" y="98">получен ACK</text>
+    <text x="600" y="98">T1 = 50%</text>
+    <text x="975" y="98">T2 = 87,5%</text>
+    <text x="1100" y="98">100%</text>
+    <text x="100" y="228" font-size="15" fill="#475569">0</text>
+  </g>
+
+  <g font-size="17" fill="#0E1830">
+    <text x="60" y="290" font-weight="bold">С T1:</text>
+    <text x="150" y="290">клиент шлёт Request прямо выдавшему серверу (не широковещательно). Получил ACK - срок отсчитывается заново.</text>
+    <text x="60" y="330" font-weight="bold">С T2:</text>
+    <text x="150" y="330">если тот молчит, клиент шлёт Request широковещательно: ответить может любой сервер сети.</text>
+    <text x="60" y="370" font-weight="bold">Конец:</text>
+    <text x="150" y="370">срок вышел, ответа нет - адрес нельзя использовать, клиент начинает с Discover.</text>
+  </g>
+
+  <rect x="40" y="410" width="1120" height="80" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="442" text-anchor="middle" font-size="17" fill="#0E1830">Сервер может передать свои T1 и T2 в опциях, а клиент вправе продлить и раньше T1.</text>
+  <text x="600" y="470" text-anchor="middle" font-size="17" fill="#0E1830">В нашем опыте аренда 30 секунд, и udhcpc продлил её через 15 секунд, ровно на T1.</text>
+</svg>
