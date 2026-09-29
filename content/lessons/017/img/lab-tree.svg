@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Учебная сеть: как STP разорвал петлю</text>
+
+  <!-- swa -->
+  <rect x="120" y="170" width="300" height="200" rx="14" fill="#0E1830"/>
+  <text x="270" y="215" text-anchor="middle" font-size="24" font-weight="bold" fill="#FFFFFF">swa - корневой мост</text>
+  <text x="270" y="245" text-anchor="middle" font-size="16" fill="#CBD5E1">ID 8000.02:00:00:00:0a:00</text>
+  <text x="270" y="270" text-anchor="middle" font-size="16" fill="#CBD5E1">расстояние до корня 0</text>
+
+  <!-- swb -->
+  <rect x="780" y="170" width="300" height="200" rx="14" fill="#0E1830"/>
+  <text x="930" y="215" text-anchor="middle" font-size="24" font-weight="bold" fill="#FFFFFF">swb</text>
+  <text x="930" y="245" text-anchor="middle" font-size="16" fill="#CBD5E1">ID 8000.02:00:00:00:0b:00</text>
+  <text x="930" y="270" text-anchor="middle" font-size="16" fill="#CBD5E1">расстояние до корня 2</text>
+
+  <!-- порты swa -->
+  <rect x="380" y="290" width="80" height="36" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+  <text x="420" y="314" text-anchor="middle" font-size="17" fill="#0E1830">a1</text>
+  <rect x="380" y="330" width="80" height="36" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+  <text x="420" y="354" text-anchor="middle" font-size="17" fill="#0E1830">a2</text>
+  <!-- порты swb -->
+  <rect x="740" y="290" width="80" height="36" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+  <text x="780" y="314" text-anchor="middle" font-size="17" fill="#0E1830">b1</text>
+  <rect x="740" y="330" width="80" height="36" rx="6" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+  <text x="780" y="354" text-anchor="middle" font-size="17" fill="#0E1830">b2</text>
+
+  <!-- кабели -->
+  <line x1="460" y1="308" x2="740" y2="308" stroke="#15803D" stroke-width="4"/>
+  <line x1="460" y1="348" x2="740" y2="348" stroke="#94A3B8" stroke-width="4" stroke-dasharray="10 8"/>
+  <text x="600" y="298" text-anchor="middle" font-size="16" fill="#15803D">кабель 1 - работает</text>
+  <text x="600" y="380" text-anchor="middle" font-size="16" fill="#B91C1C">кабель 2 - в резерве</text>
+
+  <!-- подписи ролей -->
+  <g font-size="16" fill="#0E1830">
+    <text x="120" y="420">a1, a2 - назначенные порты:</text>
+    <text x="120" y="442">у корня все порты назначенные</text>
+    <text x="700" y="420">b1 - корневой порт: пути равны, но BPDU с a1 (8001)</text>
+    <text x="700" y="442">лучше, чем с a2 (8002). b2 заблокирован:</text>
+    <text x="700" y="464">принимает BPDU, но не пересылает кадры</text>
+  </g>
+
+  <!-- BPDU -->
+  <line x1="440" y1="130" x2="740" y2="130" stroke="#4338CA" stroke-width="3"/>
+  <path d="M740 122 L758 130 L740 138 z" fill="#4338CA"/>
+  <text x="600" y="115" text-anchor="middle" font-size="17" fill="#4338CA">BPDU Hello каждые 2 с: "корень swa, расстояние 0"</text>
+
+  <rect x="120" y="500" width="960" height="70" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="530" text-anchor="middle" font-size="17" fill="#0E1830">Оборвался кабель 1 -&gt; b2 становится корневым портом:</text>
+  <text x="600" y="556" text-anchor="middle" font-size="17" fill="#0E1830">прослушивание 15 с + обучение 15 с, в нашем опыте 31 с до продвижения</text>
+</svg>
