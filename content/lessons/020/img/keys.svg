@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Откуда берутся ключи WPA2-Personal</text>
+
+  <g font-size="18" text-anchor="middle" fill="#0E1830">
+    <rect x="80" y="90" width="300" height="70" rx="10" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+    <text x="230" y="120">пароль сети</text><text x="230" y="145" font-size="15" fill="#475569">8-63 символа, общий для всех</text>
+
+    <rect x="450" y="90" width="300" height="70" rx="10" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/>
+    <text x="600" y="120">имя сети (SSID)</text><text x="600" y="145" font-size="15" fill="#475569">служит "солью"</text>
+
+    <rect x="265" y="220" width="670" height="70" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+    <text x="600" y="250">PMK = PBKDF2(пароль, SSID, 4096 раундов HMAC-SHA1)</text>
+    <text x="600" y="275" font-size="15" fill="#475569">главный ключ, 256 бит; одинаков у всех, кто знает пароль</text>
+
+    <rect x="820" y="90" width="300" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="970" y="120">ANonce, SNonce, MAC</text><text x="970" y="145" font-size="15" fill="#475569">из рукопожатия, открыто</text>
+
+    <rect x="265" y="350" width="670" height="70" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="600" y="380">PTK - ключи этого клиента на этот сеанс</text>
+    <text x="600" y="405" font-size="15" fill="#475569">KCK (считает MIC в рукопожатии), KEK (шифрует GTK), TK (шифрует данные)</text>
+
+    <rect x="265" y="470" width="670" height="60" rx="10" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/>
+    <text x="600" y="495">GTK - генерирует точка доступа, общий для всех клиентов</text><text x="600" y="518" font-size="15" fill="#475569">для широковещательных кадров</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5">
+    <line x1="230" y1="160" x2="420" y2="220"/><line x1="600" y1="160" x2="600" y2="220"/>
+    <line x1="600" y1="290" x2="600" y2="350"/><line x1="970" y1="160" x2="800" y2="350"/>
+    
+  </g>
+  <text x="640" y="452" font-size="15" fill="#475569">GTK выдаёт точка доступа в сообщении 3, зашифровав ключом KEK</text>
+</svg>

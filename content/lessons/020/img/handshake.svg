@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660">
+  <rect width="1200" height="660" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Четырёхэтапное рукопожатие WPA2 (4-way handshake)</text>
+
+  <rect x="120" y="75" width="220" height="56" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="230" y="110" text-anchor="middle" font-size="20" fill="#0E1830">клиент</text>
+  <rect x="860" y="75" width="220" height="56" rx="10" fill="#0E1830"/>
+  <text x="970" y="110" text-anchor="middle" font-size="20" fill="#FFFFFF">точка доступа</text>
+  <line x1="230" y1="131" x2="230" y2="560" stroke="#94A3B8" stroke-width="2" stroke-dasharray="6 6"/>
+  <line x1="970" y1="131" x2="970" y2="560" stroke="#94A3B8" stroke-width="2" stroke-dasharray="6 6"/>
+
+  <g font-size="16" fill="#475569">
+    <text x="40" y="160">знает PMK</text><text x="40" y="180">(из пароля)</text>
+    <text x="1000" y="160">знает PMK</text><text x="1000" y="180">(из пароля)</text>
+  </g>
+
+  <g font-size="18" fill="#0E1830" stroke-width="3">
+    <line x1="970" y1="215" x2="246" y2="215" stroke="#7C3AED"/><path d="M230 215 L246 207 L246 223 z" fill="#7C3AED"/>
+    <text x="600" y="205" text-anchor="middle" fill="#7C3AED">1. ANonce - случайное число точки (открыто)</text>
+
+    <rect x="40" y="240" width="380" height="54" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="230" y="263" text-anchor="middle" font-size="15">клиент вычисляет PTK из PMK, ANonce,</text>
+    <text x="230" y="283" text-anchor="middle" font-size="15">SNonce и MAC-адресов обеих сторон</text>
+
+    <line x1="230" y1="330" x2="954" y2="330" stroke="#2563EB"/><path d="M970 330 L954 322 L954 338 z" fill="#2563EB"/>
+    <text x="600" y="320" text-anchor="middle" fill="#2563EB">2. SNonce + MIC (код целостности на ключе из PTK)</text>
+
+    <rect x="780" y="352" width="380" height="54" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="970" y="375" text-anchor="middle" font-size="15">точка вычисляет тот же PTK и проверяет MIC:</text>
+    <text x="970" y="395" text-anchor="middle" font-size="15">не сошёлся - значит, пароль у клиента другой</text>
+
+    <line x1="970" y1="445" x2="246" y2="445" stroke="#0F766E"/><path d="M230 445 L246 437 L246 453 z" fill="#0F766E"/>
+    <text x="600" y="435" text-anchor="middle" fill="#0F766E">3. групповой ключ GTK (зашифрован) + MIC</text>
+
+    <line x1="230" y1="505" x2="954" y2="505" stroke="#0F766E"/><path d="M970 505 L954 497 L954 513 z" fill="#0F766E"/>
+    <text x="600" y="495" text-anchor="middle" fill="#0F766E">4. подтверждение + MIC</text>
+  </g>
+
+  <rect x="120" y="575" width="960" height="66" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+  <text x="600" y="603" text-anchor="middle" font-size="17" fill="#0E1830">Пароль по эфиру не передаётся. Но сообщения не зашифрованы: записав первые два, можно</text>
+  <text x="600" y="627" text-anchor="middle" font-size="17" fill="#0E1830">проверять догадки о пароле у себя, без точки доступа. WPA3 (SAE) это закрывает.</text>
+</svg>
