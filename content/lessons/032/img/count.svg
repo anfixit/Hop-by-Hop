@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Счёт до бесконечности: A пропал</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">расстояние до A в таблицах B, C, D, E после каждого обмена (по Таненбауму); красным - то, что изменилось</text>
+
+  <g font-size="20" text-anchor="middle">
+    <rect x="200" y="100" width="120" height="50" rx="10" fill="#FECACA" stroke="#B91C1C" stroke-width="2"/><text x="260" y="132" fill="#B91C1C">A (нет)</text>
+    <rect x="380" y="100" width="120" height="50" rx="10" fill="#0E1830"/><text x="440" y="132" fill="#FFFFFF">B</text>
+    <rect x="560" y="100" width="120" height="50" rx="10" fill="#0E1830"/><text x="620" y="132" fill="#FFFFFF">C</text>
+    <rect x="740" y="100" width="120" height="50" rx="10" fill="#0E1830"/><text x="800" y="132" fill="#FFFFFF">D</text>
+    <rect x="920" y="100" width="120" height="50" rx="10" fill="#0E1830"/><text x="980" y="132" fill="#FFFFFF">E</text>
+  </g>
+  <g stroke="#94A3B8" stroke-width="3">
+    <line x1="320" y1="125" x2="380" y2="125" stroke-dasharray="none" stroke="#FCA5A5"/>
+    <line x1="500" y1="125" x2="560" y2="125"/><line x1="680" y1="125" x2="740" y2="125"/><line x1="860" y1="125" x2="920" y2="125"/>
+  </g>
+
+  <g font-size="19" text-anchor="middle" fill="#0E1830">
+    <text x="100" y="200" text-anchor="start" font-size="16" fill="#475569">до отказа</text>
+    <text x="440" y="200">1</text><text x="620" y="200">2</text><text x="800" y="200">3</text><text x="980" y="200">4</text>
+    <text x="100" y="245" text-anchor="start" font-size="16" fill="#475569">обмен 1</text>
+    <text x="440" y="245" fill="#B91C1C">3</text><text x="620" y="245">2</text><text x="800" y="245">3</text><text x="980" y="245">4</text>
+    <text x="100" y="290" text-anchor="start" font-size="16" fill="#475569">обмен 2</text>
+    <text x="440" y="290">3</text><text x="620" y="290" fill="#B91C1C">4</text><text x="800" y="290">3</text><text x="980" y="290">4</text>
+    <text x="100" y="335" text-anchor="start" font-size="16" fill="#475569">обмен 3</text>
+    <text x="440" y="335" fill="#B91C1C">5</text><text x="620" y="335">4</text><text x="800" y="335" fill="#B91C1C">5</text><text x="980" y="335">4</text>
+    <text x="100" y="380" text-anchor="start" font-size="16" fill="#475569">обмен 4</text>
+    <text x="440" y="380">5</text><text x="620" y="380" fill="#B91C1C">6</text><text x="800" y="380">5</text><text x="980" y="380" fill="#B91C1C">6</text>
+    <text x="100" y="425" text-anchor="start" font-size="16" fill="#475569">...</text>
+    <text x="620" y="425" fill="#B91C1C">... и так до "бесконечности" (в RIP - 16)</text>
+  </g>
+
+  <g font-size="16" fill="#0E1830">
+    <text x="100" y="480">B слышит от C "до A - 2" и не знает, что путь C к A идёт через самого B.</text>
+    <text x="100" y="508">Пока числа растут, пакеты для A ходят по петле между соседями.</text>
+  </g>
+  <rect x="40" y="530" width="1120" height="50" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="562" text-anchor="middle" font-size="17" fill="#0E1830">Хорошие новости доходят за один обмен на шаг, плохие - медленно. В OSPF такого нет: у всех одна карта.</text>
+</svg>

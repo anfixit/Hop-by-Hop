@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Как объявление 203.0.113.0/24 обходит сеть</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">маршруты идут навстречу трафику; каждая AS дописывает свой номер в начало AS_PATH</text>
+
+  <!-- AS boxes -->
+  <g font-size="19" text-anchor="middle">
+    <rect x="470" y="100" width="260" height="80" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="600" y="133" fill="#0E1830">r3 - AS64498</text>
+    <text x="600" y="160" font-size="15" fill="#475569">владелец 203.0.113.0/24</text>
+    <rect x="80" y="380" width="260" height="80" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="210" y="413" fill="#0E1830">r2 - AS64497</text>
+    <rect x="860" y="380" width="260" height="80" rx="12" fill="#0E1830"/>
+    <text x="990" y="413" fill="#FFFFFF">r1 - AS64496</text>
+    <text x="990" y="440" font-size="15" fill="#CBD5E1">выбирает путь</text>
+  </g>
+  <!-- links -->
+  <g stroke="#94A3B8" stroke-width="3">
+    <line x1="530" y1="180" x2="250" y2="380"/>
+    <line x1="670" y1="180" x2="950" y2="380"/>
+    <line x1="340" y1="420" x2="860" y2="420"/>
+  </g>
+  <!-- adverts -->
+  <g font-size="16">
+    <text x="265" y="265" fill="#15803D" transform="rotate(-35 265 265)">путь: 64498</text>
+    <text x="820" y="240" fill="#15803D" transform="rotate(35 820 240)">путь: 64498</text>
+    <text x="600" y="405" text-anchor="middle" fill="#2563EB">путь: 64497 64498</text>
+  </g>
+
+  <!-- r1 table -->
+  <rect x="420" y="480" width="740" height="130" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="16" fill="#0E1830">
+    <text x="440" y="508" font-weight="bold">У r1 два маршрута к 203.0.113.0/24:</text>
+    <text x="440" y="536">* через r3: 64498 - короче, выбран по умолчанию</text>
+    <text x="455" y="562">через r2: 64497 64498 - выбран, если LOCAL_PREF от r2 больше</text>
+    <text x="455" y="588">или если r3 удлинит свой путь к r1: 64498 64498 64498</text>
+  </g>
+  <g font-size="16" fill="#0E1830">
+    <text x="40" y="508" font-weight="bold">Петли:</text>
+    <text x="40" y="536">если r3 получит свой префикс</text>
+    <text x="40" y="562">обратно, скажем с путём</text>
+    <text x="40" y="588">64497 64498, он его отбросит</text>
+  </g>
+</svg>
