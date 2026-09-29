@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Как traceroute находит путь</text>
+
+  <g font-size="18" text-anchor="middle">
+    <rect x="40" y="80" width="170" height="60" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="125" y="108" fill="#0E1830">a</text><text x="125" y="128" font-size="14" fill="#475569">192.0.2.1</text>
+    <rect x="360" y="80" width="170" height="60" rx="10" fill="#0E1830"/><text x="445" y="108" fill="#FFFFFF">r1</text><text x="445" y="128" font-size="14" fill="#CBD5E1">192.0.2.254</text>
+    <rect x="680" y="80" width="170" height="60" rx="10" fill="#0E1830"/><text x="765" y="108" fill="#FFFFFF">r2</text><text x="765" y="128" font-size="14" fill="#CBD5E1">198.51.100.2</text>
+    <rect x="990" y="80" width="170" height="60" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="1075" y="108" fill="#0E1830">b</text><text x="1075" y="128" font-size="14" fill="#475569">203.0.113.2</text>
+  </g>
+  <g stroke="#94A3B8" stroke-width="2" stroke-dasharray="6 6">
+    <line x1="125" y1="140" x2="125" y2="470"/><line x1="445" y1="140" x2="445" y2="470"/>
+    <line x1="765" y1="140" x2="765" y2="470"/><line x1="1075" y1="140" x2="1075" y2="470"/>
+  </g>
+
+  <g font-size="16" stroke-width="3">
+    <!-- TTL 1 -->
+    <line x1="125" y1="185" x2="429" y2="185" stroke="#2563EB"/><path d="M445 185 L429 177 L429 193 z" fill="#2563EB"/>
+    <text x="285" y="175" text-anchor="middle" fill="#2563EB">UDP на порт 33434, TTL=1</text>
+    <line x1="445" y1="215" x2="141" y2="215" stroke="#B91C1C"/><path d="M125 215 L141 207 L141 223 z" fill="#B91C1C"/>
+    <text x="285" y="240" text-anchor="middle" fill="#B91C1C">ICMP 11 "время истекло" от r1</text>
+    <!-- TTL 2 -->
+    <line x1="125" y1="285" x2="749" y2="285" stroke="#2563EB"/><path d="M765 285 L749 277 L749 293 z" fill="#2563EB"/>
+    <text x="285" y="275" text-anchor="middle" fill="#2563EB">UDP на порт 33435, TTL=2</text>
+    <text x="605" y="275" text-anchor="middle" fill="#2563EB">r1 уменьшил TTL до 1</text>
+    <line x1="765" y1="315" x2="141" y2="315" stroke="#B91C1C"/><path d="M125 315 L141 307 L141 323 z" fill="#B91C1C"/>
+    <text x="285" y="340" text-anchor="middle" fill="#B91C1C">ICMP 11 "время истекло" от r2</text>
+    <!-- TTL 3 -->
+    <line x1="125" y1="385" x2="1059" y2="385" stroke="#2563EB"/><path d="M1075 385 L1059 377 L1059 393 z" fill="#2563EB"/>
+    <text x="285" y="375" text-anchor="middle" fill="#2563EB">UDP на порт 33436, TTL=3</text>
+    <text x="920" y="375" text-anchor="middle" fill="#2563EB">порт на b закрыт</text>
+    <line x1="1075" y1="415" x2="141" y2="415" stroke="#15803D"/><path d="M125 415 L141 407 L141 423 z" fill="#15803D"/>
+    <text x="285" y="440" text-anchor="middle" fill="#15803D">ICMP 3 "порт недоступен" от b</text>
+    <text x="920" y="440" text-anchor="middle" fill="#15803D">цель достигнута</text>
+  </g>
+
+  <rect x="40" y="480" width="1120" height="60" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="516" text-anchor="middle" font-size="17" fill="#0E1830">Адрес маршрутизатора - это адрес отправителя IP-пакета с ICMP-сообщением, время - от отправки до ответа</text>
+</svg>
