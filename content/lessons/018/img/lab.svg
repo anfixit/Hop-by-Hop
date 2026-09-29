@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Учебная сеть: две VLAN на одном коммутаторе</text>
+
+  <!-- коммутатор -->
+  <rect x="330" y="250" width="540" height="100" rx="12" fill="#0E1830"/>
+  <text x="600" y="295" text-anchor="middle" font-size="22" fill="#FFFFFF">коммутатор sw (мост br0, vlan_filtering)</text>
+  <g font-size="16" text-anchor="middle">
+    <rect x="360" y="315" width="80" height="28" rx="5" fill="#BFDBFE"/><text x="400" y="335" fill="#0E1830">p1: 10</text>
+    <rect x="470" y="315" width="80" height="28" rx="5" fill="#BFDBFE"/><text x="510" y="335" fill="#0E1830">p2: 10</text>
+    <rect x="580" y="315" width="80" height="28" rx="5" fill="#FDE68A"/><text x="620" y="335" fill="#0E1830">p3: 20</text>
+    <rect x="720" y="315" width="130" height="28" rx="5" fill="#E9D5FF"/><text x="785" y="335" fill="#0E1830">p4: 10 + 20</text>
+  </g>
+
+  <!-- кабели доступа -->
+  <g stroke-width="4">
+    <line x1="400" y1="350" x2="220" y2="450" stroke="#2563EB"/>
+    <line x1="510" y1="350" x2="450" y2="450" stroke="#2563EB"/>
+    <line x1="620" y1="350" x2="680" y2="450" stroke="#D97706"/>
+    <line x1="785" y1="350" x2="960" y2="450" stroke="#7C3AED" stroke-dasharray="14 6"/>
+  </g>
+  <g font-size="18" text-anchor="middle">
+    <rect x="140" y="450" width="160" height="64" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="220" y="477" fill="#0E1830">pc1</text><text x="220" y="500" font-size="15" fill="#475569">10.10.0.1</text>
+    <rect x="370" y="450" width="160" height="64" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="450" y="477" fill="#0E1830">pc2</text><text x="450" y="500" font-size="15" fill="#475569">10.10.0.2</text>
+    <rect x="600" y="450" width="160" height="64" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="2"/>
+    <text x="680" y="477" fill="#0E1830">pc3</text><text x="680" y="500" font-size="15" fill="#475569">10.20.0.3</text>
+    <rect x="860" y="450" width="220" height="84" rx="10" fill="#F3E8FF" stroke="#7C3AED" stroke-width="2"/>
+    <text x="970" y="477" fill="#0E1830">rtr (маршрутизатор)</text>
+    <text x="970" y="500" font-size="15" fill="#475569">eth0.10: 10.10.0.254</text>
+    <text x="970" y="520" font-size="15" fill="#475569">eth0.20: 10.20.0.254</text>
+  </g>
+  <text x="920" y="400" font-size="16" fill="#7C3AED">транк: кадры с метками</text>
+  <text x="230" y="400" font-size="16" fill="#2563EB">порты доступа: кадры без меток</text>
+
+  <!-- легенда -->
+  <g font-size="17" fill="#0E1830">
+    <rect x="80" y="90" width="24" height="24" fill="#BFDBFE" stroke="#2563EB"/><text x="115" y="108">VLAN 10: pc1, pc2 - друг друга видят</text>
+    <rect x="80" y="130" width="24" height="24" fill="#FDE68A" stroke="#D97706"/><text x="115" y="148">VLAN 20: pc3 - кадры из VLAN 10 до него не доходят</text>
+    <rect x="80" y="170" width="24" height="24" fill="#E9D5FF" stroke="#7C3AED"/><text x="115" y="188">между VLAN - только через маршрутизатор rtr ("роутер на палочке")</text>
+  </g>
+  <text x="600" y="580" text-anchor="middle" font-size="16" fill="#475569">Один физический коммутатор ведёт себя как два отдельных: для VLAN 10 и для VLAN 20</text>
+</svg>
