@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660">
+  <rect width="1200" height="660" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">SLAAC: адрес без DHCP-сервера</text>
+
+  <g font-size="18" text-anchor="middle">
+    <rect x="80" y="75" width="260" height="64" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="210" y="103" fill="#0E1830">узел h1</text><text x="210" y="125" font-size="14" fill="#475569">MAC 02:00:00:00:00:01</text>
+    <rect x="860" y="75" width="260" height="64" rx="10" fill="#0E1830"/><text x="990" y="103" fill="#FFFFFF">маршрутизатор r</text><text x="990" y="125" font-size="14" fill="#CBD5E1">fe80::ff:fe00:fe</text>
+  </g>
+  <g stroke="#94A3B8" stroke-width="2">
+    <line x1="210" y1="139" x2="210" y2="560"/><line x1="990" y1="139" x2="990" y2="560"/>
+  </g>
+
+  <g font-size="16">
+    <!-- 1 -->
+    <rect x="30" y="160" width="360" height="54" rx="8" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="210" y="183" text-anchor="middle" fill="#0E1830">1. сам себе: fe80::ff:fe00:1</text>
+    <text x="210" y="203" text-anchor="middle" font-size="14" fill="#475569">пока tentative, пользоваться нельзя</text>
+    <!-- 2 DAD -->
+    <text x="600" y="240" text-anchor="middle" fill="#A16207">2. DAD: NS от :: в ff02::1:ff00:1 - "адрес чей-нибудь?"</text>
+    <line x1="210" y1="254" x2="584" y2="254" stroke="#A16207" stroke-width="3"/><path d="M600 254 L584 246 L584 262 z" fill="#A16207"/>
+    <text x="700" y="259" font-size="14" fill="#475569">тишина за 1 с - адрес свой</text>
+    <!-- 3 RS -->
+    <text x="600" y="302" text-anchor="middle" fill="#2563EB">3. RS на ff02::2: "маршрутизаторы, отзовитесь"</text>
+    <line x1="210" y1="316" x2="974" y2="316" stroke="#2563EB" stroke-width="3"/><path d="M990 316 L974 308 L974 324 z" fill="#2563EB"/>
+    <!-- 4 RA -->
+    <text x="600" y="364" text-anchor="middle" fill="#15803D">4. RA: префикс 2001:db8:1::/64 (флаг A), MTU 1400, DNS, срок шлюза 30 с</text>
+    <line x1="990" y1="378" x2="226" y2="378" stroke="#15803D" stroke-width="3"/><path d="M210 378 L226 370 L226 386 z" fill="#15803D"/>
+    <text x="600" y="402" text-anchor="middle" font-size="14" fill="#475569">Hop Limit 255: сообщение точно из этого канала</text>
+    <!-- 5 -->
+    <rect x="30" y="430" width="560" height="54" rx="8" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="310" y="453" text-anchor="middle" fill="#0E1830">5. префикс + свой идентификатор = 2001:db8:1::ff:fe00:1</text>
+    <text x="310" y="473" text-anchor="middle" font-size="14" fill="#475569">и снова DAD для нового адреса</text>
+    <!-- 6 -->
+    <rect x="30" y="500" width="560" height="54" rx="8" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="310" y="523" text-anchor="middle" fill="#0E1830">6. шлюз по умолчанию: fe80::ff:fe00:fe (адрес канала r)</text>
+    <text x="310" y="543" text-anchor="middle" font-size="14" fill="#475569">сроки адреса и шлюза продлевает каждое новое RA</text>
+  </g>
+
+  <rect x="40" y="580" width="1120" height="60" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="605" text-anchor="middle" font-size="17" fill="#0E1830">Адрес по SLAAC - если у префикса флаг A. Флаги M и O: в сети есть DHCPv6 для адресов (M) или прочих параметров (O).</text>
+  <text x="600" y="628" text-anchor="middle" font-size="17" fill="#0E1830">Шлюз по умолчанию узел всегда узнаёт из RA.</text>
+</svg>
