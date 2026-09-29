@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <rect width="1200" height="620" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Три адреса в кадре Wi-Fi: всё идёт через точку доступа</text>
+
+  <g font-size="18" text-anchor="middle">
+    <rect x="80" y="90" width="200" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="180" y="120" fill="#0E1830">клиент sta</text><text x="180" y="145" font-size="15" fill="#475569">02:00:00:00:02:00</text>
+    <rect x="500" y="90" width="200" height="70" rx="10" fill="#0E1830"/>
+    <text x="600" y="120" fill="#FFFFFF">точка доступа</text><text x="600" y="145" font-size="15" fill="#CBD5E1">02:00:00:00:00:00</text>
+    <rect x="920" y="90" width="200" height="70" rx="10" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/>
+    <text x="1020" y="120" fill="#0E1830">все в сети</text><text x="1020" y="145" font-size="15" fill="#475569">ff:ff:ff:ff:ff:ff</text>
+  </g>
+  <defs><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#0E1830"/></marker></defs>
+  <line x1="280" y1="125" x2="484" y2="125" stroke="#2563EB" stroke-width="3"/><path d="M500 125 L484 117 L484 133 z" fill="#2563EB"/>
+  <text x="388" y="112" text-anchor="middle" font-size="15" fill="#2563EB">1. к точке (To DS)</text>
+  <line x1="700" y1="125" x2="904" y2="125" stroke="#B45309" stroke-width="3"/><path d="M920 125 L904 117 L904 133 z" fill="#B45309"/>
+  <text x="808" y="112" text-anchor="middle" font-size="15" fill="#B45309">2. от точки (From DS)</text>
+
+  <text x="600" y="210" text-anchor="middle" font-size="19" fill="#0E1830">Широковещательный запрос ARP от sta в нашем опыте прошёл по эфиру дважды:</text>
+
+  <g font-size="17" text-anchor="middle">
+    <text x="190" y="260" fill="#475569">поле кадра</text>
+    <text x="520" y="260" fill="#2563EB" font-weight="bold">1. sta -&gt; точка (To DS)</text>
+    <text x="900" y="260" fill="#B45309" font-weight="bold">2. точка -&gt; всем (From DS)</text>
+
+    <rect x="60" y="280" width="260" height="60" fill="#F8FAFC" stroke="#CBD5E1"/><text x="190" y="306" fill="#0E1830">Адрес 1</text><text x="190" y="328" font-size="14" fill="#475569">кто принимает в эфире</text>
+    <rect x="320" y="280" width="400" height="60" fill="#DBEAFE" stroke="#2563EB"/><text x="520" y="316" fill="#0E1830">BSSID (точка доступа)</text>
+    <rect x="720" y="280" width="360" height="60" fill="#FEF3C7" stroke="#B45309"/><text x="900" y="316" fill="#0E1830">DA: ff:ff:ff:ff:ff:ff</text>
+
+    <rect x="60" y="340" width="260" height="60" fill="#F8FAFC" stroke="#CBD5E1"/><text x="190" y="366" fill="#0E1830">Адрес 2</text><text x="190" y="388" font-size="14" fill="#475569">кто передаёт в эфир</text>
+    <rect x="320" y="340" width="400" height="60" fill="#DBEAFE" stroke="#2563EB"/><text x="520" y="376" fill="#0E1830">SA: sta</text>
+    <rect x="720" y="340" width="360" height="60" fill="#FEF3C7" stroke="#B45309"/><text x="900" y="376" fill="#0E1830">BSSID (точка доступа)</text>
+
+    <rect x="60" y="400" width="260" height="60" fill="#F8FAFC" stroke="#CBD5E1"/><text x="190" y="426" fill="#0E1830">Адрес 3</text><text x="190" y="448" font-size="14" fill="#475569">третий участник</text>
+    <rect x="320" y="400" width="400" height="60" fill="#DBEAFE" stroke="#2563EB"/><text x="520" y="436" fill="#0E1830">DA: ff:ff:ff:ff:ff:ff</text>
+    <rect x="720" y="400" width="360" height="60" fill="#FEF3C7" stroke="#B45309"/><text x="900" y="436" fill="#0E1830">SA: sta</text>
+  </g>
+
+  <g font-size="17" fill="#0E1830">
+    <text x="60" y="510">Ethernet-кадру хватает двух адресов: отправитель и получатель. В Wi-Fi между ними стоит точка</text>
+    <text x="60" y="536">доступа, поэтому нужен третий, а биты To DS и From DS говорят, как читать адреса.</text>
+    <text x="60" y="572">Четвёртый адрес нужен, только когда кадр идёт по радио между двумя точками доступа.</text>
+  </g>
+</svg>
