@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <rect width="1200" height="620" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Как коммутатор учится и решает, куда слать кадр</text>
+
+  <!-- коммутатор -->
+  <rect x="440" y="180" width="320" height="90" rx="12" fill="#0E1830"/>
+  <text x="600" y="232" text-anchor="middle" font-size="22" fill="#FFFFFF">коммутатор</text>
+  <g font-size="16" fill="#CBD5E1" text-anchor="middle">
+    <text x="480" y="262">порт 1</text><text x="600" y="262">порт 2</text><text x="720" y="262">порт 3</text>
+  </g>
+  <g stroke="#64748B" stroke-width="3">
+    <line x1="480" y1="270" x2="260" y2="360"/>
+    <line x1="600" y1="270" x2="600" y2="360"/>
+    <line x1="720" y1="270" x2="940" y2="360"/>
+  </g>
+  <g font-size="18" text-anchor="middle">
+    <rect x="190" y="360" width="140" height="56" rx="10" fill="#CCFBF1" stroke="#0F766E" stroke-width="2"/>
+    <text x="260" y="385" fill="#0E1830">pc1</text><text x="260" y="406" font-size="14" fill="#475569">02:..:01</text>
+    <rect x="530" y="360" width="140" height="56" rx="10" fill="#CCFBF1" stroke="#0F766E" stroke-width="2"/>
+    <text x="600" y="385" fill="#0E1830">pc2</text><text x="600" y="406" font-size="14" fill="#475569">02:..:02</text>
+    <rect x="870" y="360" width="140" height="56" rx="10" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/>
+    <text x="940" y="385" fill="#0E1830">pc3</text><text x="940" y="406" font-size="14" fill="#475569">молчит</text>
+  </g>
+
+  <!-- таблица -->
+  <rect x="820" y="80" width="340" height="120" rx="10" fill="#EEF2FF" stroke="#4338CA" stroke-width="2"/>
+  <text x="990" y="108" text-anchor="middle" font-size="18" font-weight="bold" fill="#0E1830">таблица MAC-адресов</text>
+  <g font-family="monospace" font-size="17" fill="#0E1830">
+    <text x="845" y="140">02:..:01  -&gt; порт 1</text>
+    <text x="845" y="168">02:..:02  -&gt; порт 2</text>
+  </g>
+  <text x="990" y="192" text-anchor="middle" font-size="14" fill="#475569">pc3 нет: он ничего не передавал</text>
+
+  <!-- правила -->
+  <rect x="40" y="80" width="360" height="200" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="17" fill="#0E1830">
+    <text x="60" y="112" font-weight="bold">Для каждого кадра:</text>
+    <text x="60" y="140">1. запомнить отправителя и порт</text>
+    <text x="60" y="164">2. найти получателя в таблице</text>
+    <text x="60" y="188">3. за тем же портом - выбросить</text>
+    <text x="60" y="212">4. за другим портом - только туда</text>
+    <text x="60" y="236">5. неизвестен или всем - на все</text>
+    <text x="84" y="258">остальные порты</text>
+  </g>
+
+  <!-- итог демонстрации -->
+  <rect x="40" y="450" width="1120" height="140" rx="12" fill="#F0FDFA" stroke="#0F766E" stroke-width="2"/>
+  <g font-size="18" fill="#0E1830">
+    <text x="60" y="484">pc1 пингует pc2. Первым идёт широковещательный ARP-запрос "у кого 10.99.0.2?":</text>
+    <text x="60" y="512">он уходит на все остальные порты, и pc3 его получает.</text>
+    <text x="60" y="548">Дальше коммутатор уже знает оба адреса, и шесть кадров пинга идут только между</text>
+    <text x="60" y="576">портами 1 и 2. pc3 их не видит - так было и в нашем опыте на сервере.</text>
+  </g>
+</svg>
