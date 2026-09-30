@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Тройное рукопожатие TCP</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">номера - из опыта: x = 2424964883, y = 1685704378</text>
+
+  <text x="300" y="112" text-anchor="middle" font-size="20" font-weight="bold" fill="#0E1830">Клиент 192.0.2.1</text>
+  <text x="900" y="112" text-anchor="middle" font-size="20" font-weight="bold" fill="#0E1830">Сервер 192.0.2.2:5000</text>
+  <line x1="300" y1="125" x2="300" y2="520" stroke="#475569" stroke-width="3"/>
+  <line x1="900" y1="125" x2="900" y2="520" stroke="#475569" stroke-width="3"/>
+
+  <g font-size="15" text-anchor="middle" fill="#0E1830">
+    <rect x="70" y="135" width="200" height="34" rx="6" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/><text x="170" y="158">CLOSED</text>
+    <rect x="70" y="215" width="200" height="34" rx="6" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="170" y="238">SYN-SENT</text>
+    <rect x="70" y="355" width="200" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="170" y="378">ESTABLISHED</text>
+    <rect x="930" y="135" width="200" height="34" rx="6" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/><text x="1030" y="158">LISTEN</text>
+    <rect x="930" y="255" width="200" height="34" rx="6" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="1030" y="278">SYN-RECEIVED</text>
+    <rect x="930" y="455" width="200" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="1030" y="478">ESTABLISHED</text>
+  </g>
+
+  <g stroke="#2563EB" stroke-width="3">
+    <line x1="300" y1="190" x2="884" y2="248"/>
+    <line x1="300" y1="390" x2="884" y2="448"/>
+  </g>
+  <line x1="900" y1="290" x2="316" y2="348" stroke="#15803D" stroke-width="3"/>
+  <polygon points="900,250 881.4,255.2 882.8,241.2" fill="#2563EB"/>
+  <polygon points="900,450 881.4,455.2 882.8,441.2" fill="#2563EB"/>
+  <polygon points="300,350 318.6,355.2 317.2,341.2" fill="#15803D"/>
+
+  <g font-size="17" text-anchor="middle" fill="#0E1830">
+    <text x="600" y="196" font-weight="bold">1. SYN</text><text x="600" y="262" font-size="15" fill="#475569">seq = x = 2424964883, параметры клиента</text>
+    <text x="600" y="292" font-weight="bold">2. SYN + ACK</text><text x="600" y="364" font-size="15" fill="#475569">seq = y = 1685704378, ack = x + 1 = 2424964884</text>
+    <text x="600" y="396" font-weight="bold">3. ACK</text><text x="600" y="468" font-size="15" fill="#475569">ack = y + 1 = 1685704379; дальше могут идти данные</text>
+  </g>
+
+  <rect x="40" y="545" width="1120" height="75" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="574" text-anchor="middle" font-size="17" fill="#0E1830">SYN занимает один номер, поэтому подтверждается x + 1 и y + 1.</text>
+  <text x="600" y="600" text-anchor="middle" font-size="17" fill="#0E1830">Сервер заводит запись соединения уже на шаге 2, ещё не зная, придёт ли шаг 3.</text>
+</svg>
