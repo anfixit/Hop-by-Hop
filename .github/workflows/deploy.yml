@@ -97,7 +97,7 @@ jobs:
           $SSH "cd /opt/hopbyhop && chmod 600 .env \
             && IMAGE_TAG='$TAG' docker compose pull -q \
             && IMAGE_TAG='$TAG' docker compose up -d --remove-orphans \
-            ; rc=\$?; docker logout ghcr.io >/dev/null; docker image prune -f >/dev/null; exit \$rc"
+            ; rc=\$?; docker logout ghcr.io >/dev/null; docker image prune -a -f >/dev/null; exit \$rc"
           sleep 15
           $SSH "cd /opt/hopbyhop && docker compose ps --format '{{.Service}}: {{.State}} {{.Status}}' && docker compose logs --tail 20 bot"
           $SSH "cd /opt/hopbyhop && test \"\$(docker compose ps --format '{{.State}}' bot)\" = running"

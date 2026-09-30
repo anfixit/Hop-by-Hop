@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <rect width="1200" height="620" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Узкий участок на пути</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">схема опыта: каждый узел знает MTU только своих интерфейсов</text>
+
+  <g font-size="17" text-anchor="middle" fill="#0E1830">
+    <rect x="60" y="110" width="150" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="135" y="140">a</text><text x="135" y="164" font-size="14" fill="#475569">192.0.2.1</text>
+    <rect x="370" y="110" width="150" height="70" rx="10" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="445" y="140">r1</text><text x="445" y="164" font-size="14" fill="#475569">маршрутизатор</text>
+    <rect x="680" y="110" width="150" height="70" rx="10" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="755" y="140">r2</text><text x="755" y="164" font-size="14" fill="#475569">маршрутизатор</text>
+    <rect x="990" y="110" width="150" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="1065" y="140">b</text><text x="1065" y="164" font-size="14" fill="#475569">198.51.100.2</text>
+  </g>
+  <line x1="210" y1="145" x2="370" y2="145" stroke="#15803D" stroke-width="8"/>
+  <line x1="520" y1="145" x2="680" y2="145" stroke="#B91C1C" stroke-width="4"/>
+  <line x1="830" y1="145" x2="990" y2="145" stroke="#15803D" stroke-width="8"/>
+  <g font-size="15" text-anchor="middle" fill="#0E1830">
+    <text x="290" y="128">MTU 1500</text><text x="600" y="128" fill="#B91C1C" font-weight="bold">MTU 1400</text><text x="910" y="128">MTU 1500</text>
+    <text x="600" y="172" font-size="14" fill="#475569">"туннель"</text>
+  </g>
+
+  <text x="60" y="232" font-size="18" font-weight="bold" fill="#0E1830">Оба объявили MSS 1460, и a отправляет пакет в 1500 байт:</text>
+  <g font-size="14" text-anchor="middle" fill="#0E1830">
+    <rect x="60" y="246" width="60" height="46" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="90" y="274">IP 20</text>
+    <rect x="120" y="246" width="60" height="46" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="150" y="274">TCP 20</text>
+    <rect x="180" y="246" width="60" height="46" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="210" y="274" font-size="12">метки 12</text>
+    <rect x="240" y="246" width="720" height="46" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="600" y="274">данные 1448</text>
+  </g>
+  <line x1="900" y1="238" x2="900" y2="300" stroke="#B91C1C" stroke-width="3"/>
+  <text x="920" y="320" font-size="14" fill="#B91C1C">1400: сюда помещается, дальше - нет</text>
+
+  <text x="60" y="366" font-size="18" font-weight="bold" fill="#0E1830">r1 отбрасывает пакет и отвечает: ICMP "нужна фрагментация, MTU 1400". Дальше - два исхода:</text>
+
+  <rect x="40" y="386" width="550" height="130" rx="10" fill="#F8FAFC" stroke="#15803D" stroke-width="2"/>
+  <text x="315" y="416" text-anchor="middle" font-size="17" font-weight="bold" fill="#0E1830">ICMP дошёл</text>
+  <text x="315" y="444" text-anchor="middle" font-size="15" fill="#0E1830">a запоминает MTU пути 1400 и повторяет данные</text>
+  <text x="315" y="468" text-anchor="middle" font-size="15" fill="#0E1830">сегментами по 1348 = 1400 - 20 - 20 - 12.</text>
+  <text x="315" y="496" text-anchor="middle" font-size="15" fill="#475569">в опыте: передача за 0,3 с</text>
+
+  <rect x="610" y="386" width="550" height="130" rx="10" fill="#F8FAFC" stroke="#B91C1C" stroke-width="2"/>
+  <text x="885" y="416" text-anchor="middle" font-size="17" font-weight="bold" fill="#0E1830">ICMP отфильтрован: чёрная дыра</text>
+  <text x="885" y="444" text-anchor="middle" font-size="15" fill="#0E1830">a ничего не узнал и повторяет тот же большой сегмент</text>
+  <text x="885" y="468" text-anchor="middle" font-size="15" fill="#0E1830">через 0,2, 0,4, 0,8, 1,7, 3,3 с.</text>
+  <text x="885" y="496" text-anchor="middle" font-size="15" fill="#475569">в опыте: передача зависла</text>
+
+  <rect x="40" y="536" width="1120" height="64" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="562" text-anchor="middle" font-size="17" fill="#0E1830">Подрезание MSS: r1 переписывает в проходящих SYN (в обе стороны) параметр MSS с 1460 на 1360 (1400 - 40),</text>
+  <text x="600" y="586" text-anchor="middle" font-size="17" fill="#0E1830">и узлы с самого начала отправляют сегменты, которые помещаются в узкий участок.</text>
+</svg>
