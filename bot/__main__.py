@@ -13,9 +13,11 @@ from aiogram.types import BotCommand
 from bot.config import Settings
 from bot.content import load_course
 from bot.db import init_db
-from bot.handlers import account, admin, answers, lessons, payments, quiz
-from bot.handlers.common import RuntimeState
+from bot import alerts
+from bot.handlers import account, admin, answers, feedback, lessons, payments, quiz
+from bot.handlers.common import RuntimeState, notify_admins
 from bot.platega import Platega
+from bot.profile import setup_profile
 from bot.review import Reviewer
 
 
@@ -55,23 +57,29 @@ async def main() -> None:
         secret=hashlib.sha256(b"hop-by-hop/callbacks|" + token.encode()).digest(),
     )
     admin.setup_admin_filter(settings)
-    dp.include_routers(admin.router, payments.router, account.router, answers.router, quiz.router, lessons.router)
+    dp.include_routers(admin.router, payments.router, account.router, feedback.router, answers.router, quiz.router, lessons.router)
 
     await bot.set_my_commands([
         BotCommand(command="lessons", description="Оглавление курса"),
         BotCommand(command="buy", description="Разборы ИИ: остаток и покупка"),
         BotCommand(command="me", description="Моя статистика"),
         BotCommand(command="help", description="Справка"),
-        BotCommand(command="cancel", description="Отменить ввод ответа"),
+        BotCommand(command="report", description="Сообщить об ошибке"),
+        BotCommand(command="cancel", description="Отменить ввод"),
         BotCommand(command="terms", description="Оферта и документы"),
     ])
     logging.info("Уроков загружено: %d", len(course.lessons))
-    poller = asyncio.create_task(payments.poll_platega(bot, db, settings, platega)) if platega else None
+    await setup_profile(bot)
+    logging.getLogger().addHandler(alerts.AdminAlertHandler(bot, settings))
+    tasks = [asyncio.create_task(alerts.backup_daily(bot, settings))]
+    if platega:
+        tasks.append(asyncio.create_task(payments.poll_platega(bot, db, settings, platega)))
+    await notify_admins(bot, settings, f"🟢 Бот запущен. Уроков: {len(course.lessons)}.")
     try:
         await dp.start_polling(bot)
     finally:
-        if poller:
-            poller.cancel()
+        for task in tasks:
+            task.cancel()
         await engine.dispose()
 
 

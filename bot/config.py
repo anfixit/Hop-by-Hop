@@ -42,6 +42,13 @@ class Settings(BaseSettings):
     # Номер способа оплаты в Platega; пусто - плательщик выбирает сам на форме
     platega_payment_method: int | None = None
 
+    # Почта для сообщений об ошибках в уроках; без пароля сообщения приходят только в Telegram
+    smtp_host: str = "smtp.gmail.com"
+    smtp_port: int = 465
+    smtp_user: str | None = None
+    smtp_password: SecretStr | None = None
+    report_email: str | None = None
+
     budget_alert_usd: float = 5.0
     quiz_pass_ratio: float = 0.8
 
@@ -60,7 +67,7 @@ class Settings(BaseSettings):
         return value
 
     @field_validator("proxy_url", "anthropic_api_key", "telegraph_token", "platega_merchant_id", "platega_secret",
-                     "platega_payment_method", mode="before")
+                     "platega_payment_method", "smtp_user", "smtp_password", "report_email", mode="before")
     @classmethod
     def _empty_to_none(cls, value: object) -> object:
         return value or None
@@ -68,6 +75,10 @@ class Settings(BaseSettings):
     @property
     def platega_enabled(self) -> bool:
         return bool(self.platega_merchant_id and self.platega_secret)
+
+    @property
+    def report_email_enabled(self) -> bool:
+        return bool(self.smtp_user and self.smtp_password and self.report_email)
 
     @property
     def sqlite_path(self) -> Path | None:

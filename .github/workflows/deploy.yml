@@ -62,6 +62,10 @@ jobs:
           # Необязательные переменные репозитория (Settings -> Variables); пусто - значения по умолчанию из bot/config.py
           PACKS: ${{ vars.PACKS }}
           TRIAL_REVIEWS: ${{ vars.TRIAL_REVIEWS }}
+          # Почта для сообщений об ошибках в уроках (необязательно): ящик, пароль приложения, куда слать
+          SMTP_USER: ${{ vars.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          REPORT_EMAIL: ${{ vars.REPORT_EMAIL }}
         run: |
           umask 077
           {
@@ -73,6 +77,9 @@ jobs:
             printf 'PLATEGA_SECRET=%s\n' "$PLATEGA_SECRET"
             if [ -n "$PACKS" ]; then printf 'PACKS=%s\n' "$PACKS"; fi
             if [ -n "$TRIAL_REVIEWS" ]; then printf 'TRIAL_REVIEWS=%s\n' "$TRIAL_REVIEWS"; fi
+            if [ -n "$SMTP_PASSWORD" ]; then
+              printf 'SMTP_USER=%s\nSMTP_PASSWORD=%s\nREPORT_EMAIL=%s\n' "$SMTP_USER" "$SMTP_PASSWORD" "$REPORT_EMAIL"
+            fi
           } > deploy/.env
 
       - name: Выкладка

@@ -184,3 +184,16 @@ async def test_reset_forget_refund(settings):
             assert (await session.get(Payment, pid)).status == "refunded"
     finally:
         await engine.dispose()
+
+async def test_database_dump(settings):
+    import gzip
+
+    from bot.alerts import dump_database
+    engine, db = await init_db(settings)
+    try:
+        async with db() as session:
+            await upsert_user(session, SimpleNamespace(id=5, username="u", first_name="U"))
+        data = gzip.decompress(dump_database(settings.sqlite_path))
+        assert data.startswith(b"SQLite format 3")
+    finally:
+        await engine.dispose()

@@ -6,6 +6,7 @@ from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
 from sqlalchemy import func, select
 
+from bot.alerts import send_backup
 from bot.config import Settings
 from bot.content import ContentError, Course, load_course
 from bot.db import DELETED_USER_ID, AIUsage, BudgetTopup, Payment, Progress, User, budget_balance, confirm_payment, refund_payment, utcnow
@@ -173,6 +174,56 @@ async def _provider_refund(bot: Bot, platega: Platega | None, payment: Payment) 
         return None if accepted else f"касса просит обратиться в поддержку ({text})"
     except (TelegramAPIError, PlategaError) as exc:
         return str(exc)
+
+
+@router.message(Command("funnel"))
+async def cmd_funnel(message: Message, db, settings: Settings, course: Course) -> None:
+    """Воронка: где бросают курс и как пробные разборы превращаются в покупки."""
+    real = User.id.not_in(settings.admin_ids | {DELETED_USER_ID})
+    async with db() as session:
+        users = await session.scalar(select(func.count()).select_from(User).where(real))
+        per_lesson = dict((await session.execute(
+            select(Progress.lesson_id, func.count()).join(User, User.id == Progress.user_id)
+            .where(real, Progress.quiz_passed_at.is_not(None)).group_by(Progress.lesson_id))).all())
+        tried = await session.scalar(select(func.count()).select_from(User).where(real, User.trial_used > 0))
+        spent_all = await session.scalar(
+            select(func.count()).select_from(User).where(real, User.trial_used >= settings.trial_reviews))
+        sold = Payment.status == "paid", Payment.provider != "grant"
+        buyers = await session.scalar(select(func.count(func.distinct(Payment.user_id))).where(*sold))
+        repeat = len((await session.execute(
+            select(Payment.user_id).where(*sold).group_by(Payment.user_id).having(func.count() > 1))).all())
+
+    def share(part: int, whole: int) -> str:
+        return f"{part} ({part / whole:.0%})" if whole else str(part)
+
+    lines = ["<b>Воронка</b> (без админов)", "", f"Нажали /start: {users}", "", "<b>Сдали тест урока</b>"]
+    previous, worst = users, None
+    for lesson in course.ordered(False):
+        count = per_lesson.get(lesson.id, 0)
+        if previous == 0:
+            break
+        lines.append(f"{lesson.id}: {share(count, users)}")
+        lost = previous - count
+        if lost > 0 and (worst is None or lost > worst[1]):
+            worst = (lesson.id, lost, previous)
+        previous = count
+    if worst:
+        lines += ["", f"Больше всего теряется перед тестом урока {worst[0]}: {worst[1]} из {worst[2]}"]
+    lines += [
+        "", "<b>Разборы ИИ</b>",
+        f"Попробовали хотя бы один: {share(tried, users)}",
+        f"Израсходовали все пробные: {share(spent_all, tried)}",
+        f"Купили пакет: {buyers}" + (f" ({buyers / spent_all:.0%} от израсходовавших пробные)" if spent_all else ""),
+        f"Купили повторно: {repeat}",
+    ]
+    await message.answer("\n".join(lines))
+
+
+@router.message(Command("backup"))
+async def cmd_backup(message: Message, bot: Bot, settings: Settings) -> None:
+    """Прислать копию базы прямо сейчас (обычно она приходит раз в сутки)."""
+    if not await send_backup(bot, settings):
+        await message.answer("База не в SQLite или файл не найден, копию сделать не могу.")
 
 
 @router.message(Command("reload"))

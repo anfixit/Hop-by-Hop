@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 router = Router(name="answers")
 
 NO_REVIEWS = "Разборы закончились. Уроки и тесты по-прежнему бесплатны, а разборы ИИ можно докупить: /buy"
+LOW_BALANCE = 3  # с этого остатка предупреждаем и показываем кнопку покупки
 VERDICT_LABEL = {"correct": "✅ Верно", "partial": "🟡 Частично верно", "incorrect": "❌ Неверно"}
 
 
@@ -136,7 +137,12 @@ async def on_answer(message: Message, state: FSMContext, bot: Bot, db, settings:
         async with db() as session:
             fresh = await session.get(User, user.id)
         parts += ["", f"<i>{balance_line(fresh, settings)}</i>"]
+        left = fresh.credits + trial_left(fresh, settings)
     rows = [[btn("Ответить ещё раз", f"oq:{lesson.id}:{data['idx']}")], [btn("← К вопросам", f"oq:{lesson.id}")]]
+    if kind != "admin" and left <= LOW_BALANCE:
+        parts += ["", "⚠️ Это был последний разбор. Уроки и тесты остаются бесплатными, разборы можно докупить."
+                  if left == 0 else "⚠️ Разборы заканчиваются. Пакет можно купить заранее, он не сгорает."]
+        rows.insert(0, [btn("Купить разборы", "buy")])
     await pending.edit_text("\n".join(parts), reply_markup=kb(*rows))
     await _budget_alerts(bot, db, settings, runtime)
 

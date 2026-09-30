@@ -56,6 +56,7 @@ def help_text(settings: Settings) -> str:
         "/reset - сбросить прогресс: весь или одного урока\n"
         "/forget - удалить мои данные\n"
         "/help - эта справка\n"
+        "/report - сообщить об ошибке в уроке\n"
         "/cancel - отменить ответ на вопрос\n"
         "/terms - оферта, политика конфиденциальности, правила\n"
         "/start - о курсе\n\n"
@@ -87,7 +88,7 @@ def help_text(settings: Settings) -> str:
         "Кнопка \"устарела\" - открой урок заново через /lessons. "
         "Бот ждёт ответ, а ты передумал - /cancel. "
         "Урок открывается в Telegraph: если страница не грузится, проверь доступ к telegra.ph.\n\n"
-        "Нашёл ошибку в уроке? Напиши: github.com/anfixit/Hop-by-Hop/issues, "
+        "Нашёл ошибку в уроке? Нажми \"Сообщить об ошибке\" в уроке или /report. Можно и так: github.com/anfixit/Hop-by-Hop/issues, "
         "в Telegram @Anfikus или на почту anfisa.kovganyuk@gmail.com"
     )
 
@@ -185,6 +186,7 @@ async def cb_lesson(call: CallbackQuery, db, settings: Settings, course: Course,
     ]
     if lesson.id in passed and lesson.open_questions:
         rows.append([btn("💬 Вопросы на понимание", f"oq:{lesson.id}")])
+    rows.append([btn("✉️ Сообщить об ошибке", f"rp:{lesson.id}")])
     rows.append([btn("← Оглавление", "toc:0")])
     await call.message.edit_text(text, reply_markup=kb(*rows))
     await call.answer()
