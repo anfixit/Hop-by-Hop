@@ -1,5 +1,6 @@
 """Покупка пакетов разборов: звёзды Telegram и касса Platega."""
 import asyncio
+import json
 import logging
 from datetime import UTC, timedelta
 
@@ -11,6 +12,7 @@ from sqlalchemy.exc import IntegrityError
 
 from bot.access import trial_left
 from bot.config import Pack, Settings
+from bot.content import TELEGRAPH_INDEX
 from bot.db import Payment, User, confirm_payment, upsert_user, utcnow
 from bot.handlers.common import btn, kb, notify_admins
 from bot.platega import CANCELED, CHARGEBACKED, CONFIRMED, Platega, PlategaError
@@ -21,7 +23,7 @@ router = Router(name="payments")
 POLL_EVERY = 15  # секунд между опросами кассы
 PENDING_TTL = timedelta(hours=2)  # дольше неоплаченный счёт не ждём
 
-LEGAL_URL = "https://github.com/anfixit/Hop-by-Hop/blob/main/docs/legal"
+# Документы опубликованы в Telegraph (tools/publish_telegraph.py legal), адреса лежат в content/telegraph.json
 LEGAL_DOCS = (
     ("offer", "Публичная оферта"),
     ("privacy", "Политика конфиденциальности"),
@@ -95,7 +97,8 @@ async def cmd_paysupport(message: Message) -> None:
 
 
 def terms_text() -> str:
-    links = "\n".join(f'• <a href="{LEGAL_URL}/{name}.md">{title}</a>' for name, title in LEGAL_DOCS)
+    index = json.loads(TELEGRAPH_INDEX.read_text(encoding="utf-8")) if TELEGRAPH_INDEX.exists() else {}
+    links = "\n".join(f'• <a href="{index[name]["url"]}">{title}</a>' for name, title in LEGAL_DOCS if name in index)
     return (
         "<b>Документы</b>\n\n"
         f"{links}\n\n"

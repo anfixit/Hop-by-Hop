@@ -5,8 +5,8 @@ from sqlalchemy import select
 
 from bot.access import Tier, tier_of
 from bot.config import Settings
-from bot.db import (AIUsage, BudgetTopup, Payment, User, budget_balance, confirm_payment, init_db, passed_lessons,
-                    record_quiz, refund_review, spend_review, upsert_user)
+from bot.db import (DELETED_USER_ID, AIUsage, BudgetTopup, Payment, User, budget_balance, confirm_payment, init_db, passed_lessons,
+                    record_quiz, refund_payment, refund_review, reset_progress, forget_user, spend_review, upsert_user)
 
 
 @pytest.fixture
@@ -143,5 +143,44 @@ async def test_platega_payment_is_credited_once_and_underpayment_is_not(settings
         # ученику одно сообщение об оплате; админам (id 1 и 2) - о покупке и о недоплате
         assert [chat for chat, _ in sent].count(5) == 1
         assert any("вместо" in text for _, text in sent)
+    finally:
+        await engine.dispose()
+
+async def test_reset_forget_refund(settings):
+    engine, db = await init_db(settings)
+    try:
+        async with db() as session:
+            await upsert_user(session, SimpleNamespace(id=5, username="u", first_name="U"))
+            for lesson in (1, 2):
+                await record_quiz(session, 5, lesson, 3, passed=True)
+            assert await reset_progress(session, 5, 2) == 1
+            assert await passed_lessons(session, 5) == {1}
+            assert await reset_progress(session, 5) == 1
+            assert await passed_lessons(session, 5) == set()
+
+            payment = Payment(user_id=5, provider="platega", external_id="tx", reviews=50, amount=99, currency="RUB")
+            session.add(payment)
+            await session.commit()
+            pid = payment.id
+            await confirm_payment(session, pid)
+            for _ in range(20):
+                assert await spend_review(session, 5, 15) == "paid"
+            assert await refund_payment(session, pid) == 30  # списывается только неиспользованное
+            assert await refund_payment(session, pid) is None
+            user = await session.get(User, 5, populate_existing=True)
+            assert user.credits == 0
+
+            assert await spend_review(session, 5, 15) == "trial"
+            session.add(AIUsage(user_id=5, lesson_id=1, model="m", input_tokens=1, output_tokens=1, cost_usd=0.5))
+            await record_quiz(session, 5, 1, 3, passed=True)
+            await session.commit()
+            spent = await budget_balance(session)
+            await forget_user(session, 5)
+            await session.refresh(user)
+            assert (user.username, user.first_name, user.credits, user.trial_used) == (None, None, 0, 1)
+            assert await passed_lessons(session, 5) == set()
+            assert await budget_balance(session) == spent  # расходы остались в учёте, но уже не за пользователем
+            assert (await session.scalars(select(AIUsage.user_id))).all() == [DELETED_USER_ID]
+            assert (await session.get(Payment, pid)).status == "refunded"
     finally:
         await engine.dispose()

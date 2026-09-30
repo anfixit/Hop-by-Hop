@@ -13,7 +13,7 @@ from aiogram.types import BotCommand
 from bot.config import Settings
 from bot.content import load_course
 from bot.db import init_db
-from bot.handlers import admin, answers, lessons, payments, quiz
+from bot.handlers import account, admin, answers, lessons, payments, quiz
 from bot.handlers.common import RuntimeState
 from bot.platega import Platega
 from bot.review import Reviewer
@@ -55,11 +55,12 @@ async def main() -> None:
         secret=hashlib.sha256(b"hop-by-hop/callbacks|" + token.encode()).digest(),
     )
     admin.setup_admin_filter(settings)
-    dp.include_routers(admin.router, payments.router, answers.router, quiz.router, lessons.router)
+    dp.include_routers(admin.router, payments.router, account.router, answers.router, quiz.router, lessons.router)
 
     await bot.set_my_commands([
         BotCommand(command="lessons", description="Оглавление курса"),
         BotCommand(command="buy", description="Разборы ИИ: остаток и покупка"),
+        BotCommand(command="me", description="Моя статистика"),
         BotCommand(command="help", description="Справка"),
         BotCommand(command="cancel", description="Отменить ввод ответа"),
         BotCommand(command="terms", description="Оферта и документы"),

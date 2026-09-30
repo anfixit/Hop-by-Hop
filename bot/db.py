@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import BigInteger, DateTime, Float, ForeignKey, Integer, String, func, inspect, select, text, update
+from sqlalchemy import BigInteger, DateTime, Float, ForeignKey, Integer, String, delete, func, inspect, select, text, update
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -39,7 +39,7 @@ class Payment(Base):
     reviews: Mapped[int] = mapped_column(Integer)
     amount: Mapped[int] = mapped_column(Integer)
     currency: Mapped[str] = mapped_column(String(8))  # RUB | XTR
-    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)  # pending | paid | canceled
+    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)  # pending | paid | canceled | refunded
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
@@ -166,6 +166,50 @@ async def confirm_payment(session: AsyncSession, payment_id: int) -> Payment | N
     await session.commit()
     await session.refresh(payment)
     return payment
+
+async def reset_progress(session: AsyncSession, user_id: int, lesson_id: int | None = None) -> int:
+    """Стереть результаты тестов: одного урока или всех. Возвращает число стёртых записей."""
+    query = delete(Progress).where(Progress.user_id == user_id)
+    if lesson_id is not None:
+        query = query.where(Progress.lesson_id == lesson_id)
+    done = await session.execute(query)
+    await session.commit()
+    return done.rowcount
+
+
+DELETED_USER_ID = 0  # на него переписывается учёт разборов удалённых пользователей
+
+
+async def forget_user(session: AsyncSession, user_id: int) -> None:
+    """Удалить данные пользователя по его запросу.
+
+    Остаются: идентификатор со счётчиком пробных разборов (иначе пробный запас выдавался бы заново)
+    и платежи (их хранения требует закон). Расходы на ИИ обезличиваются, чтобы не поплыл учёт бюджета.
+    """
+    if await session.get(User, DELETED_USER_ID) is None:
+        session.add(User(id=DELETED_USER_ID))
+    await session.execute(delete(Progress).where(Progress.user_id == user_id))
+    await session.execute(update(AIUsage).where(AIUsage.user_id == user_id).values(user_id=DELETED_USER_ID))
+    await session.execute(update(User).where(User.id == user_id).values(username=None, first_name=None, credits=0))
+    await session.commit()
+
+
+async def refund_payment(session: AsyncSession, payment_id: int) -> int | None:
+    """Пометить платёж возвращённым и списать его разборы (сколько осталось, но не больше пакета).
+
+    Возвращает число списанных разборов или None, если платёж не в статусе paid.
+    """
+    done = await session.execute(
+        update(Payment).where(Payment.id == payment_id, Payment.status == "paid").values(status="refunded"))
+    if not done.rowcount:
+        await session.rollback()
+        return None
+    payment = await session.get(Payment, payment_id)
+    user = await session.get(User, payment.user_id)
+    taken = min(user.credits, payment.reviews)
+    await session.execute(update(User).where(User.id == user.id).values(credits=User.credits - taken))
+    await session.commit()
+    return taken
 
 
 async def budget_balance(session: AsyncSession) -> float:

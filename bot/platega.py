@@ -68,6 +68,16 @@ class Platega:
             raise PlategaError("unexpected response")
         return Transaction(tx_id, url, data.get("status", PENDING))
 
+    async def cancel_supported(self, transaction_id: str) -> tuple[bool, str]:
+        """Можно ли вернуть платёж целиком; вторым значением - причина отказа, если нельзя."""
+        data = await self._request("GET", f"/transaction/{transaction_id}/cancel-supported")
+        return bool(data.get("supported")), data.get("blockReason") or ""
+
+    async def cancel(self, transaction_id: str) -> tuple[bool, str]:
+        """Вернуть платёж плательщику целиком. accepted=False значит, что касса просит обратиться в поддержку."""
+        data = await self._request("POST", f"/transaction/{transaction_id}/cancel")
+        return bool(data.get("accepted")), data.get("message") or ""
+
     async def status(self, transaction_id: str) -> tuple[str, float | None]:
         """Статус платежа и его сумма в рублях (по ней проверяем, что оплачено столько, сколько выставлено)."""
         data = await self._request("GET", f"/transaction/{transaction_id}")

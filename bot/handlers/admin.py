@@ -1,14 +1,16 @@
 from datetime import timedelta
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
 from sqlalchemy import func, select
 
 from bot.config import Settings
 from bot.content import ContentError, Course, load_course
-from bot.db import AIUsage, BudgetTopup, Payment, Progress, User, budget_balance, confirm_payment, utcnow
+from bot.db import DELETED_USER_ID, AIUsage, BudgetTopup, Payment, Progress, User, budget_balance, confirm_payment, refund_payment, utcnow
 from bot.handlers.common import RuntimeState
+from bot.platega import Platega, PlategaError
 
 router = Router(name="admin")
 
@@ -21,7 +23,7 @@ def setup_admin_filter(settings: Settings) -> None:
 async def cmd_stats(message: Message, db, course: Course) -> None:
     day_ago = utcnow() - timedelta(days=1)
     async with db() as session:
-        users = await session.scalar(select(func.count()).select_from(User))
+        users = await session.scalar(select(func.count()).select_from(User).where(User.id != DELETED_USER_ID))
         new_users = await session.scalar(select(func.count()).select_from(User).where(User.created_at >= day_ago))
         passed = await session.scalar(select(func.count()).select_from(Progress).where(Progress.quiz_passed_at.is_not(None)))
         reviews_day = await session.scalar(select(func.count()).select_from(AIUsage).where(AIUsage.created_at >= day_ago))
@@ -84,6 +86,94 @@ async def cmd_grant(message: Message, command: CommandObject, db) -> None:
         await confirm_payment(session, payment.id)
         await session.refresh(user)
     await message.answer(f"Пользователю {user_id} начислено разборов: {reviews}. Теперь у него {user.credits}.")
+
+@router.message(Command("payments"))
+async def cmd_payments(message: Message, command: CommandObject, db) -> None:
+    """Платежи пользователя: /payments <user_id>"""
+    if not (command.args or "").strip().isdigit():
+        await message.answer("Использование: /payments <user_id>")
+        return
+    user_id = int(command.args)
+    async with db() as session:
+        user = await session.get(User, user_id)
+        rows = (await session.scalars(
+            select(Payment).where(Payment.user_id == user_id, Payment.status.in_(("paid", "refunded")))
+            .order_by(Payment.id))).all()
+    if user is None or not rows:
+        await message.answer("Оплаченных платежей у этого пользователя нет.")
+        return
+    lines = [f"<b>Платежи пользователя {user_id}</b>, на балансе разборов: {user.credits}", ""]
+    lines += [f"#{p.id} · {p.paid_at:%d.%m.%Y} · {p.provider} · {p.reviews} разб. за {p.amount} {_sign(p)} · {p.status}"
+              for p in rows]
+    lines += ["", "Возврат: /refund <номер платежа>"]
+    await message.answer("\n".join(lines))
+
+
+def _sign(payment: Payment) -> str:
+    return "⭐" if payment.currency == "XTR" else "₽"
+
+
+@router.message(Command("refund"))
+async def cmd_refund(message: Message, command: CommandObject, bot: Bot, db, platega: Platega | None) -> None:
+    """Возврат платежа: /refund <номер> - целиком через кассу или Telegram; /refund <номер> manual - только учёт."""
+    args = (command.args or "").split()
+    if not args or not args[0].isdigit() or args[1:] not in ([], ["manual"]):
+        await message.answer("Использование: /refund <номер платежа> [manual]. Номера - в /payments <user_id>.")
+        return
+    manual = len(args) == 2
+    async with db() as session:
+        payment = await session.get(Payment, int(args[0]))
+        user = await session.get(User, payment.user_id) if payment else None
+    if payment is None or payment.status != "paid" or payment.provider == "grant":
+        await message.answer("Такого оплаченного платежа нет (или он уже возвращён).")
+        return
+
+    unused = min(user.credits, payment.reviews)
+    if not manual:
+        if unused < payment.reviews:
+            part = payment.amount * unused // payment.reviews
+            await message.answer(
+                f"Из пакета в {payment.reviews} разборов не использовано {unused}. По оферте к возврату "
+                f"{part} {_sign(payment)} из {payment.amount}.\n\n"
+                "Касса и Telegram возвращают платёж только целиком, поэтому частичный возврат сделай вручную "
+                f"(в кабинете кассы или переводом), а потом отметь: /refund {payment.id} manual - "
+                "оставшиеся разборы пакета спишутся.")
+            return
+        error = await _provider_refund(bot, platega, payment)
+        if error:
+            await message.answer(f"Возврат не прошёл: {error}\nБаланс пользователя не менялся.")
+            return
+
+    async with db() as session:
+        taken = await refund_payment(session, payment.id)
+    if taken is None:
+        await message.answer("Платёж уже возвращён.")
+        return
+    how = "отмечен как возвращённый вручную" if manual else "возвращён"
+    await message.answer(f"Платёж #{payment.id} {how}. Списано разборов: {taken}.")
+    try:
+        await bot.send_message(payment.user_id, f"Возврат оформлен: платёж на {payment.amount} {_sign(payment)} "
+                                                f"от {payment.paid_at:%d.%m.%Y}. Разборов списано: {taken}.")
+    except Exception:  # пользователь мог заблокировать бота
+        pass
+
+
+async def _provider_refund(bot: Bot, platega: Platega | None, payment: Payment) -> str | None:
+    """Вернуть деньги через того, кто их принял. Возвращает текст ошибки или None при успехе."""
+    try:
+        if payment.provider == "stars":
+            await bot.refund_star_payment(user_id=payment.user_id, telegram_payment_charge_id=payment.external_id)
+            return None
+        if platega is None:
+            return "касса не подключена"
+        supported, reason = await platega.cancel_supported(payment.external_id)
+        if not supported:
+            return f"касса не может отменить этот платёж ({reason or 'причина не указана'})"
+        accepted, text = await platega.cancel(payment.external_id)
+        return None if accepted else f"касса просит обратиться в поддержку ({text})"
+    except (TelegramAPIError, PlategaError) as exc:
+        return str(exc)
+
 
 @router.message(Command("reload"))
 async def cmd_reload(message: Message, course: Course) -> None:

@@ -3,6 +3,7 @@
   python -m tools.publish_telegraph init         создать аккаунт и записать TELEGRAPH_TOKEN в .env
   python -m tools.publish_telegraph publish 1    опубликовать или обновить урок 1
   python -m tools.publish_telegraph preview 1    показать узлы Telegraph без публикации
+  python -m tools.publish_telegraph legal        опубликовать или обновить оферту, политику и правила
 
 Страница урока создаётся один раз; повторная публикация редактирует её по тому же адресу.
 Адреса хранятся в content/telegraph.json (он в git).
@@ -25,6 +26,8 @@ from bot.content import LESSONS_DIR, TELEGRAPH_INDEX
 AUTHOR = "Hop-by-Hop"
 ENV_FILE = REPO_ROOT / ".env"
 RAW_BASE = "https://raw.githubusercontent.com/anfixit/Hop-by-Hop"
+LEGAL_DIR = REPO_ROOT.parent / "legal"  # исходники документов лежат вне репозитория
+LEGAL_DOCS = ("offer", "privacy", "rules")
 
 
 class PublishSettings(BaseSettings):
@@ -103,10 +106,31 @@ def publish(lesson_id: int) -> None:
     print(f"Урок {lesson_id}: {page['url']}")
 
 
+def publish_legal() -> None:
+    """Документы для /terms. Строка "{url}" в тексте заменяется адресом самой страницы."""
+    settings = PublishSettings()
+    if settings.telegraph_token is None:
+        raise SystemExit("Нет TELEGRAPH_TOKEN. Сначала: python -m tools.publish_telegraph init")
+    index = json.loads(TELEGRAPH_INDEX.read_text(encoding="utf-8")) if TELEGRAPH_INDEX.exists() else {}
+    for name in LEGAL_DOCS:
+        title, body = telegraph.split_title((LEGAL_DIR / f"{name}.md").read_text(encoding="utf-8-sig"))
+        params = dict(access_token=settings.telegraph_token.get_secret_value(), title=title, author_name=AUTHOR,
+                      return_content="false")
+        if name not in index:  # адрес страницы появляется только после её создания
+            page = telegraph.call("createPage", settings.proxy_url, content=[{"tag": "p", "children": [title]}], **params)
+            index[name] = {"path": page["path"], "url": page["url"]}
+        nodes = telegraph.markdown_to_nodes(body.replace("{url}", index[name]["url"].removeprefix("https://")))
+        telegraph.call(f"editPage/{index[name]['path']}", settings.proxy_url, content=nodes, **params)
+        print(f"{name}: {index[name]['url']}")
+    TELEGRAPH_INDEX.write_text(json.dumps(index, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def main(argv: list[str]) -> None:
     match argv:
         case ["init"]:
             init()
+        case ["legal"]:
+            publish_legal()
         case ["publish", lesson_id]:
             publish(int(lesson_id))
         case ["preview", lesson_id]:
