@@ -21,6 +21,13 @@ router = Router(name="payments")
 POLL_EVERY = 15  # секунд между опросами кассы
 PENDING_TTL = timedelta(hours=2)  # дольше неоплаченный счёт не ждём
 
+LEGAL_URL = "https://github.com/anfixit/Hop-by-Hop/blob/main/docs/legal"
+LEGAL_DOCS = (
+    ("offer", "Публичная оферта"),
+    ("privacy", "Политика конфиденциальности"),
+    ("rules", "Правила использования"),
+)
+
 
 def plural(n: int, one: str, few: str, many: str) -> str:
     if n % 10 == 1 and n % 100 != 11:
@@ -60,7 +67,8 @@ async def shop(tg_user, db, settings: Settings):
         if settings.platega_enabled:
             row.append(btn(f"{pack.reviews} за {pack.rub} ₽", f"buy:p:{i}"))
         rows.append(row)
-    lines += ["", "Уроки, тесты и оглавление остаются бесплатными. Вопросы по оплате: /paysupport"]
+    lines += ["", "Уроки, тесты и оглавление остаются бесплатными. Вопросы по оплате: /paysupport",
+              "Оплачивая пакет, ты принимаешь оферту и правила: /terms"]
     rows.append([btn("← Оглавление", "toc:0")])
     return "\n".join(lines), kb(*rows)
 
@@ -84,6 +92,21 @@ async def cmd_paysupport(message: Message) -> None:
         "Если оплата прошла, а разборы не начислились, или нужен возврат - напиши @Anfikus "
         "или на anfisa.kovganyuk@gmail.com. Укажи дату, сумму и способ оплаты, разберёмся."
     )
+
+
+def terms_text() -> str:
+    links = "\n".join(f'• <a href="{LEGAL_URL}/{name}.md">{title}</a>' for name, title in LEGAL_DOCS)
+    return (
+        "<b>Документы</b>\n\n"
+        f"{links}\n\n"
+        "Исполнитель: ИП Ковганюк Анфиса Валерьевна, ОГРНИП 324632700157665, ИНН 632418110551.\n"
+        "Контакты: @Anfikus, anfisa.kovganyuk@gmail.com"
+    )
+
+
+@router.message(Command("terms"))
+async def cmd_terms(message: Message) -> None:
+    await message.answer(terms_text(), disable_web_page_preview=True)
 
 
 # --- Звёзды Telegram ---

@@ -62,6 +62,7 @@ async def main() -> None:
         BotCommand(command="buy", description="Разборы ИИ: остаток и покупка"),
         BotCommand(command="help", description="Справка"),
         BotCommand(command="cancel", description="Отменить ввод ответа"),
+        BotCommand(command="terms", description="Оферта и документы"),
     ])
     logging.info("Уроков загружено: %d", len(course.lessons))
     poller = asyncio.create_task(payments.poll_platega(bot, db, settings, platega)) if platega else None
