@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Окно перегрузки: три алгоритма на одном пути</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">данные опыта: узкое место 10 Мбит/с, время оборота 40 мс; замеры примерно раз в полсекунды, без первых мгновений старта</text>
+  <line x1="100" y1="500" x2="1120" y2="500" stroke="#475569" stroke-width="2"/>
+  <line x1="100" y1="110" x2="100" y2="500" stroke="#475569" stroke-width="2"/>
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="100" y1="436" x2="1120" y2="436"/><line x1="100" y1="372" x2="1120" y2="372"/><line x1="100" y1="308" x2="1120" y2="308"/><line x1="100" y1="244" x2="1120" y2="244"/><line x1="100" y1="180" x2="1120" y2="180"/><line x1="100" y1="116" x2="1120" y2="116"/>
+  </g>
+  <g font-size="14" fill="#475569" text-anchor="end">
+    <text x="90" y="505">0</text><text x="90" y="441">20</text><text x="90" y="377">40</text><text x="90" y="313">60</text><text x="90" y="249">80</text><text x="90" y="185">100</text><text x="90" y="121">120</text>
+  </g>
+  <g font-size="14" fill="#475569" text-anchor="middle">
+    <text x="240" y="524">1</text><text x="380" y="524">2</text><text x="520" y="524">3</text><text x="660" y="524">4</text><text x="800" y="524">5</text><text x="940" y="524">6</text><text x="1080" y="524">7 с</text>
+  </g>
+  <text x="40" y="100" font-size="14" fill="#475569">окно, сегментов</text>
+  <line x1="100" y1="285.6" x2="1120" y2="285.6" stroke="#94A3B8" stroke-width="2"/>
+  <text x="1115" y="278" text-anchor="end" font-size="14" fill="#475569">67: труба + очередь, выше - потери</text><text x="1115" y="150" text-anchor="end" font-size="14" fill="#475569">у BBR окно - лишь потолок: в пути у него около 39 сегментов</text>
+  <line x1="100" y1="388" x2="1120" y2="388" stroke="#94A3B8" stroke-width="2"/>
+  <text x="1115" y="406" text-anchor="end" font-size="14" fill="#475569">вместимость трубы без очереди: 35</text>
+  <polyline points="170,368.8 240,336.8 310,311.2 380,288.8 450,375.2 520,343.2 590,317.6 660,295.2 730,372 800,343.2 870,314.4 940,384.8 1010,352.8 1080,324" fill="none" stroke="#B91C1C" stroke-width="4"/>
+  <polyline points="170,317.6 240,298.4 310,285.6 380,336.8 450,327.2 520,314.4 590,301.6 660,288.8 730,343.2 800,317.6 870,301.6 940,292 1010,352.8 1080,336.8" fill="none" stroke="#2563EB" stroke-width="4"/>
+  <polyline points="170,199.2 240,205.6 310,221.6 380,212 450,199.2 520,218.4 590,224.8 660,180 730,199.2 800,205.6 870,199.2 940,205.6 1010,218.4 1080,224.8" fill="none" stroke="#15803D" stroke-width="4"/>
+  <g font-size="16" fill="#0E1830">
+    <rect x="130" y="555" width="30" height="6" fill="#B91C1C"/><text x="170" y="564">Reno: ровный рост и падение вдвое</text>
+    <rect x="480" y="555" width="30" height="6" fill="#2563EB"/><text x="520" y="564">CUBIC: до 0,7 и плавный возврат</text>
+    <rect x="800" y="555" width="30" height="6" fill="#15803D"/><text x="840" y="564">BBR: без пилы, темп вместо окна</text>
+  </g>
+  <text x="600" y="610" text-anchor="middle" font-size="16" fill="#475569">Время оборота (медиана за опыт): Reno 60 мс, CUBIC 70 мс, BBR 47 мс при чистых 40 мс.</text>
+</svg>
