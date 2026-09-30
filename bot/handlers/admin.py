@@ -7,7 +7,7 @@ from sqlalchemy import func, select
 
 from bot.config import Settings
 from bot.content import ContentError, Course, load_course
-from bot.db import AIUsage, BudgetTopup, Progress, User, budget_balance, utcnow
+from bot.db import AIUsage, BudgetTopup, Payment, Progress, User, budget_balance, confirm_payment, utcnow
 from bot.handlers.common import RuntimeState
 
 router = Router(name="admin")
@@ -29,6 +29,10 @@ async def cmd_stats(message: Message, db, course: Course) -> None:
             select(func.coalesce(func.sum(AIUsage.cost_usd), 0.0)).where(AIUsage.created_at >= day_ago))
         spent_total = await session.scalar(select(func.coalesce(func.sum(AIUsage.cost_usd), 0.0)))
         balance = await budget_balance(session)
+        sales = (await session.execute(
+            select(Payment.currency, func.count(), func.coalesce(func.sum(Payment.amount), 0))
+            .where(Payment.status == "paid", Payment.provider != "grant").group_by(Payment.currency))).all()
+    sales_line = ", ".join(f"{n} шт. на {total} {'⭐' if cur == 'XTR' else '₽'}" for cur, n, total in sales) or "пока нет"
     published = sum(1 for l in course.lessons.values() if l.published)
     await message.answer(
         "<b>Статистика</b>\n"
@@ -37,7 +41,8 @@ async def cmd_stats(message: Message, db, course: Course) -> None:
         f"Уроков: {len(course.lessons)}, опубликовано {published}\n\n"
         f"Проверок ИИ за сутки: {reviews_day}, ${spent_day:.4f}\n"
         f"Потрачено всего: ${spent_total:.4f}\n"
-        f"Расчётный остаток бюджета: ${balance:.2f}"
+        f"Расчётный остаток бюджета: ${balance:.2f}\n\n"
+        f"Продажи пакетов: {sales_line}"
     )
 
 
@@ -61,21 +66,24 @@ async def cmd_topup(message: Message, command: CommandObject, db, runtime: Runti
 
 @router.message(Command("grant"))
 async def cmd_grant(message: Message, command: CommandObject, db) -> None:
-    """Выдать платный тариф вручную: /grant <user_id> <дней>"""
+    """Начислить разборы вручную: /grant <user_id> <разборов>"""
     try:
-        user_id, days = (int(x) for x in (command.args or "").split())
+        user_id, reviews = (int(x) for x in (command.args or "").split())
     except ValueError:
-        await message.answer("Использование: /grant <user_id> <дней>")
+        await message.answer("Использование: /grant <user_id> <разборов>")
         return
     async with db() as session:
         user = await session.get(User, user_id)
         if user is None:
             await message.answer("Такого пользователя нет: он должен сначала нажать /start.")
             return
-        user.paid_until = utcnow() + timedelta(days=days)
+        payment = Payment(user_id=user_id, provider="grant", external_id=f"grant:{user_id}:{utcnow().timestamp()}",
+                          reviews=reviews, amount=0, currency="RUB")
+        session.add(payment)
         await session.commit()
-    await message.answer(f"Пользователю {user_id} выдан платный тариф на {days} дн.")
-
+        await confirm_payment(session, payment.id)
+        await session.refresh(user)
+    await message.answer(f"Пользователю {user_id} начислено разборов: {reviews}. Теперь у него {user.credits}.")
 
 @router.message(Command("reload"))
 async def cmd_reload(message: Message, course: Course) -> None:

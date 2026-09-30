@@ -56,6 +56,12 @@ jobs:
           ADMIN_IDS: ${{ secrets.ADMIN_IDS }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAPH_TOKEN: ${{ secrets.TELEGRAPH_TOKEN }}
+          # Касса: без этих двух секретов в боте остаётся только оплата звёздами
+          PLATEGA_MERCHANT_ID: ${{ secrets.PLATEGA_MERCHANT_ID }}
+          PLATEGA_SECRET: ${{ secrets.PLATEGA_SECRET }}
+          # Необязательные переменные репозитория (Settings -> Variables); пусто - значения по умолчанию из bot/config.py
+          PACKS: ${{ vars.PACKS }}
+          TRIAL_REVIEWS: ${{ vars.TRIAL_REVIEWS }}
         run: |
           umask 077
           {
@@ -63,6 +69,10 @@ jobs:
             printf 'ADMIN_IDS=%s\n' "$ADMIN_IDS"
             printf 'ANTHROPIC_API_KEY=%s\n' "$ANTHROPIC_API_KEY"
             printf 'TELEGRAPH_TOKEN=%s\n' "$TELEGRAPH_TOKEN"
+            printf 'PLATEGA_MERCHANT_ID=%s\n' "$PLATEGA_MERCHANT_ID"
+            printf 'PLATEGA_SECRET=%s\n' "$PLATEGA_SECRET"
+            if [ -n "$PACKS" ]; then printf 'PACKS=%s\n' "$PACKS"; fi
+            if [ -n "$TRIAL_REVIEWS" ]; then printf 'TRIAL_REVIEWS=%s\n' "$TRIAL_REVIEWS"; fi
           } > deploy/.env
 
       - name: Выкладка

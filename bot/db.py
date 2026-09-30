@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import BigInteger, DateTime, Float, ForeignKey, Integer, String, func, select
+from sqlalchemy import BigInteger, DateTime, Float, ForeignKey, Integer, String, func, inspect, select, text, update
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -21,8 +21,27 @@ class User(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)  # Telegram user id
     username: Mapped[str | None] = mapped_column(String(64))
     first_name: Mapped[str | None] = mapped_column(String(128))
-    paid_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    paid_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # старая схема тарифов, не используется
+    credits: Mapped[int] = mapped_column(Integer, default=0, server_default="0")  # купленные разборы
+    trial_used: Mapped[int] = mapped_column(Integer, default=0, server_default="0")  # истрачено пробных
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class Payment(Base):
+    """Покупка пакета разборов. Разборы начисляются один раз, при переходе в статус paid."""
+
+    __tablename__ = "payments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    provider: Mapped[str] = mapped_column(String(16))  # stars | platega | grant
+    external_id: Mapped[str] = mapped_column(String(128), unique=True)  # id платежа у провайдера
+    reviews: Mapped[int] = mapped_column(Integer)
+    amount: Mapped[int] = mapped_column(Integer)
+    currency: Mapped[str] = mapped_column(String(8))  # RUB | XTR
+    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)  # pending | paid | canceled
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Progress(Base):
@@ -65,7 +84,21 @@ async def init_db(settings: Settings) -> tuple[AsyncEngine, async_sessionmaker[A
     engine = create_async_engine(url)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(_add_missing_columns)
     return engine, async_sessionmaker(engine, expire_on_commit=False)
+
+
+def _add_missing_columns(conn) -> None:
+    """create_all не меняет существующие таблицы: новые столбцы добавляем сами."""
+    inspector = inspect(conn)
+    for table in Base.metadata.sorted_tables:
+        existing = {c["name"] for c in inspector.get_columns(table.name)}
+        for column in table.columns:
+            if column.name not in existing:
+                ddl = f"ALTER TABLE {table.name} ADD COLUMN {column.name} {column.type.compile(conn.dialect)}"
+                if column.server_default is not None:
+                    ddl += f" NOT NULL DEFAULT {column.server_default.arg}"
+                conn.execute(text(ddl))
 
 
 async def upsert_user(session: AsyncSession, tg_user) -> User:
@@ -97,11 +130,42 @@ async def record_quiz(session: AsyncSession, user_id: int, lesson_id: int, score
     await session.commit()
 
 
-async def reviews_today(session: AsyncSession, user_id: int) -> int:
-    start = utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-    return await session.scalar(
-        select(func.count()).select_from(AIUsage).where(AIUsage.user_id == user_id, AIUsage.created_at >= start)
-    ) or 0
+async def spend_review(session: AsyncSession, user_id: int, trial_limit: int) -> str | None:
+    """Списать один разбор: сначала купленный, потом пробный. Возвращает "paid", "trial" или None, если списать нечего.
+
+    Списание идёт одним UPDATE с условием, поэтому два одновременных ответа не уйдут в минус.
+    """
+    paid = await session.execute(
+        update(User).where(User.id == user_id, User.credits > 0).values(credits=User.credits - 1))
+    kind = "paid" if paid.rowcount else None
+    if kind is None:
+        trial = await session.execute(
+            update(User).where(User.id == user_id, User.trial_used < trial_limit).values(trial_used=User.trial_used + 1))
+        kind = "trial" if trial.rowcount else None
+    await session.commit()
+    return kind
+
+
+async def refund_review(session: AsyncSession, user_id: int, kind: str) -> None:
+    """Вернуть списанный разбор, если проверка не состоялась."""
+    values = {"credits": User.credits + 1} if kind == "paid" else {"trial_used": User.trial_used - 1}
+    await session.execute(update(User).where(User.id == user_id).values(**values))
+    await session.commit()
+
+
+async def confirm_payment(session: AsyncSession, payment_id: int) -> Payment | None:
+    """Перевести платёж в paid и начислить разборы. Повторный вызов ничего не делает и возвращает None."""
+    done = await session.execute(
+        update(Payment).where(Payment.id == payment_id, Payment.status != "paid")
+        .values(status="paid", paid_at=utcnow()))
+    if not done.rowcount:
+        await session.rollback()
+        return None
+    payment = await session.get(Payment, payment_id)
+    await session.execute(update(User).where(User.id == payment.user_id).values(credits=User.credits + payment.reviews))
+    await session.commit()
+    await session.refresh(payment)
+    return payment
 
 
 async def budget_balance(session: AsyncSession) -> float:

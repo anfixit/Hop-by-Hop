@@ -10,32 +10,87 @@ from bot.config import Settings
 from bot.content import Course
 from bot.db import passed_lessons, upsert_user
 from bot.handlers.common import btn, kb, sees_drafts
+from bot.review import MAX_ANSWER_CHARS
 
 router = Router(name="lessons")
 
 PAGE_SIZE = 10
 BUTTONS_PER_ROW = 5
 
-WELCOME = (
-    "<b>Hop-by-Hop</b> - курс по компьютерным сетям.\n\n"
-    "Проходим путь пакета от кабеля до сервера и обратно: Ethernet, IP, TCP, DNS, NAT, "
-    "Linux и netfilter, криптография, TLS, современные прокси-протоколы. "
-    "В каждой главе разбираем атаки и защиту.\n\n"
-    "Как это работает:\n"
-    "1. Читаешь главу (она открывается прямо в Telegram).\n"
-    "2. Проходишь тест. Следующая глава открывается, когда тест сдан.\n"
-    "3. Отвечаешь своими словами на вопросы на понимание, ответы разбирает ИИ.\n\n"
-    "Команды: /lessons - оглавление, /help - справка."
-)
+def welcome_text(settings: Settings, course: Course) -> str:
+    lessons = course.ordered(False)
+    card = " или картой" if settings.platega_enabled else ""
+    return (
+        "<b>Hop-by-Hop</b> - курс по компьютерным сетям, от кабеля до современных прокси-протоколов, "
+        "с упором на безопасность.\n\n"
+        "<b>На чём основан</b>\n"
+        "Учебники Олифера и Таненбаума, книга Ристича о TLS, стандарты RFC и документация Linux. "
+        "Каждый опыт из уроков реально запущен на Linux, в тексте настоящий вывод команд. "
+        "Каждый урок дважды проверен на ошибки перед публикацией.\n\n"
+        "<b>Из чего состоит</b>\n"
+        "14 блоков, 105 уроков: Ethernet, IP и маршрутизация, TCP и UDP, сетевой стек Linux, файерволы и NAT, DNS, криптография, TLS, "
+        f"прокси и туннели. Сейчас готово уроков: {len(lessons)}, новые выходят постоянно.\n\n"
+        "<b>Как проходить</b>\n"
+        "1. Читаешь урок (открывается прямо в Telegram).\n"
+        "2. Сдаёшь тест, и открывается следующий урок.\n"
+        "3. Отвечаешь своими словами на вопросы на понимание.\n\n"
+        "<b>Что бесплатно</b>\n"
+        "Все уроки и все тесты.\n\n"
+        "<b>Что платно и почему</b>\n"
+        "Разбор твоего ответа ИИ: он находит ошибки в понимании и объясняет, как на самом деле. "
+        "Каждый такой разбор - запрос к платной модели, за который платит автор курса. "
+        f"Поэтому первые разборы ({settings.trial_reviews}) в подарок, дальше пакетами за звёзды Telegram{card}. "
+        "Пакет не сгорает.\n\n"
+        "/lessons - оглавление, /buy - разборы, /help - справка"
+    )
+
+
+def help_text(settings: Settings) -> str:
+    card = " или картой через кассу" if settings.platega_enabled else ""
+    return (
+        "<b>Справка</b>\n\n"
+        "<b>Команды</b>\n"
+        "/lessons - оглавление и твой прогресс\n"
+        "/buy - сколько разборов осталось и покупка пакета\n"
+        "/help - эта справка\n"
+        "/cancel - отменить ответ на вопрос\n"
+        "/start - о курсе\n\n"
+        "<b>Значки в оглавлении</b>\n"
+        "✅ тест сдан, ▶️ урок открыт, 🔒 откроется после теста предыдущего урока.\n\n"
+        "<b>Тест</b>\n"
+        f"Один верный вариант в каждом вопросе. Тест сдан, если верных ответов не меньше "
+        f"{settings.quiz_pass_ratio:.0%}. Пересдавать можно сколько угодно, после каждого "
+        "ответа бот объясняет, почему так.\n\n"
+        "<b>Вопросы на понимание</b>\n"
+        "Открываются после сданного теста. Нажми \"Ответить\", напиши ответ своими словами "
+        f"одним сообщением (до {MAX_ANSWER_CHARS} символов). ИИ разберёт его: что верно, "
+        "чего не хватает и где ошибка в понимании. Отвечать можно повторно, каждый ответ - один разбор.\n\n"
+        "<b>Разборы и оплата</b>\n"
+        f"Уроки и тесты бесплатны. Разборы ИИ платные: первые {settings.trial_reviews} в подарок, "
+        f"дальше пакетами в /buy, за звёзды Telegram{card}. Пакет не сгорает. "
+        "Если проверка не удалась по нашей вине, разбор не списывается. Вопросы по оплате: /paysupport\n\n"
+        "<b>Если что-то не работает</b>\n"
+        "Кнопка \"устарела\" - открой урок заново через /lessons. "
+        "Бот ждёт ответ, а ты передумал - /cancel. "
+        "Урок открывается в Telegraph: если страница не грузится, проверь доступ к telegra.ph.\n\n"
+        "Нашёл ошибку в уроке? Напиши: github.com/anfixit/Hop-by-Hop/issues, "
+        "в Telegram @Anfikus или на почту anfisa.kovganyuk@gmail.com"
+    )
 
 
 @router.message(CommandStart())
-@router.message(Command("help"))
-async def cmd_start(message: Message, db: async_sessionmaker[AsyncSession]) -> None:
+async def cmd_start(message: Message, db: async_sessionmaker[AsyncSession], settings: Settings, course: Course) -> None:
     async with db() as session:
         await upsert_user(session, message.from_user)
-    await message.answer(WELCOME, reply_markup=kb([btn("Оглавление", "toc:0")]))
+    await message.answer(welcome_text(settings, course), reply_markup=kb([btn("Оглавление", "toc:0")]))
 
+
+@router.message(Command("help"))
+async def cmd_help(message: Message, db: async_sessionmaker[AsyncSession], settings: Settings) -> None:
+    async with db() as session:
+        await upsert_user(session, message.from_user)
+    await message.answer(help_text(settings), reply_markup=kb([btn("Оглавление", "toc:0")]),
+                         disable_web_page_preview=True)
 
 @router.message(Command("lessons"))
 async def cmd_lessons(message: Message, db, settings: Settings, course: Course) -> None:

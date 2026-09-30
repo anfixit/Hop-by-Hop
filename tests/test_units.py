@@ -63,3 +63,53 @@ def test_telegraph_image_becomes_figure():
         {"tag": "img", "attrs": {"src": "https://x/img/a.png"}},
         {"tag": "figcaption", "children": ["Подпись"]},
     ]}
+
+def test_packs_are_parsed_from_env_string():
+    from bot.config import Pack, Settings
+
+    s = Settings(_env_file=None, bot_token="1:a", packs="50:99:75, 350:490:450")
+    assert s.packs == (Pack(50, 99, 75), Pack(350, 490, 450))
+    assert not s.platega_enabled
+    assert Settings(_env_file=None, bot_token="1:a", platega_merchant_id="m", platega_secret="s").platega_enabled
+
+
+def test_stars_invoice_must_match_a_pack_exactly():
+    from bot.config import Settings
+    from bot.handlers.payments import _stars_pack, reviews_word
+
+    s = Settings(_env_file=None, bot_token="1:a", packs="50:99:75")
+    assert _stars_pack(s, "pack:50", 75).reviews == 50
+    assert _stars_pack(s, "pack:50", 1) is None      # оплатили не ту сумму
+    assert _stars_pack(s, "pack:999", 75) is None    # пакета с таким числом разборов нет
+    assert [reviews_word(n) for n in (1, 2, 5, 11, 21)] == ["1 разбор", "2 разбора", "5 разборов", "11 разборов", "21 разбор"]
+
+
+async def test_platega_client_builds_request_and_reads_both_api_versions(monkeypatch):
+    from bot.platega import Platega, PlategaError
+
+    calls = []
+    answers = iter([
+        {"transactionId": "t1", "url": "https://pay.example/1", "status": "PENDING"},      # v2
+        {"transactionId": "t2", "redirect": "https://pay.example/2"},                      # v1
+        {"status": "PENDING"},                                                              # без ссылки
+        {"id": "t1", "status": "CONFIRMED", "paymentDetails": {"amount": 99, "currency": "RUB"}},
+    ])
+
+    async def fake(self, method, path, **kwargs):
+        calls.append((method, path, kwargs.get("json")))
+        return next(answers)
+
+    monkeypatch.setattr(Platega, "_request", fake)
+    client = Platega("merchant", "secret", payment_method=2)
+
+    tx = await client.create(99, "пакет", "https://t.me/bot", "tg:5")
+    assert (tx.id, tx.url) == ("t1", "https://pay.example/1")
+    method, path, body = calls[0]
+    assert (method, path) == ("POST", "/v2/transaction/process")
+    assert body["paymentDetails"] == {"amount": 99, "currency": "RUB"} and body["paymentMethod"] == 2
+
+    assert (await client.create(99, "пакет", "https://t.me/bot", "tg:5")).url == "https://pay.example/2"
+    with pytest.raises(PlategaError):
+        await client.create(99, "пакет", "https://t.me/bot", "tg:5")
+    assert await client.status("t1") == ("CONFIRMED", 99)
+    assert calls[-1][:2] == ("GET", "/transaction/t1")

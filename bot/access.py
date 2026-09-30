@@ -1,45 +1,29 @@
-"""Тарифы, доступ к урокам и подпись callback-данных."""
+"""Доступ к урокам, разборы ИИ и подпись callback-данных."""
 import hashlib
 import hmac
-from dataclasses import dataclass
-from datetime import UTC
 from enum import StrEnum
 
 from bot.config import Settings
 from bot.content import Course, Lesson
-from bot.db import User, utcnow
+from bot.db import User
 
 
 class Tier(StrEnum):
     FREE = "free"
-    PAID = "paid"
     ADMIN = "admin"
 
 
-@dataclass(frozen=True)
-class TierPolicy:
-    model: str
-    daily_limit: int | None  # None - без лимита
-
-
 def tier_of(user: User, settings: Settings) -> Tier:
-    if user.id in settings.admin_ids:
-        return Tier.ADMIN
-    paid_until = user.paid_until
-    if paid_until is not None:
-        if paid_until.tzinfo is None:  # SQLite не хранит часовой пояс
-            paid_until = paid_until.replace(tzinfo=UTC)
-        if paid_until > utcnow():
-            return Tier.PAID
-    return Tier.FREE
+    return Tier.ADMIN if user.id in settings.admin_ids else Tier.FREE
 
 
-def policy_for(tier: Tier, settings: Settings) -> TierPolicy:
-    return {
-        Tier.FREE: TierPolicy(settings.model_free, settings.limit_free_per_day),
-        Tier.PAID: TierPolicy(settings.model_paid, settings.limit_paid_per_day),
-        Tier.ADMIN: TierPolicy(settings.model_admin, None),
-    }[tier]
+def trial_left(user: User, settings: Settings) -> int:
+    return max(0, settings.trial_reviews - user.trial_used)
+
+
+def model_for(kind: str, settings: Settings) -> str:
+    """Модель для разбора: kind - что списали ("paid", "trial") или "admin"."""
+    return {"paid": settings.model_paid, "trial": settings.model_free, "admin": settings.model_admin}[kind]
 
 
 def is_unlocked(lesson: Lesson, course: Course, passed: set[int], include_drafts: bool) -> bool:

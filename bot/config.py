@@ -2,9 +2,17 @@ from pathlib import Path
 
 from pydantic import SecretStr, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
-from typing import Annotated
+from typing import Annotated, NamedTuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+class Pack(NamedTuple):
+    """Пакет разборов: сколько штук и сколько стоит в рублях и в звёздах Telegram."""
+
+    reviews: int
+    rub: int
+    stars: int
 
 
 class Settings(BaseSettings):
@@ -22,8 +30,18 @@ class Settings(BaseSettings):
     model_paid: str = "claude-sonnet-5"
     model_admin: str = "claude-sonnet-5"
 
-    limit_free_per_day: int = 3
-    limit_paid_per_day: int = 30
+    # Разборы ИИ: пробный запас выдаётся один раз, дальше - купленные пакеты
+    trial_reviews: int = 15
+    # Пакеты: "разборов:рублей:звёзд" через запятую
+    packs: Annotated[tuple[Pack, ...], NoDecode] = (Pack(50, 99, 75), Pack(350, 490, 450))
+    bot_username: str = "hopbyhop_bot"
+
+    # Касса Platega (оплата картой и СБП); без ключей в боте остаются только звёзды
+    platega_merchant_id: str | None = None
+    platega_secret: SecretStr | None = None
+    # Номер способа оплаты в Platega; пусто - плательщик выбирает сам на форме
+    platega_payment_method: int | None = None
+
     budget_alert_usd: float = 5.0
     quiz_pass_ratio: float = 0.8
 
@@ -34,10 +52,22 @@ class Settings(BaseSettings):
             return frozenset(int(part) for part in value.replace(" ", "").split(",") if part)
         return value
 
-    @field_validator("proxy_url", "anthropic_api_key", "telegraph_token", mode="before")
+    @field_validator("packs", mode="before")
+    @classmethod
+    def _parse_packs(cls, value: object) -> object:
+        if isinstance(value, str):
+            return tuple(Pack(*(int(x) for x in part.split(":"))) for part in value.replace(" ", "").split(",") if part)
+        return value
+
+    @field_validator("proxy_url", "anthropic_api_key", "telegraph_token", "platega_merchant_id", "platega_secret",
+                     "platega_payment_method", mode="before")
     @classmethod
     def _empty_to_none(cls, value: object) -> object:
         return value or None
+
+    @property
+    def platega_enabled(self) -> bool:
+        return bool(self.platega_merchant_id and self.platega_secret)
 
     @property
     def sqlite_path(self) -> Path | None:

@@ -8,16 +8,18 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
-from bot.access import Tier, policy_for, tier_of
+from bot.access import Tier, model_for, tier_of, trial_left
 from bot.config import Settings
 from bot.content import Course
-from bot.db import AIUsage, budget_balance, passed_lessons, reviews_today, upsert_user
+from bot.db import AIUsage, User, budget_balance, passed_lessons, refund_review, spend_review, upsert_user
 from bot.handlers.common import RuntimeState, btn, kb, notify_admins, sees_drafts
+from bot.handlers.payments import balance_line
 from bot.review import MAX_ANSWER_CHARS, Reviewer, ReviewError
 
 log = logging.getLogger(__name__)
 router = Router(name="answers")
 
+NO_REVIEWS = "Разборы закончились. Уроки и тесты по-прежнему бесплатны, а разборы ИИ можно докупить: /buy"
 VERDICT_LABEL = {"correct": "✅ Верно", "partial": "🟡 Частично верно", "incorrect": "❌ Неверно"}
 
 
@@ -62,6 +64,8 @@ async def cb_pick_question(call: CallbackQuery, state: FSMContext, db, settings:
         return
     if (refusal := await _check_limits(db, settings, user)) is not None:
         await call.answer(refusal, show_alert=True)
+        if refusal == NO_REVIEWS:
+            await call.message.answer(NO_REVIEWS, reply_markup=kb([btn("Купить разборы", "buy")]))
         return
     await state.set_state(Answering.waiting)
     await state.update_data(lesson_id=lesson.id, idx=idx)
@@ -93,18 +97,30 @@ async def on_answer(message: Message, state: FSMContext, bot: Bot, db, settings:
         return
     if (refusal := await _check_limits(db, settings, user)) is not None:
         await state.clear()
-        await message.answer(refusal)
+        await message.answer(refusal, reply_markup=kb([btn("Купить разборы", "buy")]) if refusal == NO_REVIEWS else None)
         return
     await state.clear()
 
-    policy = policy_for(tier_of(user, settings), settings)
+    # Разбор списываем до запроса к модели, чтобы два одновременных ответа не прошли по одному разбору
+    if tier_of(user, settings) is Tier.ADMIN:
+        kind = "admin"
+    else:
+        async with db() as session:
+            kind = await spend_review(session, user.id, settings.trial_reviews)
+        if kind is None:
+            await message.answer(NO_REVIEWS, reply_markup=kb([btn("Купить разборы", "buy")]))
+            return
+
     question = lesson.open_questions[data["idx"]]
     pending = await message.answer("Проверяю ответ...")
     try:
-        result = await reviewer.review(policy.model, lesson, question, answer)
+        result = await reviewer.review(model_for(kind, settings), lesson, question, answer)
     except ReviewError as exc:
         if exc.usage:
             await _record_usage(db, user.id, lesson.id, *exc.usage)
+        if kind != "admin":  # проверка не состоялась - разбор возвращаем
+            async with db() as session:
+                await refund_review(session, user.id, kind)
         await pending.edit_text(str(exc))
         return
     await _record_usage(db, user.id, lesson.id, result.model, result.input_tokens, result.output_tokens,
@@ -116,14 +132,13 @@ async def on_answer(message: Message, state: FSMContext, bot: Bot, db, settings:
         parts += ["", "<b>Ошибки в понимании:</b>"] + [f"• {escape(m)}" for m in v.misconceptions]
     if v.missing_points:
         parts += ["", "<b>Не хватает:</b>"] + [f"• {escape(m)}" for m in v.missing_points]
-    if policy.daily_limit is not None:
+    if kind != "admin":
         async with db() as session:
-            used = await reviews_today(session, user.id)
-        parts += ["", f"<i>Проверок сегодня: {used} из {policy.daily_limit}</i>"]
+            fresh = await session.get(User, user.id)
+        parts += ["", f"<i>{balance_line(fresh, settings)}</i>"]
     rows = [[btn("Ответить ещё раз", f"oq:{lesson.id}:{data['idx']}")], [btn("← К вопросам", f"oq:{lesson.id}")]]
     await pending.edit_text("\n".join(parts), reply_markup=kb(*rows))
     await _budget_alerts(bot, db, settings, runtime)
-
 
 @router.message(Answering.waiting)
 async def on_non_text(message: Message) -> None:
@@ -131,18 +146,14 @@ async def on_non_text(message: Message) -> None:
 
 
 async def _check_limits(db, settings: Settings, user) -> str | None:
-    tier = tier_of(user, settings)
-    if tier is Tier.ADMIN:
+    if tier_of(user, settings) is Tier.ADMIN:
         return None
     async with db() as session:
         if await budget_balance(session) <= 0:
             return "Проверка ответов временно недоступна. Тесты и уроки работают как обычно."
-        used = await reviews_today(session, user.id)
-    limit = policy_for(tier, settings).daily_limit
-    if limit is not None and used >= limit:
-        return f"Лимит проверок на сегодня исчерпан ({limit}). Он обновится в полночь по UTC."
+    if user.credits <= 0 and trial_left(user, settings) <= 0:
+        return NO_REVIEWS
     return None
-
 
 async def _record_usage(db, user_id, lesson_id, model, input_tokens, output_tokens, cost_usd) -> None:
     async with db() as session:
