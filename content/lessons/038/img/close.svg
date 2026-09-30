@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+  <rect width="1200" height="760" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Закрытие соединения: четыре сегмента</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">номера - из опыта; клиент закрывает первым; подтверждение данных "bye" не показано</text>
+
+  <text x="300" y="112" text-anchor="middle" font-size="20" font-weight="bold" fill="#0E1830">Клиент (закрывает первым)</text>
+  <text x="900" y="112" text-anchor="middle" font-size="20" font-weight="bold" fill="#0E1830">Сервер (закрывает вторым)</text>
+  <line x1="300" y1="125" x2="300" y2="640" stroke="#475569" stroke-width="3"/>
+  <line x1="900" y1="125" x2="900" y2="640" stroke="#475569" stroke-width="3"/>
+
+  <g font-size="15" text-anchor="middle" fill="#0E1830">
+    <rect x="70" y="130" width="200" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="170" y="153">ESTABLISHED</text>
+    <rect x="70" y="190" width="200" height="34" rx="6" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="170" y="213">FIN-WAIT-1</text>
+    <rect x="70" y="310" width="200" height="34" rx="6" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="170" y="333">FIN-WAIT-2</text>
+    <rect x="70" y="560" width="200" height="34" rx="6" fill="#FCE7F3" stroke="#BE185D" stroke-width="2"/><text x="170" y="583">TIME-WAIT, 60 с</text>
+    <rect x="70" y="606" width="200" height="34" rx="6" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/><text x="170" y="629">CLOSED</text>
+    <rect x="930" y="130" width="200" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="1030" y="153">ESTABLISHED</text>
+    <rect x="930" y="250" width="200" height="34" rx="6" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="1030" y="273">CLOSE-WAIT</text>
+    <rect x="930" y="470" width="200" height="34" rx="6" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="1030" y="493">LAST-ACK</text>
+    <rect x="930" y="600" width="200" height="34" rx="6" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/><text x="1030" y="623">CLOSED</text>
+  </g>
+
+  <g stroke="#2563EB" stroke-width="3">
+    <line x1="300" y1="190" x2="884" y2="238"/>
+    <line x1="300" y1="550" x2="884" y2="598"/>
+  </g>
+  <g stroke="#15803D" stroke-width="3">
+    <line x1="900" y1="260" x2="316" y2="308"/>
+    <line x1="900" y1="480" x2="316" y2="528"/>
+  </g>
+  <line x1="900" y1="380" x2="316" y2="428" stroke="#A16207" stroke-width="3"/>
+  <polygon points="900,240 881.6,245.4 882.8,231.4" fill="#2563EB"/>
+  <polygon points="900,600 881.6,605.4 882.8,591.4" fill="#2563EB"/>
+  <polygon points="300,310 318.4,315.4 317.2,301.4" fill="#15803D"/>
+  <polygon points="300,530 318.4,535.4 317.2,521.4" fill="#15803D"/>
+  <polygon points="300,430 318.4,435.4 317.2,421.4" fill="#A16207"/>
+
+  <g font-size="17" text-anchor="middle" fill="#0E1830">
+    <text x="600" y="196" font-weight="bold">1. FIN, seq 6</text>
+    <text x="600" y="266" font-weight="bold">2. ACK, ack 7</text>
+    <text x="600" y="386" font-weight="bold">данные "bye", seq 1:4</text>
+    <text x="600" y="486" font-weight="bold">3. FIN, seq 4</text>
+    <text x="600" y="556" font-weight="bold">4. ACK, ack 5</text>
+  </g>
+  <rect x="380" y="322" width="440" height="34" rx="6" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+  <text x="600" y="345" text-anchor="middle" font-size="15" fill="#0E1830">полузакрыто: клиент молчит, сервер ещё может передавать</text>
+
+  <rect x="40" y="665" width="1120" height="75" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="694" text-anchor="middle" font-size="17" fill="#0E1830">FIN занимает один номер, поэтому подтверждается 6 + 1 = 7 и 4 + 1 = 5.</text>
+  <text x="600" y="720" text-anchor="middle" font-size="17" fill="#0E1830">TIME-WAIT остаётся у того, кто отправил FIN первым; второй удаляет запись сразу после последнего ACK.</text>
+</svg>
