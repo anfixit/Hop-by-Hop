@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660">
+  <rect width="1200" height="660" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Заголовок TCP: от 20 до 60 байт</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">значения - из опыта (первый сегмент SYN от клиента)</text>
+  <g font-size="14" fill="#475569" text-anchor="middle">
+    <text x="120" y="104">0</text><text x="240" y="104">4</text><text x="360" y="104">8</text><text x="600" y="104">16</text><text x="1070" y="104">31</text>
+  </g>
+  <rect x="120" y="112" width="480" height="70" fill="#DBEAFE" stroke="#0E1830" stroke-width="2"/>
+  <rect x="600" y="112" width="480" height="70" fill="#DBEAFE" stroke="#0E1830" stroke-width="2"/>
+  <rect x="120" y="182" width="960" height="70" fill="#DCFCE7" stroke="#0E1830" stroke-width="2"/>
+  <rect x="120" y="252" width="960" height="70" fill="#DCFCE7" stroke="#0E1830" stroke-width="2"/>
+  <rect x="120" y="322" width="120" height="70" fill="#F1F5F9" stroke="#0E1830" stroke-width="2"/>
+  <rect x="240" y="322" width="120" height="70" fill="#F8FAFC" stroke="#0E1830" stroke-width="2"/>
+  <rect x="360" y="322" width="30" height="70" fill="#FEF9C3" stroke="#0E1830" stroke-width="2"/><text x="375" y="352" text-anchor="middle" font-size="10" fill="#0E1830">CWR</text><text x="375" y="376" text-anchor="middle" font-size="14" fill="#475569">0</text>
+  <rect x="390" y="322" width="30" height="70" fill="#FEF9C3" stroke="#0E1830" stroke-width="2"/><text x="405" y="352" text-anchor="middle" font-size="10" fill="#0E1830">ECE</text><text x="405" y="376" text-anchor="middle" font-size="14" fill="#475569">0</text>
+  <rect x="420" y="322" width="30" height="70" fill="#FEF9C3" stroke="#0E1830" stroke-width="2"/><text x="435" y="352" text-anchor="middle" font-size="10" fill="#0E1830">URG</text><text x="435" y="376" text-anchor="middle" font-size="14" fill="#475569">0</text>
+  <rect x="450" y="322" width="30" height="70" fill="#FEF9C3" stroke="#0E1830" stroke-width="2"/><text x="465" y="352" text-anchor="middle" font-size="10" fill="#0E1830">ACK</text><text x="465" y="376" text-anchor="middle" font-size="14" fill="#475569">0</text>
+  <rect x="480" y="322" width="30" height="70" fill="#FEF9C3" stroke="#0E1830" stroke-width="2"/><text x="495" y="352" text-anchor="middle" font-size="10" fill="#0E1830">PSH</text><text x="495" y="376" text-anchor="middle" font-size="14" fill="#475569">0</text>
+  <rect x="510" y="322" width="30" height="70" fill="#FEF9C3" stroke="#0E1830" stroke-width="2"/><text x="525" y="352" text-anchor="middle" font-size="10" fill="#0E1830">RST</text><text x="525" y="376" text-anchor="middle" font-size="14" fill="#475569">0</text>
+  <rect x="540" y="322" width="30" height="70" fill="#FDE68A" stroke="#0E1830" stroke-width="2"/><text x="555" y="352" text-anchor="middle" font-size="10" fill="#0E1830">SYN</text><text x="555" y="376" text-anchor="middle" font-size="14" fill="#475569">1</text>
+  <rect x="570" y="322" width="30" height="70" fill="#FEF9C3" stroke="#0E1830" stroke-width="2"/><text x="585" y="352" text-anchor="middle" font-size="10" fill="#0E1830">FIN</text><text x="585" y="376" text-anchor="middle" font-size="14" fill="#475569">0</text>
+  <rect x="600" y="322" width="480" height="70" fill="#FCE7F3" stroke="#0E1830" stroke-width="2"/>
+  <rect x="120" y="392" width="480" height="70" fill="#F1F5F9" stroke="#0E1830" stroke-width="2"/>
+  <rect x="600" y="392" width="480" height="70" fill="#F1F5F9" stroke="#0E1830" stroke-width="2"/>
+  <rect x="120" y="462" width="960" height="80" fill="#EDE9FE" stroke="#0E1830" stroke-width="2"/>
+  <g font-size="18" text-anchor="middle" fill="#0E1830">
+    <text x="360" y="142">Source Port</text><text x="360" y="166" font-size="15" fill="#475569">c552 = 50514 (временный)</text>
+    <text x="840" y="142">Destination Port</text><text x="840" y="166" font-size="15" fill="#475569">1388 = 5000</text>
+    <text x="600" y="212">Sequence Number - номер первого байта данных сегмента</text><text x="600" y="236" font-size="15" fill="#475569">b02a b2d3 = 2955588307 (начальный номер клиента)</text>
+    <text x="600" y="282">Acknowledgment Number - номер следующего ожидаемого байта</text><text x="600" y="306" font-size="15" fill="#475569">0000 0000: в первом SYN подтверждать нечего, флага ACK нет</text>
+    <text x="180" y="350" font-size="14">Data Offset</text><text x="180" y="376" font-size="14" fill="#475569">a = 10 слов</text>
+    <text x="300" y="350" font-size="14">резерв</text><text x="300" y="376" font-size="14" fill="#475569">0</text>
+    <text x="840" y="352">Window</text><text x="840" y="376" font-size="15" fill="#475569">faf0 = 64240 байт</text>
+    <text x="360" y="422">Checksum</text><text x="360" y="446" font-size="15" fill="#475569">e386; с псевдозаголовком, обязательна</text>
+    <text x="840" y="422">Urgent Pointer</text><text x="840" y="446" font-size="15" fill="#475569">0000; действует только с URG</text>
+    <text x="600" y="490">Options - параметры, до 40 байт (здесь 20)</text>
+    <text x="600" y="514" font-size="15" fill="#475569">MSS 1460 · SACK разрешён · метки времени · NOP · масштаб окна 7</text>
+  </g>
+  <g font-size="14" fill="#475569" text-anchor="end">
+    <text x="108" y="152">байты 0-3</text><text x="108" y="222">4-7</text><text x="108" y="292">8-11</text><text x="108" y="362">12-15</text><text x="108" y="432">16-19</text><text x="108" y="506">20-...</text>
+  </g>
+  <rect x="40" y="570" width="1120" height="70" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="598" text-anchor="middle" font-size="17" fill="#0E1830">Data Offset считает заголовок в 32-битных словах: 5 = 20 байт без параметров, 15 = 60 байт.</text>
+  <text x="600" y="624" text-anchor="middle" font-size="17" fill="#0E1830">За заголовком идут данные; у SYN из опыта и у чистых подтверждений данных нет.</text>
+</svg>

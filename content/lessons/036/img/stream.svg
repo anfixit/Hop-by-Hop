@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Поток байтов режется на сегменты</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">числа - из опыта: MSS сервера 1360, метки времени занимают 12 байт в каждом сегменте</text>
+
+  <text x="60" y="122" font-size="18" font-weight="bold" fill="#0E1830">Программа пишет в сокет:</text>
+  <rect x="60" y="136" width="90" height="56" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+  <text x="105" y="160" text-anchor="middle" font-size="15" fill="#0E1830">запись 1</text><text x="105" y="181" text-anchor="middle" font-size="15" fill="#0E1830">10 байт</text>
+  <rect x="150" y="136" width="990" height="56" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="645" y="160" text-anchor="middle" font-size="15" fill="#0E1830">запись 2</text><text x="645" y="181" text-anchor="middle" font-size="15" fill="#0E1830">3000 байт</text>
+
+  <text x="60" y="232" font-size="18" font-weight="bold" fill="#0E1830">TCP нумерует каждый байт:</text>
+  <rect x="60" y="246" width="1080" height="40" fill="#F1F5F9" stroke="#475569" stroke-width="2"/>
+  <g stroke="#475569" stroke-width="2"><line x1="150" y1="246" x2="150" y2="286"/><line x1="595" y1="246" x2="595" y2="286"/><line x1="1040" y1="246" x2="1040" y2="286"/></g>
+  <g font-size="14" fill="#0E1830" text-anchor="middle">
+    <text x="60" y="306">1</text><text x="150" y="306">11</text><text x="595" y="306">1359</text><text x="1040" y="306">2707</text><text x="1140" y="306">3011</text>
+  </g>
+  <g fill="#94A3B8">
+    <polygon points="105,372 97,356 113,356"/><polygon points="372,372 364,356 380,356"/><polygon points="817,372 809,356 825,356"/><polygon points="1090,372 1082,356 1098,356"/>
+  </g>
+  <g stroke="#94A3B8" stroke-width="2">
+    <line x1="105" y1="318" x2="105" y2="356"/><line x1="372" y1="318" x2="372" y2="356"/><line x1="817" y1="318" x2="817" y2="356"/><line x1="1090" y1="318" x2="1090" y2="356"/>
+  </g>
+
+  <text x="400" y="344" font-size="18" font-weight="bold" fill="#0E1830">и отправляет сегментами:</text>
+  <g font-size="14" text-anchor="middle" fill="#0E1830">
+    <rect x="60" y="376" width="50" height="76" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><rect x="110" y="376" width="40" height="76" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="105" y="474">seq 1:11</text><text x="105" y="494">10 байт, PSH</text>
+    <rect x="200" y="376" width="50" height="76" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><rect x="250" y="376" width="300" height="76" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="375" y="474">seq 11:1359</text><text x="375" y="494">1348 байт</text>
+    <rect x="600" y="376" width="50" height="76" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><rect x="650" y="376" width="300" height="76" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="775" y="474">seq 1359:2707</text><text x="775" y="494">1348 байт</text>
+    <rect x="1000" y="376" width="50" height="76" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><rect x="1050" y="376" width="90" height="76" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="1070" y="474">seq 2707:3011</text><text x="1070" y="494">304 байта, PSH</text>
+  </g>
+  <g font-size="12" text-anchor="middle" fill="#0E1830">
+    <text x="85" y="418">заг.</text><text x="225" y="418">заг.</text><text x="625" y="418">заг.</text><text x="1025" y="418">заг.</text>
+  </g>
+
+  <rect x="40" y="520" width="1120" height="60" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="546" text-anchor="middle" font-size="17" fill="#0E1830">Границы записей не сохраняются: получатель видит просто байты с 1 по 3010.</text>
+  <text x="600" y="570" text-anchor="middle" font-size="17" fill="#0E1830">seq - номер первого байта сегмента; правая граница в записи tcpdump не включается.</text>
+</svg>
