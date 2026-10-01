@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Как менялся доступ шаг за шагом</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">a внутри, s снаружи, файервол r между ними; задача: изнутри на сайт можно, снаружи внутрь нельзя</text>
+  <g font-size="16" fill="#0E1830">
+    <text x="60" y="125" font-weight="bold">правила на r</text>
+    <text x="640" y="125" font-weight="bold" text-anchor="middle">a → s:80</text>
+    <text x="830" y="125" font-weight="bold" text-anchor="middle">s → a:2222</text>
+    <text x="1030" y="125" font-weight="bold" text-anchor="middle">s → a:8080</text>
+  </g>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="140" width="1120" height="64" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="60" y="168">1. файервола нет</text>
+    <rect x="40" y="214" width="1120" height="64" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="60" y="242">2. policy accept, запрещён только 2222</text><text x="60" y="264" font-size="13" fill="#475569">"разрешено всё, что не запрещено"</text>
+    <rect x="40" y="288" width="1120" height="64" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="60" y="316">3. policy drop, разрешено a → :80, без состояния</text><text x="60" y="338" font-size="13" fill="#475569">ответы сервера отброшены политикой</text>
+    <rect x="40" y="362" width="1120" height="64" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="60" y="390">4. + ct state established,related accept</text><text x="60" y="412" font-size="13" fill="#475569">"запрещено всё, что не разрешено", с состоянием</text>
+    <rect x="40" y="436" width="1120" height="64" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+    <text x="60" y="464">5. + reject для 8080</text><text x="60" y="486" font-size="13" fill="#475569">отказ сразу вместо ожидания</text>
+  </g>
+  <g font-size="15" text-anchor="middle">
+    <rect x="575" y="155" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="640" y="177" fill="#15803D">открыт</text>
+    <rect x="765" y="155" width="130" height="34" rx="17" fill="#FEE2E2"/><text x="830" y="177" fill="#B91C1C">открыт</text>
+    <rect x="965" y="155" width="130" height="34" rx="17" fill="#FEE2E2"/><text x="1030" y="177" fill="#B91C1C">открыт</text>
+    <rect x="575" y="229" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="640" y="251" fill="#15803D">открыт</text>
+    <rect x="765" y="229" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="830" y="251" fill="#15803D">нет ответа</text>
+    <rect x="965" y="229" width="130" height="34" rx="17" fill="#FEE2E2"/><text x="1030" y="251" fill="#B91C1C">открыт</text>
+    <rect x="575" y="303" width="130" height="34" rx="17" fill="#FEE2E2"/><text x="640" y="325" fill="#B91C1C">нет ответа</text>
+    <rect x="765" y="303" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="830" y="325" fill="#15803D">нет ответа</text>
+    <rect x="965" y="303" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="1030" y="325" fill="#15803D">нет ответа</text>
+    <rect x="575" y="377" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="640" y="399" fill="#15803D">открыт</text>
+    <rect x="765" y="377" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="830" y="399" fill="#15803D">нет ответа</text>
+    <rect x="965" y="377" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="1030" y="399" fill="#15803D">нет ответа</text>
+    <rect x="575" y="451" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="640" y="473" fill="#15803D">открыт</text>
+    <rect x="765" y="451" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="830" y="473" fill="#15803D">нет ответа</text>
+    <rect x="965" y="451" width="130" height="34" rx="17" fill="#DCFCE7"/><text x="1030" y="473" fill="#15803D">отказ</text>
+  </g>
+  <text x="600" y="535" text-anchor="middle" font-size="15" fill="#475569">зелёным - как и должно быть по задаче, красным - нарушение (открыто лишнее или не работает нужное)</text>
+</svg>
