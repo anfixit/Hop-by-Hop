@@ -1,4 +1,4 @@
-"""Покупка пакетов разборов: звёзды Telegram и касса Platega."""
+"""Покупка пакетов разборов и благодарность автору: звёзды Telegram и касса Platega."""
 import asyncio
 import json
 import logging
@@ -53,6 +53,14 @@ def _pack(settings: Settings, idx: str) -> Pack | None:
     return settings.packs[int(idx)] if idx.isdigit() and int(idx) < len(settings.packs) else None
 
 
+# Благодарность автору ("купить кофе"): платёж без разборов, reviews = 0. Суммы: рубли и звёзды.
+DONATIONS = ((100, 75), (300, 225), (500, 375))
+
+
+def _donation(idx: str) -> tuple[int, int] | None:
+    return DONATIONS[int(idx)] if idx.isdigit() and int(idx) < len(DONATIONS) else None
+
+
 async def shop(tg_user, db, settings: Settings):
     async with db() as session:
         user = await upsert_user(session, tg_user)
@@ -71,8 +79,84 @@ async def shop(tg_user, db, settings: Settings):
         rows.append(row)
     lines += ["", "Уроки, тесты и оглавление остаются бесплатными. Вопросы по оплате: /paysupport",
               "Оплачивая пакет, ты принимаешь оферту и правила: /terms"]
+    rows.append([btn("☕ Поблагодарить автора", "donate")])
     rows.append([btn("← Оглавление", "toc:0")])
     return "\n".join(lines), kb(*rows)
+
+
+def donate_screen(settings: Settings):
+    text = (
+        "<b>☕ Поблагодарить автора</b>\n\n"
+        "Курс бесплатный и останется таким. Если он тебе помог и хочется сказать спасибо рублём или звездой - "
+        "выбери сумму. Это добровольная благодарность: разборы за неё не начисляются, "
+        "она просто помогает курсу жить и расти.\n\n"
+        "Спасибо, что учишься вместе с Hop-by-Hop!"
+    )
+    rows = []
+    for i, (rub, stars) in enumerate(DONATIONS):
+        row = [btn(f"{stars} ⭐", f"don:s:{i}")]
+        if settings.platega_enabled:
+            row.append(btn(f"{rub} ₽", f"don:p:{i}"))
+        rows.append(row)
+    rows.append([btn("← Оглавление", "toc:0")])
+    return text, kb(*rows)
+
+
+@router.message(Command("donate"))
+async def cmd_donate(message: Message, settings: Settings) -> None:
+    text, markup = donate_screen(settings)
+    await message.answer(text, reply_markup=markup)
+
+
+@router.callback_query(F.data == "donate")
+async def cb_donate(call: CallbackQuery, settings: Settings) -> None:
+    text, markup = donate_screen(settings)
+    await call.message.answer(text, reply_markup=markup)
+    await call.answer()
+
+
+@router.callback_query(F.data.startswith("don:s:"))
+async def cb_donate_stars(call: CallbackQuery, bot: Bot) -> None:
+    donation = _donation(call.data.split(":")[2])
+    if donation is None:
+        await call.answer("Такой суммы больше нет. Открой /donate заново.", show_alert=True)
+        return
+    await bot.send_invoice(
+        chat_id=call.from_user.id,
+        title="Благодарность автору курса",
+        description="Добровольная благодарность автору курса Hop-by-Hop. Разборы за неё не начисляются.",
+        payload=f"donate:{donation[1]}",
+        currency="XTR",
+        prices=[LabeledPrice(label="Благодарность", amount=donation[1])],
+        provider_token="",
+    )
+    await call.answer()
+
+
+@router.callback_query(F.data.startswith("don:p:"))
+async def cb_donate_platega(call: CallbackQuery, db, settings: Settings, platega: Platega | None) -> None:
+    donation = _donation(call.data.split(":")[2])
+    if donation is None or platega is None:
+        await call.answer("Этот способ сейчас недоступен. Открой /donate заново.", show_alert=True)
+        return
+    await call.answer()
+    rub = donation[0]
+    try:
+        tx = await platega.create(rub, "Hop-by-Hop: благодарность автору",
+                                  f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
+    except PlategaError:
+        await call.message.answer("Не получилось создать счёт в кассе. Попробуй чуть позже или поблагодари звёздами.")
+        return
+    async with db() as session:
+        await upsert_user(session, call.from_user)
+        payment = Payment(user_id=call.from_user.id, provider="platega", external_id=tx.id,
+                          reviews=0, amount=rub, currency="RUB")
+        session.add(payment)
+        await session.commit()
+    await call.message.answer(
+        f"Благодарность на {rub} ₽. Оплата откроется на странице кассы.",
+        reply_markup=kb([btn("💳 Оплатить", url=tx.url)], [btn("Я оплатил, проверить", f"chk:{payment.id}")]),
+    )
 
 
 @router.message(Command("buy"))
@@ -137,9 +221,15 @@ def _stars_pack(settings: Settings, payload: str, total: int) -> Pack | None:
     return next((p for p in settings.packs if payload == f"pack:{p.reviews}" and total == p.stars), None)
 
 
+def _stars_donation(payload: str, total: int) -> bool:
+    return any(payload == f"donate:{stars}" and total == stars for _, stars in DONATIONS)
+
+
 @router.pre_checkout_query()
 async def on_pre_checkout(query: PreCheckoutQuery, settings: Settings) -> None:
-    ok = query.currency == "XTR" and _stars_pack(settings, query.invoice_payload, query.total_amount) is not None
+    ok = query.currency == "XTR" and (
+        _stars_pack(settings, query.invoice_payload, query.total_amount) is not None
+        or _stars_donation(query.invoice_payload, query.total_amount))
     await query.answer(ok=ok, error_message=None if ok else "Цена пакета изменилась. Открой /buy заново.")
 
 
@@ -147,6 +237,8 @@ async def on_pre_checkout(query: PreCheckoutQuery, settings: Settings) -> None:
 async def on_successful_payment(message: Message, bot: Bot, db, settings: Settings) -> None:
     sp = message.successful_payment
     pack = _stars_pack(settings, sp.invoice_payload, sp.total_amount)
+    if pack is None and _stars_donation(sp.invoice_payload, sp.total_amount):
+        pack = Pack(reviews=0, stars=sp.total_amount, rub=0)
     if pack is None:  # деньги получены, а пакет не опознан: не теряем платёж, зовём человека
         log.error("Оплата звёздами без пакета: payload=%s total=%s", sp.invoice_payload, sp.total_amount)
         await notify_admins(bot, settings, f"⚠️ Оплата звёздами не опознана: пользователь {message.from_user.id}, "
@@ -202,7 +294,7 @@ async def cb_check(call: CallbackQuery, bot: Bot, db, settings: Settings, plateg
         await call.answer("Счёт не найден.", show_alert=True)
         return
     if payment.status == "paid":
-        await call.answer("Этот счёт уже оплачен, разборы начислены.", show_alert=True)
+        await call.answer("Этот счёт уже оплачен, спасибо!", show_alert=True)
         return
     state = await settle(bot, db, settings, platega, payment)
     await call.answer({
@@ -266,6 +358,15 @@ async def _thank(bot: Bot, db, settings: Settings, payment: Payment | None) -> N
     async with db() as session:
         user = await session.get(User, payment.user_id)
     sign_ = "⭐" if payment.currency == "XTR" else "₽"
+    if payment.reviews == 0:  # благодарность автору
+        try:
+            await bot.send_message(payment.user_id, "☕ Спасибо огромное за поддержку! Это очень помогает курсу.\n\n"
+                                                    "/lessons - к урокам.")
+        except Exception:
+            log.exception("Не удалось поблагодарить пользователя %s", payment.user_id)
+        await notify_admins(bot, settings, f"☕ Благодарность: {payment.amount} {sign_} ({payment.provider}), "
+                                           f"пользователь {payment.user_id}")
+        return
     try:
         await bot.send_message(payment.user_id, f"✅ Оплата получена: +{reviews_word(payment.reviews)}. "
                                                 f"{balance_line(user, settings)}.\n\n/lessons - к урокам.")

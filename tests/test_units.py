@@ -113,3 +113,13 @@ async def test_platega_client_builds_request_and_reads_both_api_versions(monkeyp
         await client.create(99, "пакет", "https://t.me/bot", "tg:5")
     assert await client.status("t1") == ("CONFIRMED", 99)
     assert calls[-1][:2] == ("GET", "/transaction/t1")
+
+def test_donations_match_stars_invoice():
+    from bot.config import Settings
+    from bot.handlers.payments import DONATIONS, _stars_donation, donate_screen
+    rub, stars = DONATIONS[0]
+    assert _stars_donation(f"donate:{stars}", stars)
+    assert not _stars_donation(f"donate:{stars}", stars - 1)  # сумма подменена
+    assert not _stars_donation("pack:50", stars)
+    text, markup = donate_screen(Settings(_env_file=None, bot_token="1:a"))
+    assert "Поблагодарить" in text and len(markup.inline_keyboard) == len(DONATIONS) + 1

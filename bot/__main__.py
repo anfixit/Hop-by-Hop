@@ -63,6 +63,7 @@ async def main() -> None:
         BotCommand(command="lessons", description="Оглавление курса"),
         BotCommand(command="buy", description="Разборы ИИ: остаток и покупка"),
         BotCommand(command="me", description="Моя статистика"),
+        BotCommand(command="donate", description="Поблагодарить автора"),
         BotCommand(command="help", description="Справка"),
         BotCommand(command="report", description="Сообщить об ошибке"),
         BotCommand(command="cancel", description="Отменить ввод"),
