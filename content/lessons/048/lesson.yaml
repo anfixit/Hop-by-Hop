@@ -69,7 +69,7 @@ quiz:
 
   - q: Как проверить, какой маршрут ядро выберет для пакета с адресом отправителя 203.0.113.2?
     options:
-      - ip rule show from 203.0.113.2
+      - ip rule list from 203.0.113.2 table 102
       - ip route show table all
       - ip route get 192.0.2.10 from 203.0.113.2
       - ip neigh get 203.0.113.2 dev eth2
