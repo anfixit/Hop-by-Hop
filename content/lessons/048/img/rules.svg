@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Правила выбирают таблицу</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">ip rule перебирается сверху вниз; первая таблица, где нашёлся маршрут, решает</text>
+  <text x="60" y="120" font-size="18" font-weight="bold" fill="#0E1830">ip rule</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="135" width="500" height="44" rx="8" fill="#F1F5F9" stroke="#475569"/><text x="60" y="163">0: from all lookup local</text>
+    <rect x="40" y="191" width="500" height="44" rx="8" fill="#FEF9C3" stroke="#A16207"/><text x="60" y="219">1000: from 203.0.113.2 lookup 102</text>
+    <rect x="40" y="247" width="500" height="44" rx="8" fill="#FEF9C3" stroke="#A16207"/><text x="60" y="275">1100: from all fwmark 0x2 lookup 102</text>
+    <rect x="40" y="303" width="500" height="44" rx="8" fill="#FEF9C3" stroke="#A16207"/><text x="60" y="331">1200: from all uidrange 65534-65534 lookup 102</text>
+    <rect x="40" y="359" width="500" height="44" rx="8" fill="#DBEAFE" stroke="#2563EB"/><text x="60" y="387">32766: from all lookup main</text>
+    <rect x="40" y="415" width="500" height="44" rx="8" fill="#F1F5F9" stroke="#475569"/><text x="60" y="443">32767: from all lookup default</text>
+  </g>
+  <text x="660" y="120" font-size="18" font-weight="bold" fill="#0E1830">таблицы</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="640" y="135" width="520" height="70" rx="8" fill="#F1F5F9" stroke="#475569"/><text x="660" y="162">local (255): адреса самой машины</text><text x="660" y="187" font-size="13" fill="#475569">local 198.51.100.2, local 203.0.113.2, broadcast ...</text>
+    <rect x="640" y="225" width="520" height="70" rx="8" fill="#FEF9C3" stroke="#A16207"/><text x="660" y="252">102: второй провайдер</text><text x="660" y="277" font-size="13" fill="#475569">default via 203.0.113.1 dev eth2</text>
+    <rect x="640" y="315" width="520" height="95" rx="8" fill="#DBEAFE" stroke="#2563EB"/><text x="660" y="342">main (254): обычная таблица</text><text x="660" y="367" font-size="13" fill="#475569">default via 198.51.100.1 dev eth1</text><text x="660" y="389" font-size="13" fill="#475569">198.51.100.0/24 dev eth1, 203.0.113.0/24 dev eth2</text>
+    <rect x="640" y="430" width="520" height="44" rx="8" fill="#F1F5F9" stroke="#475569"/><text x="660" y="458">default (253): пустая</text>
+  </g>
+  <g stroke="#475569" stroke-width="2" fill="none">
+    <path d="M540 157 L640 170"/><path d="M540 213 L640 255"/><path d="M540 269 L640 262"/><path d="M540 325 L640 270"/><path d="M540 381 L640 362"/><path d="M540 437 L640 452"/>
+  </g>
+  <rect x="40" y="500" width="1120" height="76" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="530" text-anchor="middle" font-size="16" fill="#0E1830">Пакет с адресом отправителя 203.0.113.2, с меткой 2 или от пользователя nobody уходит через второго провайдера.</text>
+  <text x="600" y="556" text-anchor="middle" font-size="16" fill="#0E1830">Остальные не совпали ни с одним нашим правилом и ищут маршрут в main: в интернет - через первого.</text>
+</svg>
