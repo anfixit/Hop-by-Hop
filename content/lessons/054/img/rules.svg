@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Правила опыта: набор и словарь вердиктов</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="80" width="520" height="400" rx="12" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
+    <text x="60" y="110" font-weight="bold" font-size="17">table inet lab, chain forward_filter</text>
+    <text x="60" y="135" fill="#475569">policy drop, хук forward</text>
+    <rect x="60" y="155" width="480" height="38" rx="6" fill="#DCFCE7" stroke="#15803D"/><text x="75" y="179">ct state established,related accept</text>
+    <rect x="60" y="203" width="480" height="38" rx="6" fill="#FEE2E2" stroke="#B91C1C"/><text x="75" y="227">ct state invalid drop</text>
+    <rect x="60" y="251" width="480" height="38" rx="6" fill="#DCFCE7" stroke="#15803D"/><text x="75" y="275">iifname "eth0" accept   (изнутри наружу)</text>
+    <rect x="60" y="299" width="480" height="38" rx="6" fill="#DBEAFE" stroke="#2563EB"/><text x="75" y="323">tcp dport @web_ports counter accept</text>
+    <rect x="60" y="347" width="480" height="38" rx="6" fill="#FEF9C3" stroke="#A16207"/><text x="75" y="371">tcp dport vmap { 22 : jump admin }</text>
+    <text x="60" y="420" fill="#475569">ни одно правило не подошло - policy drop</text>
+    <text x="60" y="445" fill="#475569">(в опыте так было с 8080 до шага 2)</text>
+  </g>
+  <g font-size="15" fill="#0E1830">
+    <rect x="640" y="80" width="520" height="150" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <text x="660" y="110" font-weight="bold" font-size="17">set web_ports (inet_service)</text>
+    <text x="660" y="140">elements = { 80, 443 }</text>
+    <text x="660" y="170">шаг 2: nft add element ... { 8080 }</text>
+    <text x="660" y="200">- правила не трогаем, 8080 открыт сразу</text>
+    <rect x="640" y="260" width="520" height="220" rx="12" fill="#FEFCE8" stroke="#A16207" stroke-width="2"/>
+    <text x="660" y="290" font-weight="bold" font-size="17">chain admin</text>
+    <text x="660" y="320">ip saddr @admins accept</text>
+    <text x="680" y="345" fill="#475569">set admins (ipv4_addr) = { 198.51.100.2 }</text>
+    <text x="660" y="375">counter reject with tcp reset</text>
+    <text x="660" y="415">198.51.100.2 → 22 open</text>
+    <text x="660" y="440">198.51.100.3 → 22 refused</text>
+    <text x="660" y="465">IPv6 → 22 refused (в наборе только IPv4)</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5" fill="none"><path d="M540 318 L640 200"/><path d="M540 366 L640 300"/></g>
+</svg>
