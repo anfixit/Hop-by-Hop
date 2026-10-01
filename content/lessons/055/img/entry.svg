@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Из чего состоит запись conntrack</text>
+  <rect x="40" y="80" width="1120" height="70" rx="10" fill="#0E1830"/>
+  <text x="60" y="122" font-family="monospace" font-size="17" fill="#E2E8F0">tcp 6 431999 ESTABLISHED src=192.0.2.1 dst=198.51.100.2 sport=58246 dport=81  src=198.51.100.2 ... [ASSURED]</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="190" width="170" height="110" rx="10" fill="#F1F5F9" stroke="#475569" stroke-width="2"/>
+    <text x="55" y="218" font-weight="bold">протокол</text><text x="55" y="244">tcp, номер 6</text><text x="55" y="270" font-size="13" fill="#475569">также udp, icmp</text>
+    <rect x="225" y="190" width="200" height="110" rx="10" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="240" y="218" font-weight="bold">таймаут</text><text x="240" y="244">431999 секунд</text><text x="240" y="270" font-size="13" fill="#475569">взводится заново</text><text x="240" y="288" font-size="13" fill="#475569">с каждым пакетом</text>
+    <rect x="440" y="190" width="200" height="110" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="455" y="218" font-weight="bold">состояние</text><text x="455" y="244">ESTABLISHED</text><text x="455" y="270" font-size="13" fill="#475569">SYN_SENT ... TIME_WAIT</text>
+    <rect x="655" y="190" width="300" height="110" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="670" y="218" font-weight="bold">два кортежа</text><text x="670" y="244">исходный: a:58246 → s:81</text><text x="670" y="270">ответный: s:81 → a:58246</text><text x="670" y="290" font-size="13" fill="#475569">при NAT ответный - с новыми адресами</text>
+    <rect x="970" y="190" width="190" height="110" rx="10" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+    <text x="985" y="218" font-weight="bold">флаги</text><text x="985" y="244">[ASSURED]</text><text x="985" y="260" font-size="12" fill="#475569">поток устоялся</text><text x="985" y="280">[UNREPLIED]</text><text x="985" y="295" font-size="12" fill="#475569">ответа не было</text>
+  </g>
+  <g stroke="#94A3B8" stroke-width="2"><line x1="80" y1="150" x2="125" y2="190"/><line x1="140" y1="150" x2="325" y2="190"/><line x1="230" y1="150" x2="540" y2="190"/><line x1="550" y1="150" x2="805" y2="190"/><line x1="1100" y1="150" x2="1065" y2="190"/></g>
+  <rect x="40" y="335" width="1120" height="160" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="16" fill="#0E1830">
+    <text x="60" y="368" font-weight="bold">Состояния для правил (ct state):</text>
+    <text x="60" y="396">new - ответа ещё не было; established - ответ уже видели; related - связанный поток (ошибка ICMP);</text>
+    <text x="60" y="422">invalid - ни к чему не относится; untracked - отслеживание выключено правилом notrack.</text>
+    <text x="60" y="460" font-weight="bold">Таймауты:</text>
+    <text x="160" y="460">TCP установленное - 5 суток, SYN_SENT и TIME_WAIT - 120 с, UDP - 30 или 120 с, ICMP - 30 с.</text>
+  </g>
+</svg>
