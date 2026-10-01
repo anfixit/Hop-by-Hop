@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Состояния записи в таблице соседей</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">ip neigh: как ядро решает, можно ли верить MAC-адресу соседа</text>
+  <g font-size="17" text-anchor="middle" fill="#0E1830">
+    <rect x="60" y="120" width="200" height="60" rx="10" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="160" y="148">INCOMPLETE</text><text x="160" y="168" font-size="13" fill="#475569">запрос ARP ушёл</text>
+    <rect x="500" y="120" width="200" height="60" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="600" y="148">REACHABLE</text><text x="600" y="168" font-size="13" fill="#475569">подтверждён недавно</text>
+    <rect x="940" y="120" width="200" height="60" rx="10" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="1040" y="148">STALE</text><text x="1040" y="168" font-size="13" fill="#475569">помнится, не подтверждён</text>
+    <rect x="940" y="300" width="200" height="60" rx="10" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="1040" y="328">DELAY</text><text x="1040" y="348" font-size="13" fill="#475569">ждём подтверждения</text>
+    <rect x="500" y="300" width="200" height="60" rx="10" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="600" y="328">PROBE</text><text x="600" y="348" font-size="13" fill="#475569">запрос ARP напрямую</text>
+    <rect x="60" y="300" width="200" height="60" rx="10" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/><text x="160" y="328">FAILED</text><text x="160" y="348" font-size="13" fill="#475569">ответа нет</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5">
+    <line x1="260" y1="150" x2="486" y2="150"/><line x1="700" y1="150" x2="926" y2="150"/>
+    <line x1="1040" y1="180" x2="1040" y2="286"/><line x1="940" y1="330" x2="714" y2="330"/>
+    <line x1="600" y1="300" x2="600" y2="194"/><line x1="500" y1="330" x2="274" y2="330"/>
+    <line x1="160" y1="180" x2="160" y2="286"/>
+    <line x1="940" y1="315" x2="700" y2="190"/>
+  </g>
+  <g fill="#475569">
+    <polygon points="500,150 486,143 486,157"/><polygon points="940,150 926,143 926,157"/>
+    <polygon points="1040,300 1033,286 1047,286"/><polygon points="700,330 714,323 714,337"/>
+    <polygon points="600,180 593,194 607,194"/><polygon points="260,330 274,323 274,337"/>
+    <polygon points="160,300 153,286 167,286"/><polygon points="700,190 714,190 708,202"/>
+  </g>
+  <g font-size="14" fill="#0E1830" text-anchor="middle">
+    <text x="373" y="140">пришёл ответ</text><text x="813" y="140">истёк срок (15-45 с)</text>
+    <text x="1052" y="240" text-anchor="start">нужно отправить</text>
+    <text x="827" y="350">не подтвердился</text><text x="387" y="350">ответа нет</text>
+    <text x="612" y="250" text-anchor="start">ответ</text>
+    <text x="830" y="222" text-anchor="start">трафик подтвердил</text>
+    <text x="150" y="240" text-anchor="end">нет ответа</text>
+  </g>
+  <rect x="40" y="420" width="1120" height="110" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="452" text-anchor="middle" font-size="17" fill="#0E1830">Из опыта: REACHABLE - через пару секунд STALE - новый ping: DELAY - проверка ARP: снова REACHABLE.</text>
+  <text x="600" y="480" text-anchor="middle" font-size="17" fill="#0E1830">К несуществующему адресу: INCOMPLETE - FAILED.</text>
+  <text x="600" y="508" text-anchor="middle" font-size="17" fill="#0E1830">Запись, добавленная вручную, - PERMANENT: она не истекает и не проверяется.</text>
+</svg>

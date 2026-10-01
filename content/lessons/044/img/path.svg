@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Путь пакета через ядро Linux</text>
+  <text x="205" y="92" text-anchor="middle" font-size="19" font-weight="bold" fill="#2563EB">Приём</text><text x="775" y="92" text-anchor="middle" font-size="19" font-weight="bold" fill="#15803D">Отправка</text>
+  <rect x="40" y="110" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="132" text-anchor="middle" font-size="14" fill="#0E1830">карта: кадр по DMA в кольцо приёма</text>
+  <text x="380" y="132" font-size="13" fill="#B91C1C">x кольцо полно: ethtool -S</text>
+  <rect x="610" y="110" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="132" text-anchor="middle" font-size="14" fill="#0E1830">программа: send()</text>
+  <polygon points="205,156 199,146 211,146" fill="#2563EB"/><polygon points="775,156 769,146 781,146" fill="#15803D"/>
+  <rect x="40" y="154" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="176" text-anchor="middle" font-size="14" fill="#0E1830">прерывание, затем опрос NAPI (NET_RX)</text>
+  <text x="380" y="168" font-size="13" fill="#B91C1C">x backlog полон: softnet_stat</text><text x="380" y="184" font-size="13" fill="#475569">бюджет кончился: squeezed</text>
+  <rect x="610" y="154" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="176" text-anchor="middle" font-size="14" fill="#0E1830">очередь отправки сокета</text>
+  <text x="950" y="176" font-size="13" fill="#475569">очередь полна: send ждёт</text>
+  <polygon points="205,200 199,190 211,190" fill="#2563EB"/><polygon points="775,200 769,190 781,190" fill="#15803D"/>
+  <rect x="40" y="198" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="220" text-anchor="middle" font-size="14" fill="#0E1830">sk_buff, GRO</text>
+  <rect x="610" y="198" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="220" text-anchor="middle" font-size="14" fill="#0E1830">TCP / UDP, затем IP</text>
+  <polygon points="205,244 199,234 211,234" fill="#2563EB"/><polygon points="775,244 769,234 781,234" fill="#15803D"/>
+  <rect x="40" y="242" width="330" height="34" rx="6" fill="#FEF9C3" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="264" text-anchor="middle" font-size="14" fill="#0E1830">tcpdump получает копию</text>
+  <rect x="610" y="242" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="264" text-anchor="middle" font-size="14" fill="#0E1830">netfilter OUTPUT</text>
+  <text x="950" y="264" font-size="13" fill="#B91C1C">x drop: UDP - ошибка sendto</text>
+  <polygon points="205,288 199,278 211,278" fill="#2563EB"/><polygon points="775,288 769,278 781,278" fill="#15803D"/>
+  <rect x="40" y="286" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="308" text-anchor="middle" font-size="14" fill="#0E1830">tc ingress</text>
+  <rect x="610" y="286" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="308" text-anchor="middle" font-size="14" fill="#0E1830">netfilter POSTROUTING</text>
+  <polygon points="205,332 199,322 211,322" fill="#2563EB"/><polygon points="775,332 769,322 781,322" fill="#15803D"/>
+  <rect x="40" y="330" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="352" text-anchor="middle" font-size="14" fill="#0E1830">netfilter PREROUTING</text>
+  <rect x="610" y="330" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="352" text-anchor="middle" font-size="14" fill="#0E1830">сосед: MAC следующего узла</text>
+  <polygon points="205,376 199,366 211,366" fill="#2563EB"/><polygon points="775,376 769,366 781,366" fill="#15803D"/>
+  <rect x="40" y="374" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="396" text-anchor="middle" font-size="14" fill="#0E1830">маршрут: этому узлу?</text>
+  <rect x="610" y="374" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="396" text-anchor="middle" font-size="14" fill="#0E1830">дисциплина очереди (qdisc, tc)</text>
+  <text x="950" y="396" font-size="13" fill="#B91C1C">x отброшено: tc -s qdisc</text>
+  <polygon points="205,420 199,410 211,410" fill="#2563EB"/><polygon points="775,420 769,410 781,410" fill="#15803D"/>
+  <rect x="40" y="418" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="440" text-anchor="middle" font-size="14" fill="#0E1830">netfilter INPUT</text>
+  <text x="380" y="440" font-size="13" fill="#B91C1C">x правило drop: tcpdump уже видел</text>
+  <rect x="610" y="418" width="330" height="34" rx="6" fill="#FEF9C3" stroke="#15803D" stroke-width="1.5"/><text x="775" y="440" text-anchor="middle" font-size="14" fill="#0E1830">tcpdump получает копию</text>
+  <polygon points="205,464 199,454 211,454" fill="#2563EB"/><polygon points="775,464 769,454 781,454" fill="#15803D"/>
+  <rect x="40" y="462" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="484" text-anchor="middle" font-size="14" fill="#0E1830">TCP / UDP: поиск сокета</text>
+  <text x="380" y="484" font-size="13" fill="#B91C1C">x нет сокета: RST / ICMP</text>
+  <rect x="610" y="462" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="484" text-anchor="middle" font-size="14" fill="#0E1830">драйвер: кольцо передачи</text>
+  <polygon points="205,508 199,498 211,498" fill="#2563EB"/><polygon points="775,508 769,498 781,498" fill="#15803D"/>
+  <rect x="40" y="506" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="528" text-anchor="middle" font-size="14" fill="#0E1830">очередь приёма сокета</text>
+  <text x="380" y="528" font-size="13" fill="#B91C1C">x очередь полна: RcvbufErrors</text>
+  <rect x="610" y="506" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="528" text-anchor="middle" font-size="14" fill="#0E1830">карта отправляет кадр</text>
+  <polygon points="205,552 199,542 211,542" fill="#2563EB"/><polygon points="775,552 769,542 781,542" fill="#15803D"/>
+  <rect x="40" y="550" width="330" height="34" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/><text x="205" y="572" text-anchor="middle" font-size="14" fill="#0E1830">программа: recv()</text>
+  <rect x="610" y="550" width="330" height="34" rx="6" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5"/><text x="775" y="572" text-anchor="middle" font-size="14" fill="#0E1830">освобождение sk_buff</text>
+  <text x="600" y="612" text-anchor="middle" font-size="16" fill="#475569">Жёлтым - где копию получает tcpdump; красным - где пакет может пропасть и какой счётчик это покажет.</text>
+</svg>
