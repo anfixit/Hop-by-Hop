@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" width="1200" height="540">
+  <rect width="1200" height="540" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">NAPT: два компьютера за одним адресом</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="30" y="100" width="190" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="125" y="130" text-anchor="middle" font-weight="bold">a1</text><text x="125" y="152" text-anchor="middle">10.0.0.1:40000</text>
+    <rect x="30" y="230" width="190" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="125" y="260" text-anchor="middle" font-weight="bold">a2</text><text x="125" y="282" text-anchor="middle">10.0.0.2:40000</text>
+    <rect x="330" y="80" width="480" height="250" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="570" y="110" text-anchor="middle" font-weight="bold" font-size="17">маршрутизатор r: таблица трансляции</text>
+    <text x="350" y="145" font-weight="bold">внутри</text><text x="600" y="145" font-weight="bold">снаружи</text>
+    <line x1="350" y1="155" x2="790" y2="155" stroke="#A16207"/>
+    <text x="350" y="185">10.0.0.1:40000</text><text x="530" y="185">→</text><text x="600" y="185">198.51.100.254:40000</text>
+    <text x="350" y="220">10.0.0.2:40000</text><text x="530" y="220">→</text><text x="600" y="220">198.51.100.254:13533</text>
+    <text x="350" y="260" font-size="13" fill="#475569">порт 40000 уже занят a1 - второму дан другой</text>
+    <text x="350" y="285" font-size="13" fill="#475569">в Linux это записи conntrack (урок 55)</text>
+    <text x="350" y="310" font-size="13" fill="#475569">контрольные суммы IP и TCP пересчитываются</text>
+    <rect x="950" y="160" width="220" height="80" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="1060" y="192" text-anchor="middle" font-weight="bold">сервер s</text><text x="1060" y="216" text-anchor="middle">198.51.100.2:80</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5" fill="none"><line x1="220" y1="135" x2="318" y2="175"/><line x1="220" y1="265" x2="318" y2="215"/><line x1="810" y1="200" x2="938" y2="200"/></g>
+  <g fill="#475569"><polygon points="330,180 316,168 312,182"/><polygon points="330,210 312,208 318,222"/><polygon points="950,200 936,193 936,207"/></g>
+  <text x="880" y="188" text-anchor="middle" font-size="13" fill="#475569">видит только</text><text x="880" y="230" text-anchor="middle" font-size="13" fill="#475569">198.51.100.254</text>
+  <rect x="30" y="370" width="1140" height="140" rx="10" fill="#FEF2F2" stroke="#B91C1C" stroke-width="2"/>
+  <text x="600" y="402" text-anchor="middle" font-size="18" font-weight="bold" fill="#B91C1C">NAT - не файервол</text>
+  <text x="600" y="432" text-anchor="middle" font-size="16" fill="#0E1830">Входящие на публичный адрес закрыты лишь потому, что для них нет записи; пакеты прямо</text>
+  <text x="600" y="456" text-anchor="middle" font-size="16" fill="#0E1830">на внутренние адреса, проброс порта, UPnP и исходящие соединения NAT не проверяет.</text>
+  <text x="600" y="486" text-anchor="middle" font-size="16" fill="#0E1830">Защищает фильтр с состоянием: policy drop, established,related, новые - только изнутри.</text>
+</svg>
