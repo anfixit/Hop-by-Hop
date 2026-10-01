@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Что видит наблюдатель на пути</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">один и тот же запрос к учебному сайту, записанный tcpdump в опыте</text>
+  <rect x="40" y="100" width="540" height="420" rx="12" fill="#FEF2F2" stroke="#B91C1C" stroke-width="2"/>
+  <text x="310" y="135" text-anchor="middle" font-size="22" font-weight="bold" fill="#B91C1C">HTTP, порт 8080</text>
+  <g font-size="16" fill="#0E1830">
+    <text x="70" y="180">адреса и порты: 192.0.2.1 → 192.0.2.2:8080</text>
+    <text x="70" y="215">адрес страницы: GET /account</text>
+    <text x="70" y="250">имя сайта: Host: 192.0.2.2:8080</text>
+    <text x="70" y="285">пароль: Authorization: Basic c3R1ZGVu...</text>
+    <text x="100" y="310" font-size="14" fill="#475569">base64, а не шифр: student:lab-password-123</text>
+    <text x="70" y="345">куки сеанса: session=7f3a9c21e4b8</text>
+    <text x="70" y="380">содержимое: balance: 1000</text>
+    <text x="70" y="415">размеры и время пакетов</text>
+  </g>
+  <text x="310" y="480" text-anchor="middle" font-size="17" font-weight="bold" fill="#B91C1C">видно всё</text>
+  <rect x="620" y="100" width="540" height="420" rx="12" fill="#F0FDF4" stroke="#15803D" stroke-width="2"/>
+  <text x="890" y="135" text-anchor="middle" font-size="22" font-weight="bold" fill="#15803D">HTTPS (TLS), порт 8443</text>
+  <g font-size="16" fill="#0E1830">
+    <text x="650" y="180">адреса и порты: 192.0.2.1 → 192.0.2.2:8443</text>
+    <text x="650" y="215" fill="#94A3B8">адрес страницы: зашифрован</text>
+    <text x="650" y="250">имя сайта: SNI hbh.test в Client Hello</text>
+    <text x="650" y="285" fill="#94A3B8">пароль: зашифрован</text>
+    <text x="650" y="345" fill="#94A3B8">куки сеанса: зашифрованы</text>
+    <text x="650" y="380" fill="#94A3B8">содержимое: зашифровано</text>
+    <text x="650" y="415">размеры и время записей TLS</text>
+  </g>
+  <text x="890" y="480" text-anchor="middle" font-size="17" font-weight="bold" fill="#15803D">видны только метаданные</text>
+</svg>
