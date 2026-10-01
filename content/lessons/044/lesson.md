@@ -141,7 +141,7 @@ except socket.timeout:
     pass
 print(f"receiver on port {port}: the program got {n} datagrams")
 EOF
-counters() { sudo ip netns exec $1 nstat -az $2 | sed 1d | awk '{printf "  %s %s\n", $1, $2}'; }
+counters() { sudo ip netns exec $1 nstat -asz $2 | sed 1d | awk '{printf "  %s %s\n", $1, $2}'; }
 echo '--- 2. incoming: tcpdump sees what the firewall then drops'
 $B nft add table ip lab
 $B nft add chain ip lab in '{ type filter hook input priority 0; }'

@@ -177,10 +177,10 @@ $A tc qdisc del dev eth0 ingress
 echo '--- 6. a server that does not accept: queue of 2 on port 6000'
 $A python3 "$d/client.py" 6000 5 2 1
 $B ss -tln 'sport = :6000' | awk '{print $1, $2, $3, $4}' | column -t
-$B nstat -az TcpExtListenOverflows TcpExtListenDrops | sed 1d | awk '{print $1, $2}'
+$B nstat -asz TcpExtListenOverflows TcpExtListenDrops | sed 1d | awk '{print $1, $2}'
 echo '--- 7. protective settings on b'
 $B sysctl net.ipv4.tcp_syncookies net.ipv4.tcp_max_syn_backlog net.ipv4.tcp_synack_retries net.core.somaxconn
-$B nstat -az TcpExtSyncookiesSent TcpExtSyncookiesRecv | sed 1d | awk '{print $1, $2}'
+$B nstat -asz TcpExtSyncookiesSent TcpExtSyncookiesRecv | sed 1d | awk '{print $1, $2}'
 echo '--- cleanup'
 for n in hbh-a hbh-b; do
   sudo ip netns pids $n 2>/dev/null | xargs -r sudo kill
