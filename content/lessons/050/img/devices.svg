@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Виртуальные устройства в опыте</text>
+  <g font-size="15" fill="#0E1830" text-anchor="middle">
+    <rect x="40" y="90" width="170" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="125" y="120">a: eth0</text><text x="125" y="142" font-size="13" fill="#475569">192.0.2.1</text>
+    <rect x="40" y="200" width="170" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="125" y="230">b: eth0</text><text x="125" y="252" font-size="13" fill="#475569">192.0.2.2</text>
+    <rect x="40" y="310" width="170" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="125" y="340">c: eth0</text><text x="125" y="362" font-size="13" fill="#475569">192.0.2.3</text>
+    <rect x="330" y="80" width="300" height="310" rx="14" fill="#F0FDF4" stroke="#15803D" stroke-width="2"/>
+    <text x="480" y="108" font-weight="bold">sw: мост br0</text>
+    <rect x="350" y="105" width="70" height="40" rx="6" fill="#BBF7D0" stroke="#15803D"/><text x="385" y="130">pa</text>
+    <rect x="350" y="215" width="70" height="40" rx="6" fill="#BBF7D0" stroke="#15803D"/><text x="385" y="240">pb</text>
+    <rect x="350" y="325" width="70" height="40" rx="6" fill="#BBF7D0" stroke="#15803D"/><text x="385" y="350">pc</text>
+    <text x="530" y="200" font-size="13" fill="#475569">таблица FDB:</text>
+    <text x="530" y="222" font-size="13" fill="#475569">MAC a - порт pa</text>
+    <text x="530" y="244" font-size="13" fill="#475569">MAC b - порт pb</text>
+  </g>
+  <g stroke="#475569" stroke-width="3"><line x1="210" y1="125" x2="350" y2="125"/><line x1="210" y1="235" x2="350" y2="235"/><line x1="210" y1="345" x2="350" y2="345"/></g>
+  <g font-size="12" fill="#475569" text-anchor="middle"><text x="280" y="117">veth</text><text x="280" y="227">veth</text><text x="280" y="337">veth</text></g>
+  <path d="M420 125 C 470 150, 470 210, 420 235" stroke="#15803D" stroke-width="2.5" fill="none" stroke-dasharray="6 4"/>
+  <text x="515" y="290" text-anchor="middle" font-size="13" fill="#15803D">ping a - b идёт только</text>
+  <text x="515" y="308" text-anchor="middle" font-size="13" fill="#15803D">через pa и pb; c видит</text>
+  <text x="515" y="326" text-anchor="middle" font-size="13" fill="#15803D">лишь широковещательный ARP</text>
+  <rect x="700" y="80" width="460" height="310" rx="14" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+  <text x="930" y="108" text-anchor="middle" font-size="15" font-weight="bold" fill="#0E1830">t: tun0 и tap0</text>
+  <g font-size="14" fill="#0E1830">
+    <rect x="720" y="125" width="180" height="90" rx="8" fill="#FFFFFF" stroke="#A16207"/>
+    <text x="810" y="150" text-anchor="middle">ядро</text><text x="810" y="172" text-anchor="middle" font-size="13">ping 10.9.0.2</text><text x="810" y="194" text-anchor="middle" font-size="13">маршрут: dev tun0</text>
+    <rect x="960" y="125" width="180" height="90" rx="8" fill="#FFFFFF" stroke="#A16207"/>
+    <text x="1050" y="150" text-anchor="middle">программа</text><text x="1050" y="172" text-anchor="middle" font-size="13">/dev/net/tun</text><text x="1050" y="194" text-anchor="middle" font-size="13">tunpeer.py</text>
+  </g>
+  <g stroke="#A16207" stroke-width="2.5"><line x1="900" y1="155" x2="946" y2="155"/><line x1="960" y1="190" x2="914" y2="190"/></g>
+  <g fill="#A16207"><polygon points="960,155 946,148 946,162"/><polygon points="900,190 914,183 914,197"/></g>
+  <g font-size="13" fill="#0E1830">
+    <text x="720" y="250">tun0 - пакеты IP, 84 байта: echo request</text>
+    <text x="720" y="272">программа пишет обратно echo reply - ping получает ответ</text>
+    <text x="720" y="310">tap0 - кадры Ethernet, 42 байта: запрос ARP</text>
+    <text x="720" y="332">на ff:ff:ff:ff:ff:ff; у tap есть MAC, у tun нет</text>
+    <text x="720" y="370" fill="#475569">так работают VPN и прокси в режиме TUN</text>
+  </g>
+  <rect x="40" y="420" width="1120" height="150" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="16" fill="#0E1830">
+    <text x="70" y="455">veth - пара интерфейсов, соединённых "кабелем"; концы разносят по пространствам имён.</text>
+    <text x="70" y="487">bridge - коммутатор в ядре: порты, обучение, FDB; с IP-адресом он шлюз для контейнеров (docker0).</text>
+    <text x="70" y="519">tun - на другом конце программа, получает пакеты IP; tap - то же, но кадры Ethernet.</text>
+    <text x="70" y="551" fill="#475569">Все три создаются командой ip link (ip tuntap) и живут только в ядре, без железа.</text>
+  </g>
+</svg>
