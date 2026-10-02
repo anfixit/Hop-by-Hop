@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Запрос и ответ HTTP/1.1</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="75" width="540" height="270" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="60" y="105" font-weight="bold" font-size="18">Запрос</text>
+    <text x="60" y="140" font-family="monospace" font-size="14">GET / HTTP/1.1</text>
+    <text x="60" y="165" font-family="monospace" font-size="14">Host: lab</text>
+    <text x="60" y="190" font-family="monospace" font-size="14">User-Agent: curl/8.5.0</text>
+    <text x="60" y="215" font-family="monospace" font-size="14">Accept: */*</text>
+    <text x="60" y="240" font-family="monospace" font-size="14" fill="#64748B">(пустая строка)</text>
+    <text x="60" y="275">стартовая строка: метод, путь, версия</text>
+    <text x="60" y="301">каждая строка оканчивается CR LF</text>
+    <text x="60" y="327">Host обязателен: на адресе много сайтов</text>
+    <rect x="620" y="75" width="540" height="270" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="640" y="105" font-weight="bold" font-size="18">Ответ</text>
+    <text x="640" y="140" font-family="monospace" font-size="14">HTTP/1.1 200 OK</text>
+    <text x="640" y="165" font-family="monospace" font-size="14">Content-Type: text/html</text>
+    <text x="640" y="190" font-family="monospace" font-size="14">ETag: "ab623d4329ecb188"</text>
+    <text x="640" y="215" font-family="monospace" font-size="14">Content-Length: 45</text>
+    <text x="640" y="240" font-family="monospace" font-size="14" fill="#64748B">(пустая строка)</text>
+    <text x="640" y="262" font-family="monospace" font-size="14">&lt;html&gt;...тело...&lt;/html&gt;</text>
+    <text x="640" y="301">коды: 2xx успех, 3xx перенаправление,</text>
+    <text x="640" y="327">4xx ошибка клиента, 5xx ошибка сервера</text>
+    <rect x="40" y="370" width="540" height="170" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="60" y="400" font-weight="bold" font-size="18">Соединение, кэш, длина, cookies</text>
+    <text x="60" y="432">HTTP/1.1 держит TCP открытым (keep-alive)</text>
+    <text x="60" y="458">кэш: If-None-Match по ETag → 304 без тела</text>
+    <text x="60" y="484">тело без длины: Transfer-Encoding: chunked</text>
+    <text x="60" y="510">состояние: Set-Cookie, затем Cookie</text>
+    <rect x="620" y="370" width="540" height="170" rx="12" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+    <text x="640" y="400" font-weight="bold" font-size="18">В открытом HTTP видно всё</text>
+    <text x="640" y="432">путь с ?account=42, Cookie: session=...</text>
+    <text x="640" y="458">Authorization: Basic - это base64, не шифр</text>
+    <text x="640" y="484" font-weight="bold" fill="#15803D">HTTPS, HSTS, cookies с Secure,</text>
+    <text x="640" y="510" font-weight="bold" fill="#15803D">HttpOnly и SameSite</text>
+  </g>
+</svg>
