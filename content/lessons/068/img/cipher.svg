@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Шифр открыт, секрет - только ключ</text>
+  <g font-size="16" fill="#0E1830" text-anchor="middle">
+    <rect x="40" y="100" width="190" height="70" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="135" y="132" font-weight="bold">открытый текст P</text><text x="135" y="155" font-size="13">"встреча в полдень"</text>
+    <rect x="320" y="90" width="200" height="90" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="420" y="127" font-weight="bold">шифрование E</text><text x="420" y="152" font-size="13">алгоритм открыт (AES)</text>
+    <rect x="610" y="100" width="190" height="70" rx="12" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/><text x="705" y="132" font-weight="bold">шифртекст C</text><text x="705" y="155" font-size="13">виден всем</text>
+    <rect x="890" y="90" width="200" height="90" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="990" y="127" font-weight="bold">расшифрование D</text><text x="990" y="152" font-size="13">тот же ключ, на выходе P</text>
+    <rect x="320" y="230" width="770" height="56" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="705" y="265" font-weight="bold">ключ K - единственный секрет: 128 бит и больше</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5"><line x1="230" y1="135" x2="318" y2="135"/><line x1="520" y1="135" x2="608" y2="135"/><line x1="800" y1="135" x2="888" y2="135"/><line x1="420" y1="230" x2="420" y2="182"/><line x1="990" y1="230" x2="990" y2="182"/></g>
+  <g fill="#475569"><polygon points="306,129 306,141 318,135"/><polygon points="596,129 596,141 608,135"/><polygon points="876,129 876,141 888,135"/><polygon points="414,194 426,194 420,182"/><polygon points="984,194 996,194 990,182"/></g>
+  <rect x="40" y="330" width="540" height="240" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="60" y="362" font-weight="bold">Почему классика ломается</text>
+    <text x="60" y="392">Цезарь: 32 ключа - перебор за миг</text>
+    <text x="60" y="420">Замена: 32! ≈ 2^118 ключей,</text>
+    <text x="60" y="444">но частоты букв видны в шифртексте</text>
+    <text x="60" y="474">Одноразовый блокнот: стоек абсолютно,</text>
+    <text x="60" y="498">но ключ длиной с текст и только один раз, иначе:</text>
+    <text x="60" y="522" font-family="monospace">c1 xor c2 = m1 xor m2</text>
+  </g>
+  <rect x="620" y="330" width="540" height="240" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="640" y="362" font-weight="bold">Перебор при 10^12 ключей в секунду</text>
+    <text x="640" y="392" font-family="monospace">56 бит</text><text x="760" y="392">меньше суток</text>
+    <text x="640" y="420" font-family="monospace">64 бита</text><text x="760" y="420">около 214 дней</text>
+    <text x="640" y="448" font-family="monospace">80 бит</text><text x="760" y="448">десятки тысяч лет</text>
+    <text x="640" y="476" font-family="monospace">128 бит</text><text x="760" y="476">10^19 лет</text>
+    <text x="640" y="512">каждый бит удваивает работу</text>
+    <text x="640" y="540" fill="#64748B" font-size="14">криптографию чаще обходят, чем взламывают</text>
+  </g>
+</svg>
