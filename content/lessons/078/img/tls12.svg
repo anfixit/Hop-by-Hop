@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+  <defs>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1D4ED8"/></marker>
+    <marker id="l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#15803D"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker>
+  </defs>
+  <rect width="1200" height="760" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Рукопожатие TLS 1.2 с ECDHE</text>
+  <g font-size="20" font-weight="bold" fill="#0E1830" text-anchor="middle">
+    <rect x="130" y="70" width="200" height="44" rx="8" fill="#DBEAFE" stroke="#1D4ED8"/><text x="230" y="99">Клиент</text>
+    <rect x="870" y="70" width="200" height="44" rx="8" fill="#DCFCE7" stroke="#15803D"/><text x="970" y="99">Сервер</text>
+  </g>
+  <line x1="230" y1="114" x2="230" y2="740" stroke="#94A3B8" stroke-width="3"/>
+  <line x1="970" y1="114" x2="970" y2="740" stroke="#94A3B8" stroke-width="3"/>
+  <g font-size="18" fill="#0E1830" text-anchor="middle">
+    <line x1="232" y1="160" x2="966" y2="175" stroke="#1D4ED8" stroke-width="3" marker-end="url(#r)"/>
+    <text x="600" y="155">ClientHello: версии, client_random, наборы, расширения</text>
+
+    <line x1="968" y1="215" x2="234" y2="230" stroke="#15803D" stroke-width="3" marker-end="url(#l)"/>
+    <text x="600" y="210">ServerHello: выбор, server_random</text>
+    <line x1="968" y1="265" x2="234" y2="280" stroke="#15803D" stroke-width="3" marker-end="url(#l)"/>
+    <text x="600" y="260">Certificate: цепочка сертификатов</text>
+    <line x1="968" y1="315" x2="234" y2="330" stroke="#15803D" stroke-width="3" marker-end="url(#l)"/>
+    <text x="600" y="310" font-weight="bold">ServerKeyExchange: ключ ECDHE + подпись</text>
+    <line x1="968" y1="365" x2="234" y2="380" stroke="#15803D" stroke-width="3" marker-end="url(#l)"/>
+    <text x="600" y="360">ServerHelloDone</text>
+
+    <line x1="232" y1="425" x2="966" y2="440" stroke="#1D4ED8" stroke-width="3" marker-end="url(#r)"/>
+    <text x="600" y="420">ClientKeyExchange: ключ ECDHE клиента</text>
+    <line x1="232" y1="475" x2="966" y2="490" stroke="#1D4ED8" stroke-width="3" marker-end="url(#r)"/>
+    <text x="600" y="470">ChangeCipherSpec</text>
+    <line x1="232" y1="525" x2="966" y2="540" stroke="#1D4ED8" stroke-width="3" stroke-dasharray="10 6" marker-end="url(#r)"/>
+    <text x="600" y="520" font-weight="bold">Finished (зашифровано)</text>
+
+    <line x1="968" y1="580" x2="234" y2="595" stroke="#15803D" stroke-width="3" marker-end="url(#l)"/>
+    <text x="600" y="575">ChangeCipherSpec</text>
+    <line x1="968" y1="630" x2="234" y2="645" stroke="#15803D" stroke-width="3" stroke-dasharray="10 6" marker-end="url(#l)"/>
+    <text x="600" y="625" font-weight="bold">Finished (зашифровано)</text>
+
+    <line x1="232" y1="690" x2="966" y2="705" stroke="#64748B" stroke-width="3" stroke-dasharray="4 6" marker-end="url(#g)"/>
+    <text x="600" y="685" fill="#475569">данные приложения</text>
+  </g>
+  <g font-size="17" fill="#B91C1C" text-anchor="middle">
+    <text x="52" y="300">1-й круг</text>
+    <line x1="110" y1="150" x2="110" y2="385" stroke="#B91C1C" stroke-width="2"/>
+    <text x="52" y="560">2-й круг</text>
+    <line x1="110" y1="420" x2="110" y2="650" stroke="#B91C1C" stroke-width="2"/>
+  </g>
+  <g font-size="16" fill="#475569" text-anchor="start">
+    <text x="1000" y="330">с RSA этого</text>
+    <text x="1000" y="350">сообщения нет</text>
+  </g>
+</svg>
