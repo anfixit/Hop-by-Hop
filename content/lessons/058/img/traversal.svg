@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Два устройства за NAT: как соединиться напрямую</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="30" y="90" width="200" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="130" y="120" text-anchor="middle" font-weight="bold">устройство A</text><text x="130" y="142" text-anchor="middle" font-size="13">192.168.1.10:5000</text>
+    <rect x="260" y="90" width="170" height="70" rx="10" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="345" y="120" text-anchor="middle">NAT A</text><text x="345" y="142" text-anchor="middle" font-size="13">203.0.113.1:5000</text>
+    <rect x="770" y="90" width="170" height="70" rx="10" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="855" y="120" text-anchor="middle">NAT B</text><text x="855" y="142" text-anchor="middle" font-size="13">198.51.100.7:6000</text>
+    <rect x="970" y="90" width="200" height="70" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="1070" y="120" text-anchor="middle" font-weight="bold">устройство B</text><text x="1070" y="142" text-anchor="middle" font-size="13">10.0.0.5:6000</text>
+    <rect x="500" y="200" width="200" height="80" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="600" y="230" text-anchor="middle" font-weight="bold">сервер STUN</text><text x="600" y="254" text-anchor="middle" font-size="13">"ты виден как ..."</text>
+  </g>
+  <g stroke="#94A3B8" stroke-width="2" fill="none"><line x1="345" y1="160" x2="520" y2="210"/><line x1="855" y1="160" x2="680" y2="210"/></g>
+  <g font-size="13" fill="#475569"><text x="480" y="235" text-anchor="end">1. узнать свой внешний адрес</text><text x="720" y="235">1. то же</text></g>
+  <path d="M430 110 L770 110" stroke="#15803D" stroke-width="3" fill="none"/>
+  <text x="600" y="78" text-anchor="middle" font-size="14" fill="#15803D">2. оба одновременно шлют пакет на внешний адрес другого</text>
+  <text x="600" y="298" text-anchor="middle" font-size="13" fill="#475569">каждый пакет создаёт запись в своём NAT, встречный проходит как ответ</text>
+  <rect x="30" y="310" width="1140" height="220" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="50" y="340" font-weight="bold">Сопоставление (RFC 4787):</text>
+    <text x="270" y="340">независимое - одна внешняя пара для всех получателей: пробивка работает</text>
+    <text x="270" y="364">зависимое от получателя ("симметричный NAT") - пробивка обычно не удаётся, нужен TURN</text>
+    <text x="50" y="398" font-weight="bold">Фильтрация:</text>
+    <text x="270" y="398">независимая / по адресу / по адресу и порту (Linux) - кого пускать на внешнюю пару</text>
+    <text x="50" y="432" font-weight="bold">TURN:</text>
+    <text x="270" y="432">ретрансляция через сервер, если прямой путь невозможен; ICE выбирает лучший путь</text>
+    <text x="50" y="466" font-weight="bold">Hairpin:</text>
+    <text x="270" y="466">обращение изнутри к своему публичному адресу: нужны DNAT и SNAT на маршрутизаторе</text>
+    <text x="50" y="500" font-weight="bold">CGNAT:</text>
+    <text x="270" y="500">адрес 100.64.0.0/10 и второй NAT у провайдера: домашний проброс снаружи не виден</text>
+  </g>
+</svg>
