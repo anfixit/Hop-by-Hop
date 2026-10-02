@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Цепочка доверия X.509</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="75" width="420" height="100" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="60" y="105" font-weight="bold" font-size="17">Корневой УЦ</text>
+    <text x="60" y="131">подписан сам собой, лежит в хранилище</text>
+    <text x="60" y="155">ОС или браузера, CA:TRUE</text>
+    <rect x="40" y="215" width="420" height="100" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="60" y="245" font-weight="bold" font-size="17">Промежуточный УЦ</text>
+    <text x="60" y="271">подписан корнем, CA:TRUE, pathlen:0</text>
+    <text x="60" y="295">сервер присылает его вместе со своим</text>
+    <rect x="40" y="355" width="420" height="130" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="60" y="385" font-weight="bold" font-size="17">Сертификат сервера</text>
+    <text x="60" y="411">subject www.corp.lab, issuer - промежуточный</text>
+    <text x="60" y="435">SAN: www.corp.lab, corp.lab; CA:FALSE</text>
+    <text x="60" y="459">serverAuth, срок 90 дней, открытый ключ</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5"><line x1="250" y1="175" x2="250" y2="213"/><line x1="250" y1="315" x2="250" y2="353"/></g>
+  <g fill="#475569"><polygon points="243,201 257,201 250,213"/><polygon points="243,341 257,341 250,353"/></g>
+  <g font-size="13" fill="#475569"><text x="262" y="200">подпись</text><text x="262" y="340">подпись</text></g>
+  <rect x="500" y="75" width="660" height="245" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="520" y="105" font-weight="bold" font-size="17">Что проверяет клиент</text>
+    <text x="520" y="135">каждая подпись сходится, цепочка ведёт к доверенному корню</text>
+    <text x="520" y="163" font-family="monospace" font-size="14">без промежуточного: unable to get local issuer</text>
+    <text x="520" y="189">в пределах срока, иначе <tspan font-family="monospace" font-size="14">certificate has expired</tspan></text>
+    <text x="520" y="215">имя должно быть в SAN, иначе <tspan font-family="monospace" font-size="14">hostname mismatch</tspan></text>
+    <text x="520" y="241">ограничения CA:TRUE/FALSE и назначение ключа</text>
+    <text x="520" y="267">отзыв (CRL, OCSP): <tspan font-family="monospace" font-size="14">certificate revoked</tspan></text>
+    <text x="520" y="297" fill="#64748B">отзыв ненадёжен - отсюда короткие сроки и ACME</text>
+  </g>
+  <rect x="500" y="340" width="660" height="145" rx="12" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="520" y="370" font-weight="bold" font-size="17">Любой УЦ может выдать на любое имя</text>
+    <text x="520" y="398">DigiNotar, Comodo 2011; Symantec 2015-2018</text>
+    <text x="520" y="424"><tspan font-weight="bold">Certificate Transparency:</tspan> каждый выпуск в открытом журнале</text>
+    <text x="520" y="450"><tspan font-weight="bold">CAA</tspan>: какие УЦ вправе выдавать для домена</text>
+    <text x="520" y="474"><tspan font-weight="bold">закрепление ключей</tspan> в своих клиентах</text>
+  </g>
+  <text x="600" y="540" text-anchor="middle" font-size="16" fill="#64748B">Подпись: действие закрытым ключом над сообщением (обычно над хешем); проверить может любой с открытым ключом.</text>
+</svg>
