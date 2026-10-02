@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <rect width="1200" height="620" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Режимы блочного шифра и AEAD</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="75" width="360" height="230" rx="12" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+    <text x="60" y="105" font-weight="bold" font-size="18">ECB</text>
+    <text x="60" y="135">каждый блок отдельно, тем же ключом</text>
+    <text x="60" y="165" font-family="monospace">P1 = P2  →  C1 = C2</text>
+    <text x="60" y="195">видны повторы и структура,</text>
+    <text x="60" y="219">блоки можно переставлять</text>
+    <text x="60" y="265" font-weight="bold" fill="#B91C1C">не использовать</text>
+    <rect x="420" y="75" width="360" height="230" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="440" y="105" font-weight="bold" font-size="18">CBC</text>
+    <text x="440" y="135" font-family="monospace">Ci = E(Pi xor Ci-1)</text>
+    <text x="440" y="165">первый блок - со случайным IV</text>
+    <text x="440" y="195">нужна набивка (padding)</text>
+    <text x="440" y="219">повторы скрыты</text>
+    <text x="440" y="265" font-weight="bold" fill="#A16207">без MAC подмена возможна</text>
+    <rect x="800" y="75" width="360" height="230" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="820" y="105" font-weight="bold" font-size="18">CTR</text>
+    <text x="820" y="135" font-family="monospace">Ci = Pi xor E(nonce, i)</text>
+    <text x="820" y="165">блочный шифр становится потоковым</text>
+    <text x="820" y="195">бит шифртекста = бит текста:</text>
+    <text x="820" y="219" font-family="monospace">"1000" → "9000"</text>
+    <text x="820" y="265" font-weight="bold" fill="#A16207">без MAC подмена незаметна</text>
+    <rect x="40" y="335" width="1120" height="170" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="60" y="368" font-weight="bold" font-size="18">AEAD: AES-GCM, ChaCha20-Poly1305 (в TLS 1.3 только AEAD)</text>
+    <text x="60" y="400" font-family="monospace">ключ + nonce + текст + связанные данные  →  шифртекст + тег 16 байт</text>
+    <text x="60" y="432">изменён хоть бит шифртекста или связанных данных - расшифровка отказывает (InvalidTag)</text>
+    <text x="60" y="462" font-weight="bold" fill="#B91C1C">nonce с одним ключом не повторяется никогда: повтор раскрывает m1 xor m2</text>
+  </g>
+  <text x="600" y="560" text-anchor="middle" font-size="16" fill="#64748B">AES: блок 128 бит, ключ 128/192/256, аппаратное ускорение. ChaCha20: потоковый, быстр без аппаратной поддержки.</text>
+</svg>
