@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Кривые и прямая секретность</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="75" width="540" height="220" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="60" y="105" font-weight="bold" font-size="18">Около 128 бит стойкости</text>
+    <text x="60" y="140" font-family="monospace">X25519, Ed25519</text><text x="260" y="140">ключ 32 байта</text>
+    <text x="60" y="168" font-family="monospace">P-256</text><text x="260" y="168">точка 65 байт</text>
+    <text x="60" y="196" font-family="monospace">RSA-3072</text><text x="260" y="196">модуль 384 байта</text>
+    <text x="60" y="232">X25519 - обмен ключами, Ed25519 - подписи (64 байта)</text>
+    <text x="60" y="262">подпись RSA в десятки раз медленнее</text>
+    <rect x="620" y="75" width="540" height="220" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="640" y="105" font-weight="bold" font-size="18">Случайное число в подписи</text>
+    <text x="640" y="140">ECDSA: новое секретное число на каждую подпись</text>
+    <text x="640" y="168">повтор или предсказуемость - утечка ключа</text>
+    <text x="640" y="204">Ed25519: число выводится из ключа и текста,</text>
+    <text x="640" y="228">две подписи одного текста одинаковы</text>
+    <text x="640" y="262" fill="#64748B">для ECDSA - детерминированный вариант RFC 6979</text>
+    <rect x="40" y="320" width="540" height="220" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="60" y="350" font-weight="bold" font-size="18">ECDHE: прямая секретность</text>
+    <text x="60" y="382">в каждом сеансе новые ключи X25519</text>
+    <text x="60" y="408">долговременный ключ только подписывает</text>
+    <text x="60" y="434">после сеанса эфемерные ключи стёрты</text>
+    <text x="60" y="470" font-weight="bold" fill="#15803D">украден ключ сервера -</text>
+    <text x="60" y="494" font-weight="bold" fill="#15803D">записанное прошлое не раскрыть</text>
+    <rect x="620" y="320" width="540" height="220" rx="12" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+    <text x="640" y="350" font-weight="bold" font-size="18">Обмен через RSA: без неё</text>
+    <text x="640" y="382">сеансовый ключ шифруется ключом сервера</text>
+    <text x="640" y="408">запись хранит этот зашифрованный ключ</text>
+    <text x="640" y="434">в TLS 1.3 такого обмена нет</text>
+    <text x="640" y="470" font-weight="bold" fill="#B91C1C">украден ключ сервера -</text>
+    <text x="640" y="494" font-weight="bold" fill="#B91C1C">открывается каждый записанный сеанс</text>
+  </g>
+</svg>
