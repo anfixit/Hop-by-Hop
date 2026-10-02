@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <rect width="1200" height="620" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Слои защиты DNS</text>
+  <text x="300" y="85" text-anchor="middle" font-size="17" font-weight="bold" fill="#0E1830">Чтобы ответ приняли, должно совпасть:</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="60" y="105" width="480" height="48" rx="8" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="80" y="135"><tspan font-weight="bold">ID запроса</tspan> - 16 бит, был единственной защитой</text>
+    <rect x="60" y="163" width="480" height="48" rx="8" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="80" y="193"><tspan font-weight="bold">порт источника</tspan> - случайный, ещё около 15-16 бит</text>
+    <rect x="60" y="221" width="480" height="48" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="80" y="251"><tspan font-weight="bold">вопрос</tspan>, а с 0x20 - и регистр букв в нём</text>
+    <rect x="60" y="279" width="480" height="48" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="80" y="309"><tspan font-weight="bold">cookie</tspan> клиента и сервера</text>
+    <rect x="60" y="337" width="480" height="48" rx="8" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="80" y="367"><tspan font-weight="bold">подпись DNSSEC</tspan> - подделку видно при проверке (урок 66)</text>
+  </g>
+  <text x="300" y="412" text-anchor="middle" font-size="14" fill="#64748B">первые слои мешают угадать, последний - доказывает подлинность</text>
+  <text x="890" y="85" text-anchor="middle" font-size="17" font-weight="bold" fill="#0E1830">Ограничение частоты ответов</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="640" y="105" width="500" height="48" rx="8" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="660" y="135">в пределах лимита - <tspan font-weight="bold">полный ответ</tspan></text>
+    <rect x="640" y="163" width="500" height="48" rx="8" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="660" y="193">сверх лимита - часть <tspan font-weight="bold">короткими ответами с TC</tspan></text>
+    <rect x="640" y="221" width="500" height="48" rx="8" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/><text x="660" y="251">остальное - <tspan font-weight="bold">без ответа</tspan>: усиления нет</text>
+    <rect x="640" y="279" width="500" height="48" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="660" y="309">настоящий клиент с TC повторяет по <tspan font-weight="bold">TCP</tspan></text>
+  </g>
+  <text x="890" y="355" text-anchor="middle" font-size="14" fill="#64748B">плюс закрытая рекурсия, минимальный ANY и BCP 38</text>
+  <rect x="60" y="445" width="1080" height="140" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="80" y="478" font-size="17" font-weight="bold" fill="#0E1830">Домены-двойники</text>
+  <g font-size="16" fill="#0E1830">
+    <text x="80" y="512" font-family="monospace">example.com</text><text x="300" y="512">латиница</text><text x="520" y="512" font-family="monospace">example.com</text>
+    <text x="80" y="542" font-family="monospace">ехаmple.com</text><text x="300" y="542" fill="#B91C1C">е, х, а - кириллица</text><text x="520" y="542" font-family="monospace" fill="#B91C1C">xn--mple-43d3a6i.com</text>
+    <text x="80" y="572" font-size="14" fill="#64748B">на экране одинаково, в DNS - разные домены; смешение алфавитов браузер показывает как xn--</text>
+  </g>
+</svg>
