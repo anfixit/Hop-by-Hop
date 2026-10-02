@@ -15,7 +15,7 @@ from bot.config import Pack, Settings
 from bot.content import TELEGRAPH_INDEX
 from bot.db import Payment, User, confirm_payment, upsert_user, utcnow
 from bot.handlers.common import btn, kb, notify_admins
-from bot.platega import CANCELED, CHARGEBACKED, CONFIRMED, Platega, PlategaError
+from bot.platega import CANCELED, CHARGEBACKED, CONFIRMED, Platega, PlategaError, Transaction
 from bot.yookassa import YooKassa, YooKassaError
 
 log = logging.getLogger(__name__)
@@ -57,6 +57,20 @@ CashboxError = (PlategaError, YooKassaError)
 def rub_cashbox(platega: Platega | None, yookassa: YooKassa | None) -> tuple[str, Platega | YooKassa | None]:
     """Через какую кассу выставлять новый рублёвый счёт: YooKassa заменяет Platega, если подключена."""
     return ("yookassa", yookassa) if yookassa is not None else ("platega", platega)
+
+
+async def create_rub_invoice(platega: Platega | None, yookassa: YooKassa | None, *args) -> tuple[str, Transaction]:
+    """Выставить рублёвый счёт: сначала YooKassa, если она не ответила - Platega. Ошибка, если не смогла ни одна."""
+    error: Exception = PlategaError("нет подключённой кассы")
+    for provider, cashbox in (("yookassa", yookassa), ("platega", platega)):
+        if cashbox is None:
+            continue
+        try:
+            return provider, await cashbox.create(*args)
+        except CashboxError as exc:
+            log.warning("Касса %s не выставила счёт (%s), пробуем следующую", provider, exc)
+            error = exc
+    raise error
 
 
 def _pack(settings: Settings, idx: str) -> Pack | None:
@@ -147,15 +161,14 @@ async def cb_donate_stars(call: CallbackQuery, bot: Bot) -> None:
 async def cb_donate_rub(call: CallbackQuery, db, settings: Settings, platega: Platega | None,
                        yookassa: YooKassa | None) -> None:
     donation = _donation(call.data.split(":")[2])
-    provider, cashbox = rub_cashbox(platega, yookassa)
-    if donation is None or cashbox is None:
+    if donation is None or rub_cashbox(platega, yookassa)[1] is None:
         await call.answer("Этот способ сейчас недоступен. Открой /donate заново.", show_alert=True)
         return
     await call.answer()
     rub = donation[0]
     try:
-        tx = await cashbox.create(rub, "Hop-by-Hop: благодарность автору",
-                                  f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
+        provider, tx = await create_rub_invoice(platega, yookassa, rub, "Hop-by-Hop: благодарность автору",
+                                                f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
     except CashboxError:
         await call.message.answer("Не получилось создать счёт в кассе. Попробуй чуть позже или поблагодари звёздами.")
         return
@@ -276,14 +289,14 @@ async def on_successful_payment(message: Message, bot: Bot, db, settings: Settin
 async def cb_buy_rub(call: CallbackQuery, db, settings: Settings, platega: Platega | None,
                      yookassa: YooKassa | None) -> None:
     pack = _pack(settings, call.data.split(":")[2])
-    provider, cashbox = rub_cashbox(platega, yookassa)
-    if pack is None or cashbox is None:
+    if pack is None or rub_cashbox(platega, yookassa)[1] is None:
         await call.answer("Этот способ оплаты сейчас недоступен. Открой /buy заново.", show_alert=True)
         return
     await call.answer()
     try:
-        tx = await cashbox.create(pack.rub, f"Hop-by-Hop: {reviews_word(pack.reviews)} ИИ",
-                                  f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
+        provider, tx = await create_rub_invoice(platega, yookassa, pack.rub,
+                                                f"Hop-by-Hop: {reviews_word(pack.reviews)} ИИ",
+                                                f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
     except CashboxError:
         await call.message.answer("Не получилось создать счёт в кассе. Попробуй чуть позже или оплати звёздами.")
         return

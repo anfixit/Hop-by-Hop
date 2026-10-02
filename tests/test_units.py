@@ -163,6 +163,27 @@ def test_yookassa_replaces_platega_for_new_rub_invoices():
     assert rub_cashbox(platega, None) == ("platega", platega)
     assert rub_cashbox(None, None) == ("platega", None)
 
+
+async def test_rub_invoice_falls_back_to_platega_when_yookassa_is_down():
+    from bot.handlers.payments import create_rub_invoice
+    from bot.platega import PlategaError, Transaction
+    from bot.yookassa import YooKassaError
+
+    class Box:
+        def __init__(self, error=None):
+            self.error = error
+
+        async def create(self, *args):
+            if self.error:
+                raise self.error
+            return Transaction("t", "https://pay", "PENDING")
+
+    args = (99, "пакет", "https://t.me/bot", "tg:5")
+    assert (await create_rub_invoice(Box(), Box(), *args))[0] == "yookassa"
+    assert (await create_rub_invoice(Box(), Box(YooKassaError("timeout")), *args))[0] == "platega"
+    with pytest.raises(PlategaError):
+        await create_rub_invoice(Box(PlategaError("x")), Box(YooKassaError("y")), *args)
+
 def test_donations_match_stars_invoice():
     from bot.config import Settings
     from bot.handlers.payments import DONATIONS, _stars_donation, donate_screen
