@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 545" width="1200" height="545">
+  <rect width="1200" height="545" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Хеш, коллизии и HMAC</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="75" width="540" height="220" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="60" y="105" font-weight="bold" font-size="18">Хеш: отпечаток фиксированной длины</text>
+    <text x="60" y="135">нельзя найти данные по хешу (прообраз)</text>
+    <text x="60" y="161">нельзя подобрать другие данные с тем же хешем (второй прообраз)</text>
+    <text x="60" y="187">нельзя найти любые два с одним хешем (коллизия)</text>
+    <text x="60" y="213">одна цифра в тексте - 122 бита из 256 другие</text>
+    <text x="60" y="255" fill="#B91C1C">MD5, SHA-1 сломаны</text>
+    <text x="250" y="255" fill="#15803D">SHA-2, SHA-3, BLAKE2</text>
+    <rect x="620" y="75" width="540" height="220" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="640" y="105" font-weight="bold" font-size="18">Парадокс дней рождения</text>
+    <text x="640" y="135">хеш длиной n бит:</text>
+    <text x="640" y="163">под заданный хеш - около 2^n попыток</text>
+    <text x="640" y="189">любая пара - около 2^(n/2) попыток</text>
+    <text x="640" y="223" font-family="monospace">20 бит: 349 981 против 610</text>
+    <text x="640" y="257" font-weight="bold">стойкость к коллизиям - половина длины</text>
+    <rect x="40" y="320" width="1120" height="200" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="60" y="352" font-weight="bold" font-size="18">MAC и HMAC: тег, который может сделать только владелец ключа</text>
+    <text x="60" y="386" font-family="monospace">HMAC(K, m) = H( (K xor opad) || H( (K xor ipad) || m ) )</text>
+    <text x="60" y="418">голый хеш противник пересчитает сам; без ключа правильный тег не получить</text>
+    <text x="60" y="446">наивное H(K || m) с SHA-256 уязвимо к удлинению сообщения - HMAC нет</text>
+    <text x="60" y="474">сравнивать теги за постоянное время: hmac.compare_digest</text>
+    <text x="60" y="502" fill="#64748B">MAC проверяет только тот, у кого ключ; доказать третьей стороне - подпись (урок 73)</text>
+  </g>
+</svg>
