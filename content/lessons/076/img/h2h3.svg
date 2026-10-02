@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">HTTP/1.1, HTTP/2 и HTTP/3</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="75" width="360" height="360" rx="12" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+    <text x="60" y="105" font-weight="bold" font-size="18">HTTP/1.1</text>
+    <text x="60" y="135">текст, ответы строго по очереди</text>
+    <text x="60" y="161">до 6 TCP-соединений на сайт</text>
+    <text x="60" y="187">заголовки целиком в каждом запросе</text>
+    <rect x="60" y="215" width="320" height="28" fill="#FFFFFF" stroke="#B91C1C"/><text x="70" y="235" font-size="13">TCP 1: index.html, затем style.css</text>
+    <rect x="60" y="250" width="320" height="28" fill="#FFFFFF" stroke="#B91C1C"/><text x="70" y="270" font-size="13">TCP 2: app.js</text>
+    <rect x="60" y="285" width="320" height="28" fill="#FFFFFF" stroke="#B91C1C"/><text x="70" y="305" font-size="13">TCP 3: logo.png</text>
+    <text x="60" y="350">каждое соединение - своё</text>
+    <text x="60" y="374">рукопожатие и медленный старт</text>
+    <rect x="420" y="75" width="360" height="360" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="440" y="105" font-weight="bold" font-size="18">HTTP/2</text>
+    <text x="440" y="135">двоичные кадры, потоки 1, 3, 5...</text>
+    <text x="440" y="161">одно TCP-соединение, ALPN h2</text>
+    <text x="440" y="187">HPACK: в опыте экономия 93%</text>
+    <rect x="440" y="215" width="320" height="98" fill="#FFFFFF" stroke="#2563EB"/>
+    <text x="450" y="237" font-size="13" font-family="monospace">TCP: H1 D1 H3 D3 D1 H5 D5 D3</text>
+    <text x="450" y="262" font-size="13">кадры разных потоков вперемешку</text>
+    <text x="450" y="287" font-size="13" fill="#B91C1C">потерян сегмент TCP - ждут все</text>
+    <text x="440" y="350">блокировка очереди ушла из HTTP,</text>
+    <text x="440" y="374">но осталась в TCP</text>
+    <rect x="800" y="75" width="360" height="360" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="820" y="105" font-weight="bold" font-size="18">HTTP/3</text>
+    <text x="820" y="135">поверх QUIC, UDP порт 443</text>
+    <text x="820" y="161">TLS 1.3 внутри QUIC</text>
+    <text x="820" y="187">QPACK для заголовков</text>
+    <rect x="820" y="215" width="320" height="98" fill="#FFFFFF" stroke="#15803D"/>
+    <text x="830" y="237" font-size="13">потоки независимы на уровне</text>
+    <text x="830" y="262" font-size="13">транспорта: потеря задерживает</text>
+    <text x="830" y="287" font-size="13">только свой поток</text>
+    <text x="820" y="350">1 RTT до данных (повторно - 0),</text>
+    <text x="820" y="374">миграция при смене сети</text>
+  </g>
+  <text x="600" y="490" text-anchor="middle" font-size="16" fill="#0E1830">Семантика одна: методы, коды, заголовки и URL не изменились - поменялась передача.</text>
+  <text x="600" y="522" text-anchor="middle" font-size="15" fill="#64748B">О HTTP/3 браузер узнаёт из Alt-Svc или записи HTTPS в DNS; если UDP закрыт, остаётся на TCP.</text>
+</svg>
