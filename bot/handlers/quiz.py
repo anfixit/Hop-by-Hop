@@ -9,6 +9,7 @@ from bot.config import Settings
 from bot.content import Course
 from bot.db import passed_lessons, record_quiz, upsert_user
 from bot.handlers.common import btn, kb, sees_drafts
+from bot.handlers.payments import NUDGE_EVERY, donation_nudge, has_donated
 
 router = Router(name="quiz")
 
@@ -43,6 +44,11 @@ async def cb_quiz(call: CallbackQuery, db, settings: Settings, course: Course, s
             ok = score >= settings.quiz_pass_ratio * total
             await record_quiz(session, user.id, lesson.id, score, ok)
             await show_result(call, lesson, score, ok, course, drafts, user.id, secret)
+            # рубеж считаем только при первой сдаче урока, пересдача напоминание не вызывает
+            milestone = len(passed) + 1 if ok and lesson.id not in passed else 0
+            if milestone and milestone % NUDGE_EVERY == 0:
+                text, markup = donation_nudge(milestone, await has_donated(session, user.id), settings)
+                await call.message.answer(text, reply_markup=markup)
     await call.answer()
 
 

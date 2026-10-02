@@ -127,6 +127,29 @@ def donate_screen(settings: Settings):
     return text, kb(*rows)
 
 
+NUDGE_EVERY = 10  # напоминание о благодарности после каждого десятого пройденного урока
+
+
+def donation_nudge(passed: int, donated: bool, settings: Settings):
+    """Напоминание о благодарности после рубежа в NUDGE_EVERY уроков: текст и кнопки сумм."""
+    lessons = f"{passed} {plural(passed, 'урок', 'урока', 'уроков')}"
+    if donated:
+        body = ("Спасибо за твою поддержку - она правда помогает курсу. Если захочется сказать спасибо ещё раз, "
+                "кнопки ниже. А если нет - просто учись дальше, это главное.")
+    else:
+        body = ("Hop-by-Hop делает один человек: пишет уроки, проверяет каждый опыт на настоящем сервере, "
+                "платит за сервер и за разборы ИИ. Курс бесплатный и останется таким, но живёт он на поддержке "
+                "тех, кому он полезен.\n\nЕсли курс тебе помогает, поблагодари автора любой суммой - "
+                "это занимает минуту и очень помогает выпускать новые уроки.")
+    text = f"🎉 <b>Позади {lessons} курса!</b>\n\n{body}\n\nОплачивая, ты принимаешь оферту (пункт 5.6): /terms"
+    return text, donate_screen(settings)[1]
+
+
+async def has_donated(session, user_id: int) -> bool:
+    return await session.scalar(select(Payment.id).where(
+        Payment.user_id == user_id, Payment.reviews == 0, Payment.status == "paid").limit(1)) is not None
+
+
 @router.message(Command("donate"))
 async def cmd_donate(message: Message, settings: Settings) -> None:
     text, markup = donate_screen(settings)

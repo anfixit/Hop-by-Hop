@@ -104,6 +104,30 @@ async def test_new_columns_are_added_to_an_old_database(settings):
     finally:
         await engine.dispose()
 
+async def test_donation_nudge_knows_who_already_donated(settings):
+    from bot.handlers.payments import donation_nudge, has_donated
+
+    engine, db = await init_db(settings)
+    try:
+        async with db() as session:
+            await upsert_user(session, SimpleNamespace(id=5, username="u", first_name="U"))
+            session.add(Payment(user_id=5, provider="yookassa", external_id="d", reviews=0, amount=100,
+                                currency="RUB", status="pending"))
+            await session.commit()
+            assert not await has_donated(session, 5)  # неоплаченный счёт не считается
+            payment = await session.scalar(select(Payment))
+            payment.status = "paid"
+            await session.commit()
+            assert await has_donated(session, 5)
+    finally:
+        await engine.dispose()
+    first, markup = donation_nudge(10, False, settings)
+    again, _ = donation_nudge(20, True, settings)
+    assert "Позади 10 уроков" in first and "один человек" in first
+    assert "Позади 20 уроков" in again and "Спасибо за твою поддержку" in again
+    assert any(b.callback_data == "don:s:0" for row in markup.inline_keyboard for b in row)
+
+
 async def test_platega_payment_is_credited_once_and_underpayment_is_not(settings):
     from bot.handlers.payments import settle
 
