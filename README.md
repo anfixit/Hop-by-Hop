@@ -7,7 +7,7 @@ Telegram course bot on computer networks: from bits and Ethernet to TLS 1.3 and 
 ## Как устроено
 
 - Уроки лежат в `content/lessons/NNN/`: `lesson.md` (текст, публикуется в Telegraph) и `lesson.yaml` (тест и вопросы на понимание).
-- Глава открывается после сдачи теста предыдущей. Открытые ответы разбирает Claude API. Уроки и тесты бесплатны; разборы ИИ платные: пробный запас выдаётся один раз, дальше пакеты за звёзды Telegram или через кассу Platega (`bot/handlers/payments.py`, `bot/platega.py`).
+- Глава открывается после сдачи теста предыдущей. Открытые ответы разбирает Claude API. Уроки и тесты бесплатны; разборы ИИ платные: пробный запас выдаётся один раз, дальше пакеты за звёзды Telegram или через рублёвую кассу - YooKassa или Platega (`bot/handlers/payments.py`, `bot/yookassa.py`, `bot/platega.py`).
 - Бот: Python 3.12, aiogram 3, SQLAlchemy (SQLite локально).
 
 ## Запуск локально

@@ -1,4 +1,4 @@
-"""Покупка пакетов разборов и благодарность автору: звёзды Telegram и касса Platega."""
+"""Покупка пакетов разборов и благодарность автору: звёзды Telegram и рублёвая касса (YooKassa или Platega)."""
 import asyncio
 import json
 import logging
@@ -16,6 +16,7 @@ from bot.content import TELEGRAPH_INDEX
 from bot.db import Payment, User, confirm_payment, upsert_user, utcnow
 from bot.handlers.common import btn, kb, notify_admins
 from bot.platega import CANCELED, CHARGEBACKED, CONFIRMED, Platega, PlategaError
+from bot.yookassa import YooKassa, YooKassaError
 
 log = logging.getLogger(__name__)
 router = Router(name="payments")
@@ -49,6 +50,14 @@ def balance_line(user, settings: Settings) -> str:
     return line + (f" и {trial} {plural(trial, 'пробный', 'пробных', 'пробных')}" if trial else "")
 
 
+CashboxError = (PlategaError, YooKassaError)
+
+
+def rub_cashbox(platega: Platega | None, yookassa: YooKassa | None) -> tuple[str, Platega | YooKassa | None]:
+    """Через какую кассу выставлять новый рублёвый счёт: YooKassa заменяет Platega, если подключена."""
+    return ("yookassa", yookassa) if yookassa is not None else ("platega", platega)
+
+
 def _pack(settings: Settings, idx: str) -> Pack | None:
     return settings.packs[int(idx)] if idx.isdigit() and int(idx) < len(settings.packs) else None
 
@@ -72,9 +81,9 @@ async def shop(tg_user, db, settings: Settings):
     ]
     rows = []
     for i, pack in enumerate(settings.packs):
-        lines.append(f"• {reviews_word(pack.reviews)} - {pack.stars} ⭐" + (f" или {pack.rub} ₽" if settings.platega_enabled else ""))
+        lines.append(f"• {reviews_word(pack.reviews)} - {pack.stars} ⭐" + (f" или {pack.rub} ₽" if settings.card_enabled else ""))
         row = [btn(f"{pack.reviews} за {pack.stars} ⭐", f"buy:s:{i}")]
-        if settings.platega_enabled:
+        if settings.card_enabled:
             row.append(btn(f"{pack.reviews} за {pack.rub} ₽", f"buy:p:{i}"))
         rows.append(row)
     lines += ["", "Уроки, тесты и оглавление остаются бесплатными. Вопросы по оплате: /paysupport",
@@ -95,7 +104,7 @@ def donate_screen(settings: Settings):
     rows = []
     for i, (rub, stars) in enumerate(DONATIONS):
         row = [btn(f"{stars} ⭐", f"don:s:{i}")]
-        if settings.platega_enabled:
+        if settings.card_enabled:
             row.append(btn(f"{rub} ₽", f"don:p:{i}"))
         rows.append(row)
     rows.append([btn("← Оглавление", "toc:0")])
@@ -134,22 +143,24 @@ async def cb_donate_stars(call: CallbackQuery, bot: Bot) -> None:
 
 
 @router.callback_query(F.data.startswith("don:p:"))
-async def cb_donate_platega(call: CallbackQuery, db, settings: Settings, platega: Platega | None) -> None:
+async def cb_donate_rub(call: CallbackQuery, db, settings: Settings, platega: Platega | None,
+                       yookassa: YooKassa | None) -> None:
     donation = _donation(call.data.split(":")[2])
-    if donation is None or platega is None:
+    provider, cashbox = rub_cashbox(platega, yookassa)
+    if donation is None or cashbox is None:
         await call.answer("Этот способ сейчас недоступен. Открой /donate заново.", show_alert=True)
         return
     await call.answer()
     rub = donation[0]
     try:
-        tx = await platega.create(rub, "Hop-by-Hop: благодарность автору",
+        tx = await cashbox.create(rub, "Hop-by-Hop: благодарность автору",
                                   f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
-    except PlategaError:
+    except CashboxError:
         await call.message.answer("Не получилось создать счёт в кассе. Попробуй чуть позже или поблагодари звёздами.")
         return
     async with db() as session:
         await upsert_user(session, call.from_user)
-        payment = Payment(user_id=call.from_user.id, provider="platega", external_id=tx.id,
+        payment = Payment(user_id=call.from_user.id, provider=provider, external_id=tx.id,
                           reviews=0, amount=rub, currency="RUB")
         session.add(payment)
         await session.commit()
@@ -258,24 +269,26 @@ async def on_successful_payment(message: Message, bot: Bot, db, settings: Settin
     await _thank(bot, db, settings, paid)
 
 
-# --- Касса Platega ---
+# --- Рублёвая касса: YooKassa или Platega ---
 
 @router.callback_query(F.data.startswith("buy:p:"))
-async def cb_buy_platega(call: CallbackQuery, db, settings: Settings, platega: Platega | None) -> None:
+async def cb_buy_rub(call: CallbackQuery, db, settings: Settings, platega: Platega | None,
+                     yookassa: YooKassa | None) -> None:
     pack = _pack(settings, call.data.split(":")[2])
-    if pack is None or platega is None:
+    provider, cashbox = rub_cashbox(platega, yookassa)
+    if pack is None or cashbox is None:
         await call.answer("Этот способ оплаты сейчас недоступен. Открой /buy заново.", show_alert=True)
         return
     await call.answer()
     try:
-        tx = await platega.create(pack.rub, f"Hop-by-Hop: {reviews_word(pack.reviews)} ИИ",
+        tx = await cashbox.create(pack.rub, f"Hop-by-Hop: {reviews_word(pack.reviews)} ИИ",
                                   f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
-    except PlategaError:
+    except CashboxError:
         await call.message.answer("Не получилось создать счёт в кассе. Попробуй чуть позже или оплати звёздами.")
         return
     async with db() as session:
         await upsert_user(session, call.from_user)
-        payment = Payment(user_id=call.from_user.id, provider="platega", external_id=tx.id,
+        payment = Payment(user_id=call.from_user.id, provider=provider, external_id=tx.id,
                           reviews=pack.reviews, amount=pack.rub, currency="RUB")
         session.add(payment)
         await session.commit()
@@ -287,16 +300,18 @@ async def cb_buy_platega(call: CallbackQuery, db, settings: Settings, platega: P
 
 
 @router.callback_query(F.data.startswith("chk:"))
-async def cb_check(call: CallbackQuery, bot: Bot, db, settings: Settings, platega: Platega | None) -> None:
+async def cb_check(call: CallbackQuery, bot: Bot, db, settings: Settings, platega: Platega | None,
+                   yookassa: YooKassa | None) -> None:
     async with db() as session:
         payment = await session.get(Payment, int(call.data.split(":")[1]))
-    if payment is None or payment.user_id != call.from_user.id or platega is None:
+    cashbox = {"platega": platega, "yookassa": yookassa}.get(payment.provider) if payment else None
+    if payment is None or payment.user_id != call.from_user.id or cashbox is None:
         await call.answer("Счёт не найден.", show_alert=True)
         return
     if payment.status == "paid":
         await call.answer("Этот счёт уже оплачен, спасибо!", show_alert=True)
         return
-    state = await settle(bot, db, settings, platega, payment)
+    state = await settle(bot, db, settings, cashbox, payment)
     await call.answer({
         "paid": "Оплата получена!",
         "canceled": "Счёт отменён или истёк. Создай новый через /buy.",
@@ -304,16 +319,17 @@ async def cb_check(call: CallbackQuery, bot: Bot, db, settings: Settings, plateg
     }.get(state, "Оплата пока не поступила. Если ты уже оплатил, подожди минуту."), show_alert=state != "paid")
 
 
-async def settle(bot: Bot, db, settings: Settings, platega: Platega, payment: Payment) -> str:
+async def settle(bot: Bot, db, settings: Settings, cashbox: Platega | YooKassa, payment: Payment) -> str:
     """Спросить кассу о платеже и, если он оплачен, начислить разборы. Возвращает paid, pending, canceled или error."""
     try:
-        status, amount = await platega.status(payment.external_id)
-    except PlategaError:
+        status, amount = await cashbox.status(payment.external_id)
+    except CashboxError:
         return "error"
     if status == CONFIRMED:
         if amount is not None and amount < payment.amount:
-            log.error("Platega: платёж %s оплачен на %s вместо %s", payment.external_id, amount, payment.amount)
-            await notify_admins(bot, settings, f"⚠️ Platega: платёж {payment.external_id} оплачен на {amount} ₽ "
+            log.error("%s: платёж %s оплачен на %s вместо %s", payment.provider, payment.external_id, amount,
+                      payment.amount)
+            await notify_admins(bot, settings, f"⚠️ {payment.provider}: платёж {payment.external_id} оплачен на {amount} ₽ "
                                                f"вместо {payment.amount} ₽, разборы не начислены.")
             return "error"
         async with db() as session:
@@ -338,16 +354,16 @@ def _expired(payment: Payment) -> bool:
     return utcnow() - created > PENDING_TTL
 
 
-async def poll_platega(bot: Bot, db, settings: Settings, platega: Platega) -> None:
-    """Фоновая задача: раз в POLL_EVERY секунд проверяет неоплаченные счета кассы."""
+async def poll_cashboxes(bot: Bot, db, settings: Settings, cashboxes: dict[str, Platega | YooKassa]) -> None:
+    """Фоновая задача: раз в POLL_EVERY секунд проверяет неоплаченные счета подключённых касс."""
     while True:
         await asyncio.sleep(POLL_EVERY)
         try:
             async with db() as session:
                 pending = (await session.scalars(
-                    select(Payment).where(Payment.provider == "platega", Payment.status == "pending"))).all()
+                    select(Payment).where(Payment.provider.in_(cashboxes), Payment.status == "pending"))).all()
             for payment in pending:
-                await settle(bot, db, settings, platega, payment)
+                await settle(bot, db, settings, cashboxes[payment.provider], payment)
         except Exception:  # опрос не должен умирать из-за одной ошибки
             log.exception("Ошибка опроса кассы")
 

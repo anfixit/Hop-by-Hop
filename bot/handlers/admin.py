@@ -12,6 +12,7 @@ from bot.content import ContentError, Course, load_course
 from bot.db import DELETED_USER_ID, AIUsage, BudgetTopup, Payment, Progress, User, budget_balance, confirm_payment, refund_payment, utcnow
 from bot.handlers.common import RuntimeState
 from bot.platega import Platega, PlategaError
+from bot.yookassa import YooKassa, YooKassaError
 
 router = Router(name="admin")
 
@@ -115,7 +116,8 @@ def _sign(payment: Payment) -> str:
 
 
 @router.message(Command("refund"))
-async def cmd_refund(message: Message, command: CommandObject, bot: Bot, db, platega: Platega | None) -> None:
+async def cmd_refund(message: Message, command: CommandObject, bot: Bot, db, platega: Platega | None,
+                     yookassa: YooKassa | None) -> None:
     """Возврат платежа: /refund <номер> - целиком через кассу или Telegram; /refund <номер> manual - только учёт."""
     args = (command.args or "").split()
     if not args or not args[0].isdigit() or args[1:] not in ([], ["manual"]):
@@ -140,7 +142,7 @@ async def cmd_refund(message: Message, command: CommandObject, bot: Bot, db, pla
                 f"(в кабинете кассы или переводом), а потом отметь: /refund {payment.id} manual - "
                 "оставшиеся разборы пакета спишутся.")
             return
-        error = await _provider_refund(bot, platega, payment)
+        error = await _provider_refund(bot, {"platega": platega, "yookassa": yookassa}, payment)
         if error:
             await message.answer(f"Возврат не прошёл: {error}\nБаланс пользователя не менялся.")
             return
@@ -159,20 +161,21 @@ async def cmd_refund(message: Message, command: CommandObject, bot: Bot, db, pla
         pass
 
 
-async def _provider_refund(bot: Bot, platega: Platega | None, payment: Payment) -> str | None:
+async def _provider_refund(bot: Bot, cashboxes: dict, payment: Payment) -> str | None:
     """Вернуть деньги через того, кто их принял. Возвращает текст ошибки или None при успехе."""
     try:
         if payment.provider == "stars":
             await bot.refund_star_payment(user_id=payment.user_id, telegram_payment_charge_id=payment.external_id)
             return None
-        if platega is None:
-            return "касса не подключена"
-        supported, reason = await platega.cancel_supported(payment.external_id)
+        cashbox = cashboxes.get(payment.provider)
+        if cashbox is None:
+            return f"касса {payment.provider} не подключена"
+        supported, reason = await cashbox.cancel_supported(payment.external_id)
         if not supported:
             return f"касса не может отменить этот платёж ({reason or 'причина не указана'})"
-        accepted, text = await platega.cancel(payment.external_id)
+        accepted, text = await cashbox.cancel(payment.external_id)
         return None if accepted else f"касса просит обратиться в поддержку ({text})"
-    except (TelegramAPIError, PlategaError) as exc:
+    except (TelegramAPIError, PlategaError, YooKassaError) as exc:
         return str(exc)
 
 

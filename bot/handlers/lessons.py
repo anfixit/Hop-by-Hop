@@ -19,7 +19,7 @@ BUTTONS_PER_ROW = 5
 
 def welcome_text(settings: Settings, course: Course) -> str:
     lessons = course.ordered(False)
-    card = " или картой" if settings.platega_enabled else ""
+    card = " или картой" if settings.card_enabled else ""
     return (
         "<b>Hop-by-Hop</b> - курс по компьютерным сетям, от кабеля до современных прокси-протоколов, "
         "с упором на безопасность.\n\n"
@@ -46,7 +46,7 @@ def welcome_text(settings: Settings, course: Course) -> str:
 
 
 def help_text(settings: Settings) -> str:
-    card = " или картой через кассу" if settings.platega_enabled else ""
+    card = " или картой через кассу" if settings.card_enabled else ""
     return (
         "<b>Справка</b>\n\n"
         "<b>Команды</b>\n"

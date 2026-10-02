@@ -36,7 +36,11 @@ class Settings(BaseSettings):
     packs: Annotated[tuple[Pack, ...], NoDecode] = (Pack(50, 99, 75), Pack(350, 490, 450))
     bot_username: str = "hopbyhop_bot"
 
-    # Касса Platega (оплата картой и СБП); без ключей в боте остаются только звёзды
+    # Касса YooKassa (картой и СБП); если задана, рублёвые счета идут через неё, а не через Platega
+    yookassa_shop_id: str | None = None
+    yookassa_secret_key: SecretStr | None = None
+
+    # Касса Platega (оплата картой и СБП); без ключей обеих касс в боте остаются только звёзды
     platega_merchant_id: str | None = None
     platega_secret: SecretStr | None = None
     # Номер способа оплаты в Platega; пусто - плательщик выбирает сам на форме
@@ -67,7 +71,7 @@ class Settings(BaseSettings):
         return value
 
     @field_validator("proxy_url", "anthropic_api_key", "telegraph_token", "platega_merchant_id", "platega_secret",
-                     "platega_payment_method", "smtp_user", "smtp_password", "report_email", mode="before")
+                     "platega_payment_method", "yookassa_shop_id", "yookassa_secret_key", "smtp_user", "smtp_password", "report_email", mode="before")
     @classmethod
     def _empty_to_none(cls, value: object) -> object:
         return value or None
@@ -75,6 +79,15 @@ class Settings(BaseSettings):
     @property
     def platega_enabled(self) -> bool:
         return bool(self.platega_merchant_id and self.platega_secret)
+
+    @property
+    def yookassa_enabled(self) -> bool:
+        return bool(self.yookassa_shop_id and self.yookassa_secret_key)
+
+    @property
+    def card_enabled(self) -> bool:
+        """Есть ли оплата в рублях хоть через одну кассу."""
+        return self.yookassa_enabled or self.platega_enabled
 
     @property
     def report_email_enabled(self) -> bool:

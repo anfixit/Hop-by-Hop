@@ -114,6 +114,55 @@ async def test_platega_client_builds_request_and_reads_both_api_versions(monkeyp
     assert await client.status("t1") == ("CONFIRMED", 99)
     assert calls[-1][:2] == ("GET", "/transaction/t1")
 
+
+async def test_yookassa_client_creates_payment_reads_status_and_refunds(monkeypatch):
+    from bot.yookassa import YooKassa, YooKassaError
+
+    calls = []
+    paid = {"id": "p1", "status": "succeeded", "refundable": True, "amount": {"value": "99.00", "currency": "RUB"}}
+    answers = iter([
+        {"id": "p1", "status": "pending", "confirmation": {"type": "redirect", "confirmation_url": "https://yoo/1"}},
+        {"id": "p2", "status": "pending"},                     # без ссылки на оплату
+        paid,                                                  # status
+        {"id": "p3", "status": "canceled", "amount": {"value": "99.00", "currency": "RUB"}},
+        paid,                                                  # cancel_supported
+        paid, {"id": "r1", "status": "succeeded"},             # cancel: платёж, затем возврат
+    ])
+
+    async def fake(self, method, path, **kwargs):
+        calls.append((method, path, kwargs.get("json")))
+        return next(answers)
+
+    monkeypatch.setattr(YooKassa, "_request", fake)
+    client = YooKassa("shop", "secret")
+
+    tx = await client.create(99, "пакет", "https://t.me/bot", "tg:5")
+    assert (tx.id, tx.url, tx.status) == ("p1", "https://yoo/1", "PENDING")
+    method, path, body = calls[0]
+    assert (method, path) == ("POST", "/payments")
+    assert body["amount"] == {"value": "99.00", "currency": "RUB"} and body["capture"] is True
+    assert "receipt" not in body  # продавец на НПД: чек в ЮKassa не передаём
+    with pytest.raises(YooKassaError):
+        await client.create(99, "пакет", "https://t.me/bot", "tg:5")
+    assert await client.status("p1") == ("CONFIRMED", 99.0)
+    assert await client.status("p3") == ("CANCELED", 99.0)
+    assert await client.cancel_supported("p1") == (True, "")
+    assert await client.cancel("p1") == (True, "")
+    assert calls[-1] == ("POST", "/refunds", {"payment_id": "p1", "amount": {"value": "99.00", "currency": "RUB"}})
+
+
+def test_yookassa_replaces_platega_for_new_rub_invoices():
+    from bot.config import Settings
+    from bot.handlers.payments import rub_cashbox
+
+    s = Settings(_env_file=None, bot_token="1:a", yookassa_shop_id="1", yookassa_secret_key="k")
+    assert s.yookassa_enabled and s.card_enabled and not s.platega_enabled
+    assert not Settings(_env_file=None, bot_token="1:a").card_enabled
+    platega, yookassa = object(), object()
+    assert rub_cashbox(platega, yookassa) == ("yookassa", yookassa)
+    assert rub_cashbox(platega, None) == ("platega", platega)
+    assert rub_cashbox(None, None) == ("platega", None)
+
 def test_donations_match_stars_invoice():
     from bot.config import Settings
     from bot.handlers.payments import DONATIONS, _stars_donation, donate_screen

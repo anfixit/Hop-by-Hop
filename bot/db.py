@@ -34,7 +34,7 @@ class Payment(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
-    provider: Mapped[str] = mapped_column(String(16))  # stars | platega | grant
+    provider: Mapped[str] = mapped_column(String(16))  # stars | platega | yookassa | grant
     external_id: Mapped[str] = mapped_column(String(128), unique=True)  # id платежа у провайдера
     reviews: Mapped[int] = mapped_column(Integer)
     amount: Mapped[int] = mapped_column(Integer)

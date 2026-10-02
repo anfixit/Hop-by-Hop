@@ -17,6 +17,7 @@ from bot import alerts
 from bot.handlers import account, admin, answers, feedback, lessons, payments, quiz
 from bot.handlers.common import RuntimeState, notify_admins
 from bot.platega import Platega
+from bot.yookassa import YooKassa
 from bot.profile import setup_profile
 from bot.review import Reviewer
 
@@ -38,8 +39,12 @@ async def main() -> None:
                 settings.platega_payment_method)
         if settings.platega_enabled else None
     )
-    if platega is None:
-        logging.warning("Ключи Platega не заданы: оплата только звёздами Telegram")
+    yookassa = (
+        YooKassa(settings.yookassa_shop_id, settings.yookassa_secret_key.get_secret_value(), settings.proxy_url)
+        if settings.yookassa_enabled else None
+    )
+    if yookassa is None and platega is None:
+        logging.warning("Ключи касс не заданы: оплата только звёздами Telegram")
 
     token = settings.bot_token.get_secret_value()
     session = AiohttpSession(proxy=settings.proxy_url) if settings.proxy_url else None
@@ -52,6 +57,7 @@ async def main() -> None:
         db=db,
         reviewer=reviewer,
         platega=platega,
+        yookassa=yookassa,
         runtime=RuntimeState(),
         # ключ подписи callback-данных выводится из токена бота
         secret=hashlib.sha256(b"hop-by-hop/callbacks|" + token.encode()).digest(),
@@ -73,8 +79,9 @@ async def main() -> None:
     await setup_profile(bot)
     logging.getLogger().addHandler(alerts.AdminAlertHandler(bot, settings))
     tasks = [asyncio.create_task(alerts.backup_daily(bot, settings))]
-    if platega:
-        tasks.append(asyncio.create_task(payments.poll_platega(bot, db, settings, platega)))
+    cashboxes = {name: box for name, box in (("platega", platega), ("yookassa", yookassa)) if box is not None}
+    if cashboxes:
+        tasks.append(asyncio.create_task(payments.poll_cashboxes(bot, db, settings, cashboxes)))
     await notify_admins(bot, settings, f"🟢 Бот запущен. Уроков: {len(course.lessons)}.")
     try:
         await dp.start_polling(bot)
