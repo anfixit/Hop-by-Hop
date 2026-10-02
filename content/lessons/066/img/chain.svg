@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Цепочка доверия DNSSEC</text>
+  <!-- якорь -->
+  <rect x="40" y="80" width="250" height="80" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+  <text x="165" y="112" text-anchor="middle" font-size="16" font-weight="bold" fill="#0E1830">якорь доверия</text>
+  <text x="165" y="137" text-anchor="middle" font-size="13" fill="#0E1830">ключ KSK корня в резолвере</text>
+  <line x1="290" y1="120" x2="380" y2="120" stroke="#A16207" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <polygon points="368,114 368,126 380,120" fill="#A16207"/>
+  <!-- зоны -->
+  <g font-size="15" fill="#0E1830">
+    <rect x="380" y="70" width="560" height="140" rx="14" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+    <text x="400" y="98" font-weight="bold" font-size="17">зона "."</text>
+    <text x="400" y="126">DNSKEY: KSK (257) и ZSK (256), RRSIG ключами KSK и ZSK</text>
+    <text x="400" y="152"><tspan font-weight="bold">DS lab.</tspan> = хеш KSK зоны lab., RRSIG ключом ZSK корня</text>
+    <text x="400" y="178" fill="#64748B" font-size="13">подписана с 2010 года</text>
+    <rect x="380" y="260" width="560" height="140" rx="14" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="400" y="288" font-weight="bold" font-size="17">зона lab.</text>
+    <text x="400" y="316">DNSKEY: KSK и ZSK, RRSIG ключами KSK и ZSK</text>
+    <text x="400" y="342"><tspan font-weight="bold">DS corp.lab.</tspan> = хеш KSK зоны corp.lab., RRSIG ключом ZSK</text>
+    <rect x="380" y="450" width="560" height="140" rx="14" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="400" y="478" font-weight="bold" font-size="17">зона corp.lab.</text>
+    <text x="400" y="506">DNSKEY: KSK и ZSK, RRSIG ключами KSK и ZSK</text>
+    <text x="400" y="532"><tspan font-weight="bold">www A 10.0.0.80</tspan> + RRSIG ключом ZSK</text>
+    <text x="400" y="558">NSEC: доказательство отсутствия имён</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5"><line x1="660" y1="210" x2="660" y2="258"/><line x1="660" y1="400" x2="660" y2="448"/></g>
+  <g fill="#475569"><polygon points="653,246 667,246 660,258"/><polygon points="653,436 667,436 660,448"/></g>
+  <g font-size="13" fill="#475569"><text x="672" y="240">DS сверяется с KSK ребёнка</text><text x="672" y="430">DS сверяется с KSK ребёнка</text></g>
+  <!-- итоги -->
+  <rect x="970" y="260" width="200" height="330" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="985" y="292" font-weight="bold">Результат</text>
+    <text x="985" y="324" fill="#15803D" font-weight="bold">сошлось</text>
+    <text x="985" y="346">ответ с флагом AD</text>
+    <text x="985" y="386" fill="#B91C1C" font-weight="bold">не сошлось</text>
+    <text x="985" y="408">SERVFAIL</text>
+    <text x="985" y="448" fill="#64748B" font-weight="bold">нет DS</text>
+    <text x="985" y="470">ответ без AD</text>
+    <text x="985" y="510" fill="#64748B" font-weight="bold">бит CD</text>
+    <text x="985" y="532">данные без</text>
+    <text x="985" y="552">проверки</text>
+  </g>
+  <rect x="40" y="260" width="300" height="330" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="55" y="292" font-weight="bold">Даёт</text>
+    <text x="55" y="318">подлинность источника</text>
+    <text x="55" y="342">целостность данных</text>
+    <text x="55" y="366">подписанное "имени нет"</text>
+    <text x="55" y="408" font-weight="bold">Не даёт</text>
+    <text x="55" y="434">шифрования (урок 67)</text>
+    <text x="55" y="458">защиты от отказа</text>
+    <text x="55" y="500" font-weight="bold">Цена</text>
+    <text x="55" y="526">ответы в разы больше</text>
+    <text x="55" y="550">переподписание, смена</text>
+    <text x="55" y="572">ключей и DS</text>
+  </g>
+</svg>
