@@ -22,6 +22,7 @@ log = logging.getLogger(__name__)
 router = Router(name="payments")
 
 POLL_EVERY = 15  # секунд между опросами кассы
+CHECK_TIMEOUT = 8  # секунд ждём кассу по кнопке: Telegram не принимает ответ на нажатие, если ждать дольше
 PENDING_TTL = timedelta(hours=2)  # дольше неоплаченный счёт не ждём
 
 # Документы опубликованы в Telegraph (tools/publish_telegraph.py legal), адреса лежат в content/telegraph.json
@@ -311,7 +312,10 @@ async def cb_check(call: CallbackQuery, bot: Bot, db, settings: Settings, plateg
     if payment.status == "paid":
         await call.answer("Этот счёт уже оплачен, спасибо!", show_alert=True)
         return
-    state = await settle(bot, db, settings, cashbox, payment)
+    try:
+        state = await asyncio.wait_for(asyncio.shield(settle(bot, db, settings, cashbox, payment)), CHECK_TIMEOUT)
+    except TimeoutError:  # опрос в фоне всё равно начислит разборы, когда касса ответит
+        state = "error"
     await call.answer({
         "paid": "Оплата получена!",
         "canceled": "Счёт отменён или истёк. Создай новый через /buy.",

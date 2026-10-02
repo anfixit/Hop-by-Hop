@@ -17,7 +17,7 @@ from bot.platega import CANCELED, CONFIRMED, PENDING, Transaction
 log = logging.getLogger(__name__)
 
 BASE_URL = "https://api.yookassa.ru/v3"
-TIMEOUT = aiohttp.ClientTimeout(total=20)
+TIMEOUT = aiohttp.ClientTimeout(total=15, connect=6)
 
 # Статусы YooKassa в общих статусах кассы; waiting_for_capture не бывает, платежи списываются сразу (capture)
 _STATUS = {"succeeded": CONFIRMED, "canceled": CANCELED}

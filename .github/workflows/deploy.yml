@@ -59,6 +59,8 @@ jobs:
           # Кассы: YooKassa (если задана, рублёвые счета идут через неё) и Platega; без обеих - только звёзды
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
+          # API YooKassa отвечает только российским адресам: прокси в России, http://user:pass@host:port
+          YOOKASSA_PROXY_URL: ${{ secrets.YOOKASSA_PROXY_URL }}
           PLATEGA_MERCHANT_ID: ${{ secrets.PLATEGA_MERCHANT_ID }}
           PLATEGA_SECRET: ${{ secrets.PLATEGA_SECRET }}
           # Необязательные переменные репозитория (Settings -> Variables); пусто - значения по умолчанию из bot/config.py
@@ -77,6 +79,7 @@ jobs:
             printf 'TELEGRAPH_TOKEN=%s\n' "$TELEGRAPH_TOKEN"
             printf 'YOOKASSA_SHOP_ID=%s\n' "$YOOKASSA_SHOP_ID"
             printf 'YOOKASSA_SECRET_KEY=%s\n' "$YOOKASSA_SECRET_KEY"
+            printf 'YOOKASSA_PROXY_URL=%s\n' "$YOOKASSA_PROXY_URL"
             printf 'PLATEGA_MERCHANT_ID=%s\n' "$PLATEGA_MERCHANT_ID"
             printf 'PLATEGA_SECRET=%s\n' "$PLATEGA_SECRET"
             if [ -n "$PACKS" ]; then printf 'PACKS=%s\n' "$PACKS"; fi

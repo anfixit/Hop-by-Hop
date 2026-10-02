@@ -40,7 +40,8 @@ async def main() -> None:
         if settings.platega_enabled else None
     )
     yookassa = (
-        YooKassa(settings.yookassa_shop_id, settings.yookassa_secret_key.get_secret_value(), settings.proxy_url)
+        YooKassa(settings.yookassa_shop_id, settings.yookassa_secret_key.get_secret_value(),
+                 settings.yookassa_proxy_url or settings.proxy_url)
         if settings.yookassa_enabled else None
     )
     if yookassa is None and platega is None:

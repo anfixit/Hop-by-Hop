@@ -39,6 +39,8 @@ class Settings(BaseSettings):
     # Касса YooKassa (картой и СБП); если задана, рублёвые счета идут через неё, а не через Platega
     yookassa_shop_id: str | None = None
     yookassa_secret_key: SecretStr | None = None
+    # API YooKassa недоступен с зарубежных адресов: прокси в России (http://user:pass@host:port); пусто - PROXY_URL
+    yookassa_proxy_url: str | None = None
 
     # Касса Platega (оплата картой и СБП); без ключей обеих касс в боте остаются только звёзды
     platega_merchant_id: str | None = None
@@ -71,7 +73,7 @@ class Settings(BaseSettings):
         return value
 
     @field_validator("proxy_url", "anthropic_api_key", "telegraph_token", "platega_merchant_id", "platega_secret",
-                     "platega_payment_method", "yookassa_shop_id", "yookassa_secret_key", "smtp_user", "smtp_password", "report_email", mode="before")
+                     "platega_payment_method", "yookassa_shop_id", "yookassa_secret_key", "yookassa_proxy_url", "smtp_user", "smtp_password", "report_email", mode="before")
     @classmethod
     def _empty_to_none(cls, value: object) -> object:
         return value or None
