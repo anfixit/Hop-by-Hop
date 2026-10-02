@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">REDIRECT и TPROXY</text>
+  <text x="600" y="75" text-anchor="middle" font-size="16" fill="#475569">клиент 192.0.2.1 подключается к 198.51.100.2:80, а соединение достаётся прокси на маршрутизаторе</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="30" y="100" width="550" height="300" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="305" y="130" text-anchor="middle" font-weight="bold" font-size="18">REDIRECT (DNAT на себя)</text>
+    <text x="50" y="165">правило nat: tcp dport 80 redirect to :8888</text>
+    <text x="50" y="195">адрес назначения переписан: 192.0.2.254:8888</text>
+    <text x="50" y="225">исходный адрес прокси спрашивает у conntrack:</text>
+    <text x="70" y="250">SO_ORIGINAL_DST → 198.51.100.2:80</text>
+    <text x="50" y="285">conntrack: ответный кортеж от 192.0.2.254:8888</text>
+    <text x="50" y="320">для прокси - только TCP</text>
+    <text x="50" y="355" fill="#475569">просто: одно правило nat и обычный сокет</text>
+    <rect x="620" y="100" width="550" height="300" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="895" y="130" text-anchor="middle" font-weight="bold" font-size="18">TPROXY (без изменения пакета)</text>
+    <text x="640" y="165">правило: tcp dport 80 tproxy to :9999 meta mark set 1</text>
+    <text x="640" y="195">ip rule fwmark 1 lookup 100</text>
+    <text x="640" y="220">table 100: local 0.0.0.0/0 dev lo</text>
+    <text x="640" y="250">сокет прокси с IP_TRANSPARENT:</text>
+    <text x="660" y="275">getsockname() → 198.51.100.2:80</text>
+    <text x="640" y="305">conntrack: зеркальная запись, без NAT</text>
+    <text x="640" y="335">TCP и UDP (IP_RECVORIGDSTADDR)</text>
+    <text x="640" y="365" fill="#475569">режим tproxy в Xray и sing-box (ради UDP)</text>
+  </g>
+  <rect x="30" y="425" width="1140" height="70" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="600" y="457" text-anchor="middle" font-size="16" fill="#0E1830">В нашем опыте в обоих случаях клиент ничего не замечает, а сервер видит адрес маршрутизатора:</text>
+  <text x="600" y="481" text-anchor="middle" font-size="16" fill="#0E1830">к серверу прокси подключается сам, от своего адреса.</text>
+</svg>
