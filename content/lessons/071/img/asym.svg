@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Обмен ключами и человек посередине</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="75" width="540" height="240" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+    <text x="60" y="105" font-weight="bold" font-size="18">Диффи-Хеллман</text>
+    <text x="60" y="137">открыто: p и g</text>
+    <text x="60" y="165">Алиса: секрет a, отправляет A = g^a mod p</text>
+    <text x="60" y="191">Боб: секрет b, отправляет B = g^b mod p</text>
+    <text x="60" y="221" font-family="monospace">B^a = A^b = g^(ab) mod p</text>
+    <text x="60" y="255">видя A и B, секрет не найти: дискретный логарифм</text>
+    <text x="60" y="287" fill="#15803D" font-weight="bold">защищает от подслушивания</text>
+    <rect x="620" y="75" width="540" height="240" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="640" y="105" font-weight="bold" font-size="18">RSA</text>
+    <text x="640" y="137" font-family="monospace">n = p × q, открыт (e, n), закрыт (d, n)</text>
+    <text x="640" y="165">шифрование: m^e mod n, подпись: m^d mod n</text>
+    <text x="640" y="191">стойкость: разложить n на множители</text>
+    <text x="640" y="221">только с набивкой: OAEP, PSS</text>
+    <text x="640" y="255">ключ 2048 бит ≈ 112 бит симметричного</text>
+    <text x="640" y="287" fill="#2563EB" font-weight="bold">гибридно: ключ асимметрией, данные AES</text>
+  </g>
+  <g font-size="16" fill="#0E1830" text-anchor="middle">
+    <rect x="40" y="370" width="200" height="70" rx="12" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="140" y="400" font-weight="bold">Алиса</text><text x="140" y="424" font-size="13">секрет с Мэллори: 18</text>
+    <rect x="500" y="370" width="200" height="70" rx="12" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/><text x="600" y="400" font-weight="bold">Мэллори</text><text x="600" y="424" font-size="13">знает 18 и 7</text>
+    <rect x="960" y="370" width="200" height="70" rx="12" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="1060" y="400" font-weight="bold">Боб</text><text x="1060" y="424" font-size="13">секрет с Мэллори: 7</text>
+  </g>
+  <g stroke="#B91C1C" stroke-width="2.5"><line x1="240" y1="405" x2="500" y2="405"/><line x1="700" y1="405" x2="960" y2="405"/></g>
+  <g font-size="13" fill="#B91C1C" text-anchor="middle"><text x="370" y="395">обмен 1</text><text x="830" y="395">обмен 2</text></g>
+  <text x="600" y="490" text-anchor="middle" font-size="16" fill="#0E1830">Без проверки, чей открытый ключ, каждый обменивается ключом с посредником.</text>
+  <text x="600" y="522" text-anchor="middle" font-size="16" font-weight="bold" fill="#15803D">Защита: подписать открытые значения долговременным ключом, подтверждённым сертификатом или отпечатком.</text>
+</svg>
