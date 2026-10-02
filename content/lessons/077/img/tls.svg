@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">От SSL к TLS 1.3</text>
+  <line x1="60" y1="140" x2="1140" y2="140" stroke="#475569" stroke-width="3"/>
+  <g font-size="15" fill="#0E1830" text-anchor="middle">
+    <circle cx="110" cy="140" r="12" fill="#B91C1C"/><text x="110" y="110" font-weight="bold">SSL 2.0</text><text x="110" y="175">1995</text>
+    <circle cx="280" cy="140" r="12" fill="#B91C1C"/><text x="280" y="110" font-weight="bold">SSL 3.0</text><text x="280" y="175">1996</text>
+    <circle cx="460" cy="140" r="12" fill="#B91C1C"/><text x="460" y="110" font-weight="bold">TLS 1.0</text><text x="460" y="175">1999</text>
+    <circle cx="640" cy="140" r="12" fill="#B91C1C"/><text x="640" y="110" font-weight="bold">TLS 1.1</text><text x="640" y="175">2006</text>
+    <circle cx="840" cy="140" r="12" fill="#15803D"/><text x="840" y="110" font-weight="bold">TLS 1.2</text><text x="840" y="175">2008, AEAD</text>
+    <circle cx="1060" cy="140" r="12" fill="#15803D"/><text x="1060" y="110" font-weight="bold">TLS 1.3</text><text x="1060" y="175">2018, 1 RTT</text>
+  </g>
+  <text x="380" y="215" text-anchor="middle" font-size="15" fill="#B91C1C">запрещены: 2011, 2015, 2021 (RFC 6176, 7568, 8996)</text>
+  <text x="950" y="215" text-anchor="middle" font-size="15" fill="#15803D">допустимы сегодня</text>
+  <g font-size="15" fill="#0E1830">
+    <rect x="40" y="250" width="540" height="290" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+    <text x="60" y="280" font-weight="bold" font-size="18">Место в стеке</text>
+    <rect x="80" y="300" width="460" height="40" rx="6" fill="#FFFFFF" stroke="#475569"/><text x="310" y="326" text-anchor="middle">HTTP, SMTP, IMAP...</text>
+    <rect x="80" y="345" width="460" height="40" rx="6" fill="#DCFCE7" stroke="#15803D"/><text x="310" y="371" text-anchor="middle" font-weight="bold">TLS: записи, рукопожатие, оповещения</text>
+    <rect x="80" y="390" width="460" height="40" rx="6" fill="#FFFFFF" stroke="#475569"/><text x="310" y="416" text-anchor="middle">TCP (для UDP - DTLS, в QUIC - TLS 1.3 внутри)</text>
+    <rect x="80" y="435" width="460" height="40" rx="6" fill="#FFFFFF" stroke="#475569"/><text x="310" y="461" text-anchor="middle">IP</text>
+    <text x="60" y="510" fill="#64748B">HTTPS = HTTP поверх TLS, порт 443</text>
+    <rect x="620" y="250" width="540" height="290" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/>
+    <text x="640" y="280" font-weight="bold" font-size="18">Защищено и видно</text>
+    <text x="640" y="314" fill="#15803D">шифруется: данные, в TLS 1.3 и сертификат</text>
+    <text x="640" y="340" fill="#15803D">проверяется: целостность, подлинность сервера</text>
+    <text x="640" y="380" fill="#B91C1C">видно: IP-адреса и порты</text>
+    <text x="640" y="406" fill="#B91C1C">видно: размеры и время записей</text>
+    <text x="640" y="432" fill="#B91C1C">видно: имя сервера в SNI (без ECH)</text>
+    <text x="640" y="472" font-family="monospace" font-size="14">запись: 16 03 03 ... / 17 03 03 ...</text>
+    <text x="640" y="498" fill="#64748B" font-size="14">TLS 1.3 в записях выдаёт себя за TLS 1.2</text>
+  </g>
+</svg>
