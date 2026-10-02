@@ -1,5 +1,6 @@
 """Покупка пакетов разборов и благодарность автору: звёзды Telegram и рублёвая касса (YooKassa или Platega)."""
 import asyncio
+import html
 import json
 import logging
 from datetime import UTC, timedelta
@@ -385,6 +386,15 @@ async def poll_cashboxes(bot: Bot, db, settings: Settings, cashboxes: dict[str, 
             log.exception("Ошибка опроса кассы")
 
 
+def buyer(user: User | None, user_id: int) -> str:
+    """Кто заплатил, для уведомления админу: имя-ссылка на профиль, @username и id."""
+    name = html.escape(user.first_name or "без имени") if user else "без имени"
+    parts = [f'<a href="tg://user?id={user_id}">{name}</a>']
+    if user and user.username:
+        parts.append(f"@{html.escape(user.username)}")
+    return " ".join(parts) + f" (id {user_id})"
+
+
 async def _thank(bot: Bot, db, settings: Settings, payment: Payment | None) -> None:
     if payment is None:
         return
@@ -398,7 +408,7 @@ async def _thank(bot: Bot, db, settings: Settings, payment: Payment | None) -> N
         except Exception:
             log.exception("Не удалось поблагодарить пользователя %s", payment.user_id)
         await notify_admins(bot, settings, f"☕ Благодарность: {payment.amount} {sign_} ({payment.provider}), "
-                                           f"пользователь {payment.user_id}")
+                                           f"{buyer(user, payment.user_id)}")
         return
     try:
         await bot.send_message(payment.user_id, f"✅ Оплата получена: +{reviews_word(payment.reviews)}. "
@@ -406,4 +416,4 @@ async def _thank(bot: Bot, db, settings: Settings, payment: Payment | None) -> N
     except Exception:
         log.exception("Не удалось сообщить пользователю %s об оплате", payment.user_id)
     await notify_admins(bot, settings, f"💰 Покупка: {reviews_word(payment.reviews)} за {payment.amount} {sign_} "
-                                       f"({payment.provider}), пользователь {payment.user_id}")
+                                       f"({payment.provider}), {buyer(user, payment.user_id)}")

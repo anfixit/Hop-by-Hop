@@ -164,6 +164,17 @@ def test_yookassa_replaces_platega_for_new_rub_invoices():
     assert rub_cashbox(None, None) == ("platega", None)
 
 
+def test_buyer_label_for_admin_notifications():
+    from types import SimpleNamespace
+
+    from bot.handlers.payments import buyer
+
+    assert buyer(SimpleNamespace(first_name="Аня <3", username="anya"), 5) == \
+        '<a href="tg://user?id=5">Аня &lt;3</a> @anya (id 5)'
+    assert buyer(SimpleNamespace(first_name=None, username=None), 7) == '<a href="tg://user?id=7">без имени</a> (id 7)'
+    assert buyer(None, 9) == '<a href="tg://user?id=9">без имени</a> (id 9)'
+
+
 async def test_rub_invoice_falls_back_to_platega_when_yookassa_is_down():
     from bot.handlers.payments import create_rub_invoice
     from bot.platega import PlategaError, Transaction
