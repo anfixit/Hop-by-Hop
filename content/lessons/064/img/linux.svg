@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Путь имени в Linux и кэши по дороге</text>
+  <g stroke="#475569" stroke-width="2.5">
+    <line x1="150" y1="150" x2="150" y2="200"/><line x1="150" y1="270" x2="150" y2="320"/>
+    <line x1="260" y1="355" x2="330" y2="355"/><line x1="260" y1="455" x2="330" y2="455"/><line x1="150" y1="390" x2="150" y2="420"/>
+    <line x1="590" y1="455" x2="650" y2="455"/><line x1="890" y1="455" x2="940" y2="455"/><line x1="1060" y1="420" x2="1060" y2="270"/>
+  </g>
+  <g fill="#475569">
+    <polygon points="143,188 157,188 150,200"/><polygon points="143,308 157,308 150,320"/><polygon points="143,408 157,408 150,420"/>
+    <polygon points="318,349 318,361 330,355"/><polygon points="318,449 318,461 330,455"/>
+    <polygon points="638,449 638,461 650,455"/><polygon points="928,449 928,461 940,455"/><polygon points="1053,282 1067,282 1060,270"/>
+  </g>
+  <g font-size="16" fill="#0E1830" text-anchor="middle">
+    <rect x="40" y="80" width="220" height="70" rx="12" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="150" y="110" font-weight="bold">программа</text><text x="150" y="133" font-size="13" fill="#B45309">свой кэш (браузер)</text>
+    <rect x="40" y="200" width="220" height="70" rx="12" fill="#F1F5F9" stroke="#475569" stroke-width="2"/><text x="150" y="230" font-weight="bold">getaddrinfo (libc)</text><text x="150" y="253" font-size="13">/etc/nsswitch.conf: hosts:</text>
+    <rect x="40" y="320" width="220" height="70" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="150" y="350" font-weight="bold">files</text><text x="150" y="373" font-size="13">/etc/hosts - побеждает DNS</text>
+    <rect x="40" y="420" width="220" height="70" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/><text x="150" y="450" font-weight="bold">dns</text><text x="150" y="473" font-size="13">/etc/resolv.conf</text>
+    <rect x="330" y="320" width="260" height="70" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6 4"/><text x="460" y="350" font-size="14">если найдено -</text><text x="460" y="372" font-size="14">DNS не спрашивают</text>
+    <rect x="330" y="410" width="260" height="90" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="460" y="440" font-weight="bold">systemd-resolved</text><text x="460" y="463" font-size="13">заглушка 127.0.0.53, если есть</text><text x="460" y="484" font-size="13" fill="#B45309">кэш</text>
+    <rect x="650" y="410" width="240" height="90" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="770" y="440" font-weight="bold">роутер</text><text x="770" y="463" font-size="13">пересылающий сервер</text><text x="770" y="484" font-size="13" fill="#B45309">кэш</text>
+    <rect x="940" y="410" width="240" height="90" rx="12" fill="#FEF9C3" stroke="#A16207" stroke-width="2"/><text x="1060" y="440" font-weight="bold">рекурсивный резолвер</text><text x="1060" y="463" font-size="13">провайдер или свой</text><text x="1060" y="484" font-size="13" fill="#B45309">кэш, TTL, отриц. ответы</text>
+    <rect x="940" y="200" width="240" height="70" rx="12" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/><text x="1060" y="230" font-weight="bold">авторитетные серверы</text><text x="1060" y="253" font-size="13">задают TTL записей</text>
+  </g>
+  <rect x="330" y="80" width="560" height="200" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="350" y="110" font-weight="bold">/etc/resolv.conf</text>
+    <text x="350" y="138" font-family="monospace" font-size="14">nameserver 10.53.0.53</text>
+    <text x="350" y="162" font-family="monospace" font-size="14">search corp.lab</text>
+    <text x="350" y="186" font-family="monospace" font-size="14">options ndots:1 timeout:2 attempts:2</text>
+    <text x="350" y="218">www → меньше точек, чем ndots → www.corp.lab</text>
+    <text x="350" y="244">www.dev → сначала как есть, потом www.dev.corp.lab</text>
+    <text x="350" y="268" fill="#64748B" font-size="13">dig не читает /etc/hosts, search - только с +search; getent видит, как программы</text>
+  </g>
+  <text x="600" y="560" text-anchor="middle" font-size="15" fill="#B45309">Каждый кэш может помнить запись до конца TTL, поэтому изменения в DNS расходятся не сразу.</text>
+</svg>
