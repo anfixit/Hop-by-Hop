@@ -202,5 +202,18 @@ def test_donations_match_stars_invoice():
     assert _stars_donation(f"donate:{stars}", stars)
     assert not _stars_donation(f"donate:{stars}", stars - 1)  # сумма подменена
     assert not _stars_donation("pack:50", stars)
+    assert _stars_donation("donate:150", 150) and not _stars_donation("donate:1", 1)  # своя сумма в пределах
     text, markup = donate_screen(Settings(_env_file=None, bot_token="1:a"))
-    assert "Поблагодарить" in text and len(markup.inline_keyboard) == len(DONATIONS) + 1
+    assert "Поблагодарить" in text and len(markup.inline_keyboard) == len(DONATIONS) + 2
+    assert markup.inline_keyboard[0][0].callback_data == f"don:s:{stars}"
+
+
+def test_custom_donation_amount_and_buttons():
+    from bot.config import Settings
+    from bot.handlers.payments import DONATE_RUB, _amount, donate_buttons
+
+    assert _amount("250", DONATE_RUB) == 250
+    assert _amount("10", DONATE_RUB) is None and _amount("1e5", DONATE_RUB) is None and _amount("-5", DONATE_RUB) is None
+    card = Settings(_env_file=None, bot_token="1:a", yookassa_shop_id="1", yookassa_secret_key="k")
+    assert [b.callback_data for b in donate_buttons(200, card)] == ["don:s:150", "don:p:200"]
+    assert [b.callback_data for b in donate_buttons(10_000, card)] == ["don:p:10000"]  # звёзд больше предела

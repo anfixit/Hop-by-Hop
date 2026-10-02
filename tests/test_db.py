@@ -125,7 +125,7 @@ async def test_donation_nudge_knows_who_already_donated(settings):
     again, _ = donation_nudge(20, True, settings)
     assert "Позади 10 уроков" in first and "один человек" in first
     assert "Позади 20 уроков" in again and "Спасибо за твою поддержку" in again
-    assert any(b.callback_data == "don:s:0" for row in markup.inline_keyboard for b in row)
+    assert any(b.callback_data == "don:s:75" for row in markup.inline_keyboard for b in row)
 
 
 async def test_platega_payment_is_credited_once_and_underpayment_is_not(settings):

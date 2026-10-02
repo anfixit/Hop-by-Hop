@@ -7,6 +7,8 @@ from datetime import UTC, timedelta
 
 from aiogram import Bot, F, Router
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, LabeledPrice, Message, PreCheckoutQuery
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -78,12 +80,39 @@ def _pack(settings: Settings, idx: str) -> Pack | None:
     return settings.packs[int(idx)] if idx.isdigit() and int(idx) < len(settings.packs) else None
 
 
-# Благодарность автору ("купить кофе"): платёж без разборов, reviews = 0. Суммы: рубли и звёзды.
+# Благодарность автору ("купить кофе"): платёж без разборов, reviews = 0. Готовые суммы: рубли и звёзды.
 DONATIONS = ((100, 75), (300, 225), (500, 375))
+# Своя сумма: пределы в рублях и звёздах (звёзды - по тому же курсу, что готовые суммы: 3/4 от рублей)
+DONATE_RUB = (50, 50_000)
+DONATE_STARS = (25, 2_500)
 
 
-def _donation(idx: str) -> tuple[int, int] | None:
-    return DONATIONS[int(idx)] if idx.isdigit() and int(idx) < len(DONATIONS) else None
+def stars_for(rub: int) -> int:
+    return round(rub * 3 / 4)
+
+
+def _amount(value: str, limits: tuple[int, int]) -> int | None:
+    """Сумма из кнопки или сообщения, если она в допустимых пределах."""
+    return int(value) if value.isdigit() and limits[0] <= int(value) <= limits[1] else None
+
+
+class Donating(StatesGroup):
+    amount = State()
+
+
+CUSTOM_PROMPT = (f"Напиши сумму благодарности в рублях одним числом, от {DONATE_RUB[0]} до {DONATE_RUB[1]:,}. "
+                 "/cancel - отмена.").replace(",", " ")
+
+
+def donate_buttons(rub: int, settings: Settings) -> list:
+    """Кнопки оплаты одной суммы: звёздами (если сумма в их пределах) и рублями (если есть касса)."""
+    row = []
+    stars = stars_for(rub)
+    if DONATE_STARS[0] <= stars <= DONATE_STARS[1]:
+        row.append(btn(f"{stars} ⭐", f"don:s:{stars}"))
+    if settings.card_enabled:
+        row.append(btn(f"{rub} ₽", f"don:p:{rub}"))
+    return row
 
 
 async def shop(tg_user, db, settings: Settings):
@@ -117,12 +146,8 @@ def donate_screen(settings: Settings):
         "она просто помогает курсу жить и расти.\n\n"
         "Спасибо, что учишься вместе с Hop-by-Hop!\n\nОплачивая, ты принимаешь оферту (пункт 5.6): /terms"
     )
-    rows = []
-    for i, (rub, stars) in enumerate(DONATIONS):
-        row = [btn(f"{stars} ⭐", f"don:s:{i}")]
-        if settings.card_enabled:
-            row.append(btn(f"{rub} ₽", f"don:p:{i}"))
-        rows.append(row)
+    rows = [donate_buttons(rub, settings) for rub, _ in DONATIONS]
+    rows.append([btn("✍️ Своя сумма", "don:c")])
     rows.append([btn("← Оглавление", "toc:0")])
     return text, kb(*rows)
 
@@ -139,7 +164,7 @@ def donation_nudge(passed: int, donated: bool, settings: Settings):
     else:
         body = ("Hop-by-Hop делает один человек: пишет уроки, проверяет каждый опыт на настоящем сервере, "
                 "платит за сервер и за разборы ИИ. Курс бесплатный и останется таким, но живёт он на поддержке "
-                "тех, кому он полезен.\n\nЕсли курс тебе помогает, поблагодари автора любой суммой - "
+                "тех, кому он полезен.\n\nЕсли курс тебе помогает, поблагодари автора - готовой суммой или своей, "
                 "это занимает минуту и очень помогает выпускать новые уроки.")
     text = f"🎉 <b>Позади {lessons} курса!</b>\n\n{body}\n\nОплачивая, ты принимаешь оферту (пункт 5.6): /terms"
     return text, donate_screen(settings)[1]
@@ -163,19 +188,40 @@ async def cb_donate(call: CallbackQuery, settings: Settings) -> None:
     await call.answer()
 
 
+@router.callback_query(F.data == "don:c")
+async def cb_donate_custom(call: CallbackQuery, state: FSMContext) -> None:
+    await state.set_state(Donating.amount)
+    await call.message.answer(f"<b>☕ Своя сумма</b>\n\n{CUSTOM_PROMPT}")
+    await call.answer()
+
+
+# Команды (в том числе /cancel) пропускаем дальше, к своим обработчикам
+@router.message(Donating.amount, ~F.text.startswith("/"))
+async def on_donate_amount(message: Message, state: FSMContext, settings: Settings) -> None:
+    raw = (message.text or "").lower().replace(" ", "").removesuffix("₽").removesuffix("руб").removesuffix("р")
+    rub = _amount(raw, DONATE_RUB)
+    if rub is None:
+        await message.answer(f"Не понял сумму. {CUSTOM_PROMPT}")
+        return
+    await state.clear()
+    await message.answer(f"Благодарность на {rub} ₽. Выбери, как оплатить:\n\n"
+                         "Оплачивая, ты принимаешь оферту (пункт 5.6): /terms",
+                         reply_markup=kb(donate_buttons(rub, settings)))
+
+
 @router.callback_query(F.data.startswith("don:s:"))
 async def cb_donate_stars(call: CallbackQuery, bot: Bot) -> None:
-    donation = _donation(call.data.split(":")[2])
-    if donation is None:
+    stars = _amount(call.data.split(":")[2], DONATE_STARS)
+    if stars is None:
         await call.answer("Такой суммы больше нет. Открой /donate заново.", show_alert=True)
         return
     await bot.send_invoice(
         chat_id=call.from_user.id,
         title="Благодарность автору курса",
         description="Добровольная благодарность автору курса Hop-by-Hop. Разборы за неё не начисляются.",
-        payload=f"donate:{donation[1]}",
+        payload=f"donate:{stars}",
         currency="XTR",
-        prices=[LabeledPrice(label="Благодарность", amount=donation[1])],
+        prices=[LabeledPrice(label="Благодарность", amount=stars)],
         provider_token="",
     )
     await call.answer()
@@ -184,12 +230,11 @@ async def cb_donate_stars(call: CallbackQuery, bot: Bot) -> None:
 @router.callback_query(F.data.startswith("don:p:"))
 async def cb_donate_rub(call: CallbackQuery, db, settings: Settings, platega: Platega | None,
                        yookassa: YooKassa | None) -> None:
-    donation = _donation(call.data.split(":")[2])
-    if donation is None or rub_cashbox(platega, yookassa)[1] is None:
+    rub = _amount(call.data.split(":")[2], DONATE_RUB)
+    if rub is None or rub_cashbox(platega, yookassa)[1] is None:
         await call.answer("Этот способ сейчас недоступен. Открой /donate заново.", show_alert=True)
         return
     await call.answer()
-    rub = donation[0]
     try:
         provider, tx = await create_rub_invoice(platega, yookassa, rub, "Hop-by-Hop: благодарность автору",
                                                 f"https://t.me/{settings.bot_username}", f"tg:{call.from_user.id}")
@@ -271,7 +316,7 @@ def _stars_pack(settings: Settings, payload: str, total: int) -> Pack | None:
 
 
 def _stars_donation(payload: str, total: int) -> bool:
-    return any(payload == f"donate:{stars}" and total == stars for _, stars in DONATIONS)
+    return payload == f"donate:{total}" and DONATE_STARS[0] <= total <= DONATE_STARS[1]
 
 
 @router.pre_checkout_query()
