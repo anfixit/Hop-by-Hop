@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="600" y="42" text-anchor="middle" font-size="30" font-weight="bold" fill="#0E1830">Сообщение DNS</text>
+  <text x="300" y="82" text-anchor="middle" font-size="16" font-weight="bold" fill="#0E1830">заголовок, 12 байт (по 16 бит в строке)</text>
+  <g font-size="15" fill="#0E1830" text-anchor="middle" stroke-width="2">
+    <rect x="60" y="95" width="480" height="44" fill="#FEF9C3" stroke="#A16207"/><text x="300" y="123">ID - номер запроса</text>
+    <!-- флаги: 1,4,1,1,1,1,1,1,1,4 бит по 30 px -->
+    <rect x="60" y="139" width="30" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="75" y="166" font-size="12">QR</text>
+    <rect x="90" y="139" width="120" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="150" y="166" font-size="13">OPCODE</text>
+    <rect x="210" y="139" width="30" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="225" y="166" font-size="12">AA</text>
+    <rect x="240" y="139" width="30" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="255" y="166" font-size="12">TC</text>
+    <rect x="270" y="139" width="30" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="285" y="166" font-size="12">RD</text>
+    <rect x="300" y="139" width="30" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="315" y="166" font-size="12">RA</text>
+    <rect x="330" y="139" width="30" height="44" fill="#F1F5F9" stroke="#2563EB"/><text x="345" y="166" font-size="12">Z</text>
+    <rect x="360" y="139" width="30" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="375" y="166" font-size="12">AD</text>
+    <rect x="390" y="139" width="30" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="405" y="166" font-size="12">CD</text>
+    <rect x="420" y="139" width="120" height="44" fill="#DBEAFE" stroke="#2563EB"/><text x="480" y="166" font-size="13">RCODE</text>
+    <rect x="60" y="183" width="480" height="44" fill="#FEF9C3" stroke="#A16207"/><text x="300" y="211">число вопросов</text>
+    <rect x="60" y="227" width="480" height="44" fill="#FEF9C3" stroke="#A16207"/><text x="300" y="255">число записей ответа</text>
+    <rect x="60" y="271" width="480" height="44" fill="#FEF9C3" stroke="#A16207"/><text x="300" y="299">число записей полномочий</text>
+    <rect x="60" y="315" width="480" height="44" fill="#FEF9C3" stroke="#A16207"/><text x="300" y="343">число дополнительных записей</text>
+    <rect x="60" y="375" width="480" height="40" rx="6" fill="#F1F5F9" stroke="#475569"/><text x="300" y="401">вопрос: имя, тип, класс</text>
+    <rect x="60" y="421" width="480" height="40" rx="6" fill="#DCFCE7" stroke="#15803D"/><text x="300" y="447">ответ (answer)</text>
+    <rect x="60" y="467" width="480" height="40" rx="6" fill="#DCFCE7" stroke="#15803D"/><text x="300" y="493">полномочия (authority): NS или SOA</text>
+    <rect x="60" y="513" width="480" height="40" rx="6" fill="#DCFCE7" stroke="#15803D"/><text x="300" y="539">дополнительные (additional), OPT из EDNS</text>
+  </g>
+  <text x="300" y="585" text-anchor="middle" font-size="14" fill="#64748B">RCODE: 0 NOERROR, 2 SERVFAIL, 3 NXDOMAIN, 5 REFUSED</text>
+  <!-- справа: запись и сжатие -->
+  <text x="890" y="82" text-anchor="middle" font-size="16" font-weight="bold" fill="#0E1830">запись ресурса</text>
+  <g font-size="14" fill="#0E1830" text-anchor="middle" stroke="#15803D" stroke-width="2">
+    <rect x="640" y="95" width="130" height="44" fill="#DCFCE7"/><text x="705" y="122" stroke="none">имя</text>
+    <rect x="770" y="95" width="70" height="44" fill="#DCFCE7"/><text x="805" y="122" stroke="none">тип</text>
+    <rect x="840" y="95" width="70" height="44" fill="#DCFCE7"/><text x="875" y="122" stroke="none">класс</text>
+    <rect x="910" y="95" width="80" height="44" fill="#DCFCE7"/><text x="950" y="122" stroke="none">TTL</text>
+    <rect x="990" y="95" width="70" height="44" fill="#DCFCE7"/><text x="1025" y="122" stroke="none">длина</text>
+    <rect x="1060" y="95" width="100" height="44" fill="#DCFCE7"/><text x="1110" y="122" stroke="none">данные</text>
+  </g>
+  <text x="640" y="160" font-size="13" fill="#64748B">2 байта тип, 2 класс, 4 TTL, 2 длина данных</text>
+  <text x="890" y="215" text-anchor="middle" font-size="16" font-weight="bold" fill="#0E1830">имя в пакете и сжатие</text>
+  <g font-size="15" font-family="monospace" fill="#0E1830">
+    <text x="640" y="255">байт 12:</text>
+    <text x="640" y="282"><tspan fill="#B91C1C">03</tspan> 77 77 77 <tspan fill="#B91C1C">04</tspan> 63 6f 72 70 <tspan fill="#B91C1C">03</tspan> 6c 61 62 <tspan fill="#B91C1C">00</tspan></text>
+    <text x="640" y="306" font-size="13" font-family="sans-serif" fill="#64748B">3 "www"  4 "corp"  3 "lab"  корень</text>
+    <text x="640" y="355">в ответе вместо имени:</text>
+    <text x="640" y="382"><tspan fill="#2563EB" font-weight="bold">c0 0c</tspan> = биты 11 + смещение 12</text>
+    <text x="640" y="406" font-size="13" font-family="sans-serif" fill="#64748B">"имя такое же, как с байта 12"</text>
+  </g>
+  <rect x="630" y="440" width="540" height="140" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <g font-size="15" fill="#0E1830">
+    <text x="650" y="472"><tspan font-weight="bold">Без EDNS</tspan> ответ по UDP - до 512 байт.</text>
+    <text x="650" y="500">Не поместилось - флаг <tspan font-weight="bold">TC</tspan>, повтор по TCP.</text>
+    <text x="650" y="528"><tspan font-weight="bold">EDNS(0)</tspan>: псевдозапись OPT, размер UDP</text>
+    <text x="650" y="552">(обычно 1232) и флаг DO для DNSSEC.</text>
+  </g>
+</svg>
